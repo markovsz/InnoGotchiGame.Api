@@ -27,6 +27,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureDbContext(Configuration);
+            services.ConfigureRepositoryManager();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

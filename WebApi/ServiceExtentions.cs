@@ -1,7 +1,11 @@
-﻿using Infrastructure.Data;
+﻿using Domain.Interfaces;
+using Domain.Interfaces.Repositories;
+using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace WebApi
 {
@@ -12,5 +16,12 @@ namespace WebApi
             services.AddDbContext<RepositoryContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
                 b => b.MigrationsAssembly("Infrastructure.Data")));
         }
+
+        public static void ConfigureRepositoryManager(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
+
+        
     }
 }
