@@ -1,7 +1,11 @@
-﻿using Domain.Interfaces;
+﻿using Application.Services.Services;
+using Domain.Core.Models;
+using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Services.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,5 +27,18 @@ namespace WebApi
         }
 
         
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentityCore<User>(o =>
+            {
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = false;
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<RepositoryContext>();
+        }
     }
 }

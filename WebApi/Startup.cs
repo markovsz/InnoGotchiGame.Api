@@ -28,6 +28,7 @@ namespace WebApi
         {
             services.ConfigureDbContext(Configuration);
             services.ConfigureRepositoryManager();
+            services.ConfigureIdentity();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
