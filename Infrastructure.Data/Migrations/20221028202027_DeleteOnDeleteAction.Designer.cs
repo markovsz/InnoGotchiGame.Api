@@ -4,14 +4,16 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20221028202027_DeleteOnDeleteAction")]
+    partial class DeleteOnDeleteAction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,8 +255,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c3f9e1a6-8f6d-448b-a7b9-4f28a63e3924"),
-                            ConcurrencyStamp = "5d5296d6-7c8e-48ac-9fce-46ec423d95fd",
+                            Id = new Guid("4a501116-95a0-4fee-b734-f9dde8ee89da"),
+                            ConcurrencyStamp = "11dc74f8-62c2-426e-954d-bd6d18026d58",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -366,7 +368,7 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Models.UserInfo", "UserInfo")
                         .WithOne("Farm")
                         .HasForeignKey("Domain.Core.Models.Farm", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("UserInfo");
@@ -383,7 +385,7 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Models.UserInfo", "UserInfo")
                         .WithMany("FarmFriends")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Farm");

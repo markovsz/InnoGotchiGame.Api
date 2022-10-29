@@ -30,23 +30,23 @@ namespace Infrastructure.Data
 				
 			modelBuilder.Entity<Pet>().HasKey(e => e.Id);
 			modelBuilder.Entity<Pet>().Property(e => e.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Pet>().HasOne(e => e.Farm).WithMany(e => e.Pets).HasForeignKey(e => e.FarmId).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Pet>().HasOne(e => e.Farm).WithMany(e => e.Pets).HasForeignKey(e => e.FarmId);
 
 			modelBuilder.Entity<FarmFriend>().HasKey(e => e.Id);
 			modelBuilder.Entity<FarmFriend>().Property(e => e.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<FarmFriend>().HasOne(e => e.Farm).WithMany(e => e.FarmFriends).HasForeignKey(e => e.FarmId).OnDelete(DeleteBehavior.NoAction);
-			modelBuilder.Entity<FarmFriend>().HasOne(e => e.UserInfo).WithMany(e => e.FarmFriends).HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.NoAction);
+			modelBuilder.Entity<FarmFriend>().HasOne(e => e.Farm).WithMany(e => e.FarmFriends).HasForeignKey(e => e.FarmId);
+			modelBuilder.Entity<FarmFriend>().HasOne(e => e.UserInfo).WithMany(e => e.FarmFriends).HasForeignKey(e => e.UserId);
 
 			modelBuilder.Entity<FeedingEvent>().HasKey(e => e.Id);
 			modelBuilder.Entity<FeedingEvent>().Property(e => e.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<FeedingEvent>().HasOne(e => e.Pet).WithMany(e => e.FeedingEvents).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.NoAction);
+			modelBuilder.Entity<FeedingEvent>().HasOne(e => e.Pet).WithMany(e => e.FeedingEvents).HasForeignKey(e => e.PetId);
 
 			modelBuilder.Entity<ThirstQuenchingEvent>().HasKey(e => e.Id);
 			modelBuilder.Entity<ThirstQuenchingEvent>().Property(e => e.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<ThirstQuenchingEvent>().HasOne(e => e.Pet).WithMany(e => e.ThirstQuenchingEvents).HasForeignKey(e => e.PetId).OnDelete(DeleteBehavior.NoAction);
+			modelBuilder.Entity<ThirstQuenchingEvent>().HasOne(e => e.Pet).WithMany(e => e.ThirstQuenchingEvents).HasForeignKey(e => e.PetId);
 
 			modelBuilder.Entity<UserInfo>().HasKey(e => e.UserId);
-			modelBuilder.Entity<UserInfo>().HasOne(e => e.User).WithOne(e => e.UserInfo).HasForeignKey<UserInfo>(e => e.UserId).OnDelete(DeleteBehavior.NoAction);
+			modelBuilder.Entity<UserInfo>().HasOne(e => e.User).WithOne(e => e.UserInfo).HasForeignKey<UserInfo>(e => e.UserId);
 
 			modelBuilder.Entity<IdentityRole<Guid>>().HasData(
 				new IdentityRole<Guid> {
