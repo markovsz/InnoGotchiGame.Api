@@ -9,7 +9,7 @@ namespace Application.Services.DataTransferObjects.Reading
         public int Age { get; set; }
         public string HungerLevel { get; set; }
         public string ThirstLevel { get; set; }
-        public string HappinessDaysCount { get; set; }
+        public int HappinessDaysCount { get; set; }
         public string IsAlive { get; set; }
         public DateTime LastFeedingEventTime { get; set; }
         public DateTime LastThirstQuenchingEventTime { get; set; }
