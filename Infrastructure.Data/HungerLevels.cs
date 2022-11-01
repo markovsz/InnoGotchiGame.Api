@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Infrastructure.Data
 {
@@ -18,5 +19,17 @@ namespace Infrastructure.Data
         public static readonly float HungerMinHungerValue = HungerLevelsList[1].Item2;
         public static readonly float NormalMinHungerValue = HungerLevelsList[2].Item2;
         public static readonly float FullMinHungerValue = HungerLevelsList[3].Item2;
+
+        public static string GetHungerLevelName(float hungerValue)
+        {
+            var minHungerLevel = HungerLevelsList.FirstOrDefault();
+            string hungerLevelName = minHungerLevel.Item1;
+            foreach (var hungerLevel in HungerLevelsList)
+            {
+                if (hungerLevel.Item2 <= hungerValue)
+                    hungerLevelName = hungerLevel.Item1;
+            }
+            return hungerLevelName.ToLower();
+        }
     }
 }

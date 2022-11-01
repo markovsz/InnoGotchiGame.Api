@@ -24,7 +24,9 @@ namespace Infrastructure.Services
             CreateMap<FarmUpdatingDto, Farm>();
 
             CreateMap<PetCreatingDto, Pet>();
-            CreateMap<Pet, PetReadingDto>();
+            CreateMap<Pet, PetReadingDto>()
+                .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
+                .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)));
             CreateMap<PetUpdatingDto, Pet>();
 
             CreateMap<FarmFriendCreatingDto, FarmFriend>();

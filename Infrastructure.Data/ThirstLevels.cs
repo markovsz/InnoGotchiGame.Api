@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Infrastructure.Data
 {
@@ -18,5 +19,17 @@ namespace Infrastructure.Data
         public static readonly float ThirstyMinThirstValue = ThirstLevelsList[1].Item2;
         public static readonly float NormalMinThirstValue = ThirstLevelsList[2].Item2;
         public static readonly float FullMinThirstValue = ThirstLevelsList[3].Item2;
+
+        public static string GetThirstLevelName(float thirstValue)
+        {
+            var minHungerLevel = ThirstLevelsList.FirstOrDefault();
+            string thirstLevelName = minHungerLevel.Item1;
+            foreach (var thirstLevel in ThirstLevelsList)
+            {
+                if (thirstLevel.Item2 <= thirstValue)
+                    thirstLevelName = thirstLevel.Item1;
+            }
+            return thirstLevelName.ToLower();
+        }
     }
 }
