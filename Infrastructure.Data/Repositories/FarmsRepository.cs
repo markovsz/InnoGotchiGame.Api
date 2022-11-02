@@ -25,11 +25,13 @@ namespace Infrastructure.Data.Repositories
         public async Task<Farm> GetFarmByIdAsync(Guid farmId, bool trackChanges) => 
             await GetByCondition(e => e.Id.Equals(farmId), trackChanges)
             .Include(e => e.Pets)
+            .Include(e => e.FarmFriends)
             .FirstOrDefaultAsync();
 
         public async Task<Farm> GetFarmByUserIdAsync(Guid userId, bool trackChanges) =>
             await GetByCondition(e => e.UserId.Equals(userId), trackChanges)
             .Include(e => e.Pets)
+            .Include(e => e.FarmFriends)
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Farm>> GetFarmsAsync() => 
