@@ -11,7 +11,5 @@ namespace Application.Services.DataTransferObjects.Reading
         public string ThirstLevel { get; set; }
         public int HappinessDaysCount { get; set; }
         public string IsAlive { get; set; }
-        public DateTime LastFeedingEventTime { get; set; }
-        public DateTime LastThirstQuenchingEventTime { get; set; }
     }
 }
