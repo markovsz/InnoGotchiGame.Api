@@ -17,6 +17,7 @@ namespace Application.Services.Services
         Task<int> GetHappinessDaysCountAsync(Guid petId);
         Task<PetReadingDto> GetPetByIdAsync(Guid petId);
         Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId);
+        Task<IEnumerable<PetMinReadingDto>> GetPetsAsync();
         Task UpdatePetAsync(Guid petId, PetUpdatingDto petDto);
         Task DeletePetByIdAsync(Guid petId);
     }
