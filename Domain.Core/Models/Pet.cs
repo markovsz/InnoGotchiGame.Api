@@ -12,6 +12,8 @@ namespace Domain.Core.Models
         public DateTime BirthDate { get; set; }
         public Guid FarmId { get; set; }
         public bool IsAlive { get; set; }
+        public int HappinessDaysCount { get; set; }
+        public DateTime LastPetDetailsUpdatingTime { get; set; }
         public DateTime DeathDate { get; set; }
 
         public Farm Farm { get; set; }
