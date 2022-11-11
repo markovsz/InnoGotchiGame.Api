@@ -5,6 +5,7 @@ namespace Application.Services.DataTransferObjects.Reading
 {
     public class FarmReadingDto
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public int DeadPetsCount { get; set; }
         public int AlivePetsCount { get; set; }
