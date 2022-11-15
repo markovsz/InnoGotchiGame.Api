@@ -5,6 +5,22 @@ namespace Domain.Core.Models
 {
     public class Pet
     {
+        public Pet() { }
+
+        public Pet(Pet pet)
+        {
+            Id = pet.Id;
+            Name = pet.Name;
+            HungerValue = pet.HungerValue;
+            ThirstValue = pet.ThirstValue;
+            BirthDate = pet.BirthDate;
+            DeathDate = pet.DeathDate;
+            FarmId = pet.FarmId;
+            IsAlive = pet.IsAlive;
+            HappinessDaysCount = pet.HappinessDaysCount;
+            LastPetDetailsUpdatingTime = pet.LastPetDetailsUpdatingTime;
+        }
+
         public Guid Id { get; set; }
         public string Name { get; set; }
         public float HungerValue { get; set; }

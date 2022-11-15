@@ -25,6 +25,9 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Pet>> GetPetsAsync() =>
             await GetAll(false)
+            .Where(e => e.DeathDate > DateTime.Now)
+            .Select(e => new Pet(e){ HappinessDaysCount = e.HappinessDaysCount + EF.Functions.DateDiffDay(EF.Functions.DateFromParts(e.LastPetDetailsUpdatingTime.Year, e.LastPetDetailsUpdatingTime.Month, e.LastPetDetailsUpdatingTime.Day), EF.Functions.DateFromParts(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)) })
+            .OrderByDescending(e => e.HappinessDaysCount)
             .ToListAsync();
 
         public async Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId) =>
@@ -32,6 +35,21 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Farm)
             .Where(e => e.Farm.UserId.Equals(userId))
             .ToListAsync();
+
+        public async Task<int> GetFarmDeadPetsCountAsync(Guid farmId) =>
+            await GetByCondition(e => e.FarmId.Equals(farmId), false)
+            .Where(e => !e.IsAlive)
+            .CountAsync();
+
+        public async Task<int> GetFarmAlivePetsCountAsync(Guid farmId) =>
+            await GetByCondition(e => e.FarmId.Equals(farmId), false)
+            .Where(e => e.IsAlive)
+            .CountAsync();
+
+        public async Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId) =>
+            await GetByCondition(e => e.FarmId.Equals(farmId), false)
+            .Select(e => e.HappinessDaysCount)
+            .AverageAsync();
 
         public void UpdatePet(Pet pet) => Update(pet);
     }
