@@ -12,9 +12,6 @@ namespace Application.Services.Services
         Task<Guid> CreatePetAsync(PetCreatingDto petDto);
         Task FeedPetAsync(Guid petId);
         Task QuenchPetThirstAsync(Guid petId);
-        Task<DateTime> TimeLeftBeforeHungerAsync(Guid petId);
-        Task<DateTime> TimeLeftBeforeThirstAsync(Guid petId);
-        Task<int> GetHappinessDaysCountAsync(Guid petId);
         Task<PetReadingDto> GetPetByIdAsync(Guid petId);
         Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId);
         Task<IEnumerable<PetMinReadingDto>> GetPetsAsync();
