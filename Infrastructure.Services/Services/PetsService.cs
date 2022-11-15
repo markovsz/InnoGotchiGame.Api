@@ -122,6 +122,24 @@ namespace Infrastructure.Services.Services
             await _repositoryManager.SaveChangeAsync();
         }
 
+        public async Task<DateTime> TimeLeftBeforeHungerAsync(Guid petId) //TODO: add checks of death
+        {
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
+            var hungerValue = CalculateHungerValueAtTime(pet.HungerValue, pet.LastPetDetailsUpdatingTime, DateTime.Now);
+            var hours = (hungerValue - HungerLevels.NormalMinHungerValue) / PetSettings.HungerUnitsPerPetsHour / PetSettings.PetsTimeConstant;
+            return DateTime.Now.AddHours(hours);
+        }
+
+        public async Task<DateTime> TimeLeftBeforeThirstAsync(Guid petId) //TODO: add checks of death
+        {
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
+            var thirstValue = CalculateThirstValueAtTime(pet.ThirstValue, pet.LastPetDetailsUpdatingTime, DateTime.Now);
+            var hours = (thirstValue - ThirstLevels.NormalMinThirstValue) / PetSettings.ThirstUnitsPerPetsHour / PetSettings.PetsTimeConstant;
+            return DateTime.Now.AddHours(hours);
+        }
+
+
+
 
         public async Task UpdatePetVitalSignsAsync(Pet pet, DateTime updationTime) {
             var hungerValue = CalculateHungerValueAtTime(pet.HungerValue, pet.LastPetDetailsUpdatingTime, updationTime);
