@@ -25,12 +25,12 @@ namespace Domain.Core.Models
         public string Name { get; set; }
         public float HungerValue { get; set; }
         public float ThirstValue { get; set; }
-        public DateTime BirthDate { get; set; }
+        public long BirthDate { get; set; } //in seconds
         public Guid FarmId { get; set; }
         public bool IsAlive { get; set; }
         public int HappinessDaysCount { get; set; }
-        public DateTime LastPetDetailsUpdatingTime { get; set; }
-        public DateTime DeathDate { get; set; }
+        public long LastPetDetailsUpdatingTime { get; set; } //in seconds
+        public long DeathDate { get; set; } //in seconds
 
         public Farm Farm { get; set; }
         public IEnumerable<FeedingEvent> FeedingEvents { get; set; }

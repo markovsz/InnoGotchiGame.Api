@@ -4,14 +4,16 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20221116175558_AddTimePropertiesAsLong")]
+    partial class AddTimePropertiesAsLong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,6 +71,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("FeedingTime")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("FeedingTimeD")
+                        .HasColumnType("datetime2");
+
                     b.Property<float>("HungerValueBefore")
                         .HasColumnType("real");
 
@@ -91,8 +96,14 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("BirthDate")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("BirthDateD")
+                        .HasColumnType("datetime2");
+
                     b.Property<long>("DeathDate")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DeathDateD")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("FarmId")
                         .HasColumnType("uniqueidentifier");
@@ -108,6 +119,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<long>("LastPetDetailsUpdatingTime")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("LastPetDetailsUpdatingTimeD")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -133,6 +147,9 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<long>("ThirstQuenchingTime")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("ThirstQuenchingTimeD")
+                        .HasColumnType("datetime2");
 
                     b.Property<float>("ThirstValueBefore")
                         .HasColumnType("real");
@@ -259,8 +276,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e07be452-e6dd-4b49-8553-1f329ed9e43a"),
-                            ConcurrencyStamp = "ff090b6d-3c16-45a3-a511-abea8e2afad8",
+                            Id = new Guid("6217fe7c-7ef1-498c-a8e0-3297e7077bec"),
+                            ConcurrencyStamp = "fd6a993b-e4de-409b-b6dd-96efcc26588e",
                             Name = "user",
                             NormalizedName = "USER"
                         });

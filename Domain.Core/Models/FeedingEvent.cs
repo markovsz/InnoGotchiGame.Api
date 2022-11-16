@@ -6,7 +6,7 @@ namespace Domain.Core.Models
     {
         public Guid Id { get; set; }
         public Guid PetId { get; set; }
-        public DateTime FeedingTime { get; set; }
+        public long FeedingTime { get; set; } //in seconds
         public float HungerValueBefore { get; set; }
 
         public Pet Pet { get; set; }
