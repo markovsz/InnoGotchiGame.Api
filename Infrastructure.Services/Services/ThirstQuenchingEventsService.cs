@@ -4,8 +4,10 @@ using Application.Services.Services;
 using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
+using Infrastructure.Services.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Services
@@ -14,17 +16,19 @@ namespace Infrastructure.Services.Services
     {
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
+        private DateTimeConverter _dateTimeConverter;
 
-        public ThirstQuenchingEventsService(IRepositoryManager repositoryManager, IMapper mapper)
+        public ThirstQuenchingEventsService(IRepositoryManager repositoryManager, IMapper mapper, DateTimeConverter dateTimeConverter)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _dateTimeConverter = dateTimeConverter;
         }
 
         public async Task<Guid> CreateThirstQuenchingEventAsync(ThirstQuenchingEventCreatingDto thirstQuenchingEventDto)
         {
             var thirstQuenchingEvent = _mapper.Map<ThirstQuenchingEvent>(thirstQuenchingEventDto);
-            thirstQuenchingEvent.ThirstQuenchingTime = DateTime.Now;
+            thirstQuenchingEvent.ThirstQuenchingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(thirstQuenchingEvent.PetId, false);
             thirstQuenchingEvent.ThirstValueBefore = pet.HungerValue;
@@ -44,7 +48,17 @@ namespace Infrastructure.Services.Services
 
         public async Task<double> GetAverageTimeBetweenThirstQuenchingAsync(Guid petId)
         {
-            throw new NotImplementedException();
+            var thirstyDays = await _repositoryManager.ThirstQuenchingEvents.GetThirstyDaysAsync(petId);
+            var spansBetweenThirstQuenching = new List<double>();
+            var thirstyDaysEnumerator = thirstyDays.GetEnumerator();
+            thirstyDaysEnumerator.MoveNext();
+            var thirstyDayPrev = thirstyDaysEnumerator.Current;
+            while(thirstyDaysEnumerator.MoveNext())
+            {
+                var thirstyDay = thirstyDaysEnumerator.Current;
+                spansBetweenThirstQuenching.Add(thirstyDayPrev - thirstyDay);
+            }
+            return _dateTimeConverter.GetTotalDays((long)spansBetweenThirstQuenching.Average());
         }
     }
 }

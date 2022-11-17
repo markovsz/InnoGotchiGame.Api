@@ -5,6 +5,7 @@ using Application.Services.Services;
 using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
+using Infrastructure.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,11 +16,13 @@ namespace Infrastructure.Services.Services
     {
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
+        private DateTimeConverter _dateTimeConverter;
 
-        public FarmsService(IRepositoryManager repositoryManager, IMapper mapper)
+        public FarmsService(IRepositoryManager repositoryManager, IMapper mapper, DateTimeConverter dateTimeConverter)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _dateTimeConverter = dateTimeConverter;
         }
 
         public async Task<Guid> CreateFarmAsync(Guid userId, FarmCreatingDto farmDto)
@@ -56,12 +59,13 @@ namespace Infrastructure.Services.Services
         {
             var farms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
             var farmsDto = _mapper.Map<IEnumerable<FarmMinReadingDto>>(farms);
-            foreach(var farm in farmsDto)
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            foreach (var farm in farmsDto)
             {
                 farm.AlivePetsCount = await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farm.Id);
                 farm.DeadPetsCount = await _repositoryManager.Pets.GetFarmDeadPetsCountAsync(farm.Id);
-                farm.AverageHappinessDaysCount = (int) await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farm.Id);
-                //farm.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farm.Id);
+                farm.AverageHappinessDaysCount = (int) await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farm.Id, now);
+                farm.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farm.Id, now);
             }
             return farmsDto;
         }
@@ -70,12 +74,13 @@ namespace Infrastructure.Services.Services
         {
             var farms = await _repositoryManager.Farms.GetFarmsAsync();
             var farmsDto = _mapper.Map<IEnumerable<FarmMinReadingDto>>(farms);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             foreach (var farm in farmsDto)
             {
                 farm.AlivePetsCount = await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farm.Id);
                 farm.DeadPetsCount = await _repositoryManager.Pets.GetFarmDeadPetsCountAsync(farm.Id);
-                farm.AverageHappinessDaysCount = (int)await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farm.Id);
-                //farm.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farm.Id);
+                farm.AverageHappinessDaysCount = (int)await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farm.Id, now);
+                farm.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farm.Id, now);
             }
             return farmsDto;
         }
