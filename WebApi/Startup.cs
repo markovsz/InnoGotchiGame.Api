@@ -31,6 +31,7 @@ namespace WebApi
             services.ConfigureRepositoryManager();
             services.ConfigureIdentity();
             services.AddAutoMapper(typeof(MappingProfile));
+            services.ConfigureServices();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

@@ -26,7 +26,16 @@ namespace WebApi
             services.AddScoped<IRepositoryManager, RepositoryManager>();
         }
 
-        
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddScoped<IPetsService, PetsService>();
+            services.AddScoped<IFarmsService, FarmsService>();
+            services.AddScoped<IFarmFriendsService, FarmFriendsService>();
+            services.AddScoped<IFeedingEventsService, FeedingEventsService>();
+            services.AddScoped<IThirstQuenchingEventsService, ThirstQuenchingEventsService>();
+            services.AddScoped<IUsersService, UsersService>();
+        }
+
         public static void ConfigureIdentity(this IServiceCollection services)
         {
             var builder = services.AddIdentityCore<User>(o =>
