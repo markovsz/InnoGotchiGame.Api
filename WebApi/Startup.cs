@@ -1,4 +1,5 @@
 using Infrastructure.Services;
+using Infrastructure.Services.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,7 @@ namespace WebApi
             services.ConfigureRepositoryManager();
             services.ConfigureIdentity();
             services.AddAutoMapper(typeof(MappingProfile));
+            services.AddScoped<DateTimeConverter>();
             services.ConfigureServices();
             services.AddControllers();
             services.AddSwaggerGen(c =>
