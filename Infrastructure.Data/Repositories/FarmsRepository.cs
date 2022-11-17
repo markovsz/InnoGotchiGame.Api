@@ -27,7 +27,7 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Pets)
             .Include(e => e.FarmFriends)
             .FirstOrDefaultAsync();
-
+        
         public async Task<Farm> GetFarmByUserIdAsync(Guid userId, bool trackChanges) =>
             await GetByCondition(e => e.UserId.Equals(userId), trackChanges)
             .Include(e => e.Pets)
@@ -36,7 +36,6 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Farm>> GetFarmsAsync() => 
             await GetAll(false)
-            .Include(e => e.Pets)
             .ToListAsync();
 
         public async Task<IEnumerable<Farm>> GetFriendFarmsAsync(Guid userId) =>

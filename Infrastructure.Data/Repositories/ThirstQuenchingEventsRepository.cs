@@ -34,10 +34,10 @@ namespace Infrastructure.Data.Repositories
             await GetByCondition(e => e.PetId.Equals(petId), trackChanges)
             .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<DateTime>> GetThirstyDaysAsync(Guid petId) =>
+        public async Task<IEnumerable<long>> GetThirstyDaysAsync(Guid petId) =>
             await GetByCondition(e => e.PetId.Equals(petId), false)
             .Where(e => e.ThirstValueBefore < ThirstLevels.NormalMinThirstValue)
-            .Select(e => new DateTime(e.ThirstQuenchingTime.Year, e.ThirstQuenchingTime.Month, e.ThirstQuenchingTime.Day))
+            .Select(e => e.ThirstQuenchingTime)
             .Distinct()
             .ToListAsync();
     }

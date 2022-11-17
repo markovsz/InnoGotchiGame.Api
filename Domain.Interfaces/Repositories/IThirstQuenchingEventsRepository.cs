@@ -11,7 +11,7 @@ namespace Domain.Interfaces.Repositories
         Task<ThirstQuenchingEvent> GetThirstQuenchingEventByIdAsync(Guid thirstQuenchingEventId, bool trackChanges);
         Task<ThirstQuenchingEvent> GetLastPetThirstQuenchingEventAsync(Guid petId, bool trackChanges);
         Task<IEnumerable<ThirstQuenchingEvent>> GetPetThirstQuenchingEventsAsync(Guid petId);
-        Task<IEnumerable<DateTime>> GetThirstyDaysAsync(Guid petId);
+        Task<IEnumerable<long>> GetThirstyDaysAsync(Guid petId);
         void DeleteThirstQuenchingEvent(ThirstQuenchingEvent thirstQuenchingEvent);
     }
 }

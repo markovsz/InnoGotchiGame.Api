@@ -11,7 +11,7 @@ namespace Domain.Interfaces.Repositories
         Task<FeedingEvent> GetFeedingEventByIdAsync(Guid feedingEventId, bool trackChanges);
         Task<FeedingEvent> GetLastPetFeedingEventAsync(Guid petId, bool trackChanges);
         Task<IEnumerable<FeedingEvent>> GetPetFeedingEventsAsync(Guid petId);
-        Task<IEnumerable<DateTime>> GetHungerDaysAsync(Guid petId);
+        Task<IEnumerable<long>> GetHungerDaysAsync(Guid petId);
         void DeleteFeedingEvent(FeedingEvent feedingEvent);
     }
 }

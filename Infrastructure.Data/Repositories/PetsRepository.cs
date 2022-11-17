@@ -23,17 +23,24 @@ namespace Infrastructure.Data.Repositories
             await GetByCondition(e => e.Id.Equals(petId), trackChanges)
             .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Pet>> GetPetsAsync() =>
+        public async Task<IEnumerable<Pet>> GetPetsAsync(long now) =>
             await GetAll(false)
-            .Where(e => e.DeathDate > DateTime.Now)
-            .Select(e => new Pet(e){ HappinessDaysCount = e.HappinessDaysCount + EF.Functions.DateDiffDay(EF.Functions.DateFromParts(e.LastPetDetailsUpdatingTime.Year, e.LastPetDetailsUpdatingTime.Month, e.LastPetDetailsUpdatingTime.Day), EF.Functions.DateFromParts(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)) })
+            .Where(e => e.DeathDate > now)
+            .Select(e => new Pet(e){ 
+                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+            })
             .OrderByDescending(e => e.HappinessDaysCount)
             .ToListAsync();
 
-        public async Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId) =>
+        public async Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId, long now) =>
             await GetAll(false)
             .Include(e => e.Farm)
             .Where(e => e.Farm.UserId.Equals(userId))
+            .Select(e => new Pet(e)
+            {
+                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+            })
+            .OrderByDescending(e => e.HappinessDaysCount)
             .ToListAsync();
 
         public async Task<int> GetFarmDeadPetsCountAsync(Guid farmId) =>
@@ -46,9 +53,14 @@ namespace Infrastructure.Data.Repositories
             .Where(e => e.IsAlive)
             .CountAsync();
 
-        public async Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId) =>
+        public async Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
-            .Select(e => e.HappinessDaysCount)
+            .Select(e => e.HappinessDaysCount + (int)((e.LastPetDetailsUpdatingTime - e.LastPetDetailsUpdatingTime % (60 * 60 * 24) - now + now % (60 * 60 * 24)) / (60 * 60 * 24)))
+            .AverageAsync();
+
+        public async Task<double> GetFarmAveragePetsAgeAsync(Guid farmId, long now) =>
+            await GetByCondition(e => e.FarmId.Equals(farmId), false)
+            .Select(e => (now - e.BirthDate) / (60 * 60 * 24 * 365))
             .AverageAsync();
 
         public void UpdatePet(Pet pet) => Update(pet);

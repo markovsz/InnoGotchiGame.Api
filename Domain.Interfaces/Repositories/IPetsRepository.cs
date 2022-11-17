@@ -9,11 +9,12 @@ namespace Domain.Interfaces.Repositories
     {
         Task CreatePetAsync(Pet pet);
         Task<Pet> GetPetByIdAsync(Guid petId, bool trackChanges);
-        Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId);
-        Task<IEnumerable<Pet>> GetPetsAsync();
+        Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId, long now);
+        Task<IEnumerable<Pet>> GetPetsAsync(long now);
         Task<int> GetFarmDeadPetsCountAsync(Guid farmId);
         Task<int> GetFarmAlivePetsCountAsync(Guid farmId);
-        Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId);
+        Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId, long now);
+        Task<double> GetFarmAveragePetsAgeAsync(Guid farmId, long now);
         void UpdatePet(Pet pet);
         void DeletePet(Pet pet);
     }

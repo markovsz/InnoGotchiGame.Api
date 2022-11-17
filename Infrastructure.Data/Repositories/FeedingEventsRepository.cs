@@ -27,10 +27,10 @@ namespace Infrastructure.Data.Repositories
             await GetByCondition(e => e.PetId.Equals(petId), trackChanges)
             .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<DateTime>> GetHungerDaysAsync(Guid petId) =>
+        public async Task<IEnumerable<long>> GetHungerDaysAsync(Guid petId) =>
             await GetByCondition(e => e.PetId.Equals(petId), false)
             .Where(e => e.HungerValueBefore < HungerLevels.NormalMinHungerValue)
-            .Select(e => new DateTime(e.FeedingTime.Year, e.FeedingTime.Month, e.FeedingTime.Day))
+            .Select(e => e.FeedingTime)
             .Distinct()
             .ToListAsync();
 
