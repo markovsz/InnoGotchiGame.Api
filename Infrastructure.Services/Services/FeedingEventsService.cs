@@ -41,28 +41,7 @@ namespace Infrastructure.Services.Services
             await _repositoryManager.SaveChangeAsync();
         }
 
-        public async Task<FeedingEventReadingDto> GetFeedingEventByIdAsync(Guid eventId)
-        {
-            var feedingEvent = await _repositoryManager.FeedingEvents.GetFeedingEventByIdAsync(eventId, false);
-            var feedingEventDto = _mapper.Map<FeedingEventReadingDto>(feedingEvent);
-            return feedingEventDto;
-        }
-        
-        public async Task<FeedingEventReadingDto> GetLastPetFeedingEventAsync(Guid petId)
-        {
-            var feedingEvent = await _repositoryManager.FeedingEvents.GetLastPetFeedingEventAsync(petId, false);
-            var feedingEventDto = _mapper.Map<FeedingEventReadingDto>(feedingEvent);
-            return feedingEventDto;
-        }
-
-        public async Task<IEnumerable<FeedingEventReadingDto>> GetPetFeedingEventsAsync(Guid petId)
-        {
-            var feedingEvents = await _repositoryManager.FeedingEvents.GetPetFeedingEventsAsync(petId);
-            var feedingEventsDto = _mapper.Map<IEnumerable<FeedingEventReadingDto>>(feedingEvents);
-            return feedingEventsDto;
-        }
-
-        public async Task<IEnumerable<DateTime>> GetHungerDaysAsync(Guid petId)
+        public async Task<double> GetAverageTimeBetweenFeedingAsync(Guid petId)
         {
             throw new NotImplementedException();
         }

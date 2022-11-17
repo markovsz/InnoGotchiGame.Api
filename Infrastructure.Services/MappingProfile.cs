@@ -38,10 +38,8 @@ namespace Infrastructure.Services
             CreateMap<FarmFriend, PetReadingDto>();
 
             CreateMap<FeedingEventCreatingDto, FeedingEvent>();
-            CreateMap<FeedingEvent, FeedingEventReadingDto>();
 
             CreateMap<ThirstQuenchingEventCreatingDto, ThirstQuenchingEvent>();
-            CreateMap<ThirstQuenchingEvent, ThirstQuenchingEventReadingDto>();
         }
     }
 }

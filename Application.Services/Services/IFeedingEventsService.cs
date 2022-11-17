@@ -12,10 +12,7 @@ namespace Application.Services.Services
     public interface IFeedingEventsService
     {
         Task<Guid> CreateFeedingEventAsync(FeedingEventCreatingDto thirstQuenchingEventDto);
-        Task<FeedingEventReadingDto> GetFeedingEventByIdAsync(Guid eventId);
-        Task<FeedingEventReadingDto> GetLastPetFeedingEventAsync(Guid petId);
-        Task<IEnumerable<FeedingEventReadingDto>> GetPetFeedingEventsAsync(Guid petId);
-        Task<IEnumerable<DateTime>> GetHungerDaysAsync(Guid petId);
+        Task<double> GetAverageTimeBetweenFeedingAsync(Guid petId);
         Task DeleteFeedingEventByIdAsync(Guid eventId);
     }
 }
