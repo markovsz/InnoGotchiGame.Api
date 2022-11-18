@@ -32,6 +32,7 @@ namespace WebApi
             services.ConfigureIdentity();
             services.AddAutoMapper(typeof(MappingProfile));
             services.ConfigureServices();
+            services.ConfigureJwt(Configuration);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -53,6 +54,7 @@ namespace WebApi
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
