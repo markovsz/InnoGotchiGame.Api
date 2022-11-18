@@ -1,5 +1,6 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +21,7 @@ namespace WebApi.Controllers
             _farmFriendsService = farmFriendsService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateFarmFriendAsync([FromBody] FarmFriendCreatingDto farmDto)
         {
@@ -27,6 +29,7 @@ namespace WebApi.Controllers
             return Created($"{farmFriendId}", new { Id = farmFriendId });
         }
 
+        [Authorize]
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserFarmFriendsAsync(Guid userId)
         {
@@ -34,6 +37,7 @@ namespace WebApi.Controllers
             return Ok(farmFriends);
         }
 
+        [Authorize]
         [HttpDelete("user/{userId}")]
         public async Task<IActionResult> DeleteFarmFriendByIdAsync(Guid userId)
         {

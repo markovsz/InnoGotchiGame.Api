@@ -1,6 +1,7 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Updating;
 using Application.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,7 @@ namespace WebApi.Controllers
             _farmsService = farmsService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateFarmAsync(Guid userId, [FromBody] FarmCreatingDto farmDto)
         {
@@ -28,6 +30,7 @@ namespace WebApi.Controllers
             return Created($"{farmId}", new { Id = farmId });
         }
 
+        [Authorize]
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetFarmByUserIdAsync(Guid userId)
         {
@@ -35,6 +38,7 @@ namespace WebApi.Controllers
             return Ok(farmDto);
         }
 
+        [Authorize]
         [HttpGet("friends")]
         public async Task<IActionResult> GetFriendFarmsAsync(Guid userId)
         {
@@ -42,6 +46,7 @@ namespace WebApi.Controllers
             return Ok(farms);
         }
 
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> GetFarmsAsync()
         {
@@ -49,6 +54,7 @@ namespace WebApi.Controllers
             return Ok(farms);
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateFarmAsync([FromBody] FarmUpdatingDto farmDto)
         {
@@ -56,6 +62,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("farm/{farmId}")]
         public async Task<IActionResult> DeleteFarmByIdAsync(Guid farmId)
         {
@@ -63,6 +70,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("user/{userId}")]
         public async Task<IActionResult> DeleteFarmByUserIdAsync(Guid userId)
         {
