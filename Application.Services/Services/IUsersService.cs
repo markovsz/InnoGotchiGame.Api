@@ -10,7 +10,6 @@ namespace Application.Services.Services
     public interface IUsersService
     {
         Task<Guid> CreateUserAsync(UserCreatingDto userDto);
-        Task<UserAccessDto> SignInAsync(UserAuthenticationDto userDto);
         Task<UserReadingDto> GetUserInfoByIdAsync(Guid userId);
         Task UpdateUserAsync(Guid userId, UserUpdatingDto userDto);
         Task ChangePasswordAsync(Guid userId, PasswordChangingDto passwordUpdatingDto);
