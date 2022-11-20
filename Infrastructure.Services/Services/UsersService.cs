@@ -64,8 +64,6 @@ namespace Infrastructure.Services.Services
         public async Task DeleteUserByIdAsync(Guid userId) //TODO: user info deletion
         {
             var userInfo = await _repositoryManager.UsersInfo.GetUserInfoByUserIdAsync(userId, false);
-            //_repositoryManager.UsersInfo.DeleteUserInfo(userInfo);
-            //await _repositoryManager.SaveChangeAsync();
             await _farmsService.DeleteFarmByUserIdAsync(userId);
             var user = await _userManager.FindByIdAsync(userId.ToString());
             var result = await _userManager.DeleteAsync(user);
@@ -85,12 +83,6 @@ namespace Infrastructure.Services.Services
             userInfo.UserId = userId;
             _repositoryManager.UsersInfo.UpdateUserInfo(userInfo);
             await _repositoryManager.SaveChangeAsync();
-        }
-
-        public async Task<UserAccessDto> SignInAsync(UserAuthenticationDto userDto)
-        {
-            var user = await _userManager.FindByEmailAsync(userDto.Email);
-            return new UserAccessDto { JwtToken = "token" };
         }
     }
 }

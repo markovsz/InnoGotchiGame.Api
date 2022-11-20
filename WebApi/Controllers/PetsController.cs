@@ -1,6 +1,7 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Updating;
 using Application.Services.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,7 @@ namespace WebApi.Controllers
             _petsService = petsService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreatePetAsync([FromBody] PetCreatingDto petDto)
         {
@@ -28,6 +30,7 @@ namespace WebApi.Controllers
             return Created($"{petId}", new { Id = petId });
         }
 
+        [Authorize]
         [HttpGet("pet/{petId}")]
         public async Task<IActionResult> GetPetByIdAsync(Guid petId)
         {
@@ -35,6 +38,7 @@ namespace WebApi.Controllers
             return Ok(petDto);
         }
 
+        [Authorize]
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetUserPetsAsync(Guid userId)
         {
@@ -42,6 +46,7 @@ namespace WebApi.Controllers
             return Ok(petDto);
         }
 
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> GetPetsAsync()
         {
@@ -49,6 +54,7 @@ namespace WebApi.Controllers
             return Ok(pets);
         }
 
+        [Authorize]
         [HttpPost("pet/{petId}/feed")]
         public async Task<IActionResult> FeedPetAsync(Guid petId)
         {
@@ -56,6 +62,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost("pet/{petId}/thristQuenching")] //TODO: change it's address
         public async Task<IActionResult> QuenchPetThirstAsync(Guid petId)
         {
@@ -63,6 +70,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPut("pet/{petId}")]
         public async Task<IActionResult> UpdatePetAsync(Guid petId, [FromBody] PetUpdatingDto petDto)
         {
