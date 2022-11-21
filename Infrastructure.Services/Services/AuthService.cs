@@ -1,6 +1,7 @@
 ﻿using Application.Services.DataTransferObjects;
 using Application.Services.Services;
 using Domain.Core.Models;
+using Infrastructure.Services.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace Infrastructure.Services.Services
         public async Task<UserAccessDto> SignInAsync(UserAuthenticationDto userDto)
         {
             var user = await _userManager.FindByEmailAsync(userDto.Email);
+            if (user is null)
+                throw new UserWasntFoundException("user wasn't found");
             var jwtToken = await _jwtTokensGeneratorService.CreateJwtToken(user);
             return new UserAccessDto { JwtToken = jwtToken };
         }
