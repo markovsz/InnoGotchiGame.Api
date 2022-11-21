@@ -35,6 +35,7 @@ namespace WebApi
             services.AddScoped<DateTimeConverter>();
             services.ConfigureServices();
             services.ConfigureJwt(Configuration);
+            services.ConfigureFilters();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

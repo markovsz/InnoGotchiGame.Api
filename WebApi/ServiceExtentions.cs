@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using WebApi.Filters;
 
 namespace WebApi
 {
@@ -77,5 +78,11 @@ namespace WebApi
                 };
             });
         }
+
+        public static void ConfigureFilters(this IServiceCollection services)
+        {
+            services.AddScoped<ExtractUserIdFilter>();
+        }
+
     }
 }
