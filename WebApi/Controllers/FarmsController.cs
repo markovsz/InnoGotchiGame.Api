@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Filters;
 
 namespace WebApi.Controllers
 {
@@ -39,6 +40,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpGet("friends")]
         public async Task<IActionResult> GetFriendFarmsAsync(Guid userId)
         {
@@ -55,23 +57,16 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> UpdateFarmAsync([FromBody] FarmUpdatingDto farmDto)
+        [HttpPut("farm")]
+        public async Task<IActionResult> UpdateFarmAsync([FromBody] FarmUpdatingDto farmDto, Guid userId)
         {
-            await _farmsService.UpdateFarmAsync(farmDto);
+            await _farmsService.UpdateFarmAsync(farmDto, userId);
             return NoContent();
         }
 
         [Authorize]
-        [HttpDelete("farm/{farmId}")]
-        public async Task<IActionResult> DeleteFarmByIdAsync(Guid farmId)
-        {
-            await _farmsService.DeleteFarmByIdAsync(farmId);
-            return NoContent();
-        }
-
-        [Authorize]
-        [HttpDelete("user/{userId}")]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpDelete("farm")]
         public async Task<IActionResult> DeleteFarmByUserIdAsync(Guid userId)
         {
             await _farmsService.DeleteFarmByUserIdAsync(userId);

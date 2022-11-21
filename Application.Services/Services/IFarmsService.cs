@@ -13,7 +13,7 @@ namespace Application.Services.Services
         Task<FarmReadingDto> GetFarmByUserIdAsync(Guid userId);
         Task<IEnumerable<FarmMinReadingDto>> GetFriendFarmsAsync(Guid userId);
         Task<IEnumerable<FarmMinReadingDto>> GetFarmsAsync();
-        Task UpdateFarmAsync(FarmUpdatingDto farmDto);
+        Task UpdateFarmAsync(FarmUpdatingDto farmDto, Guid userId);
         Task DeleteFarmByIdAsync(Guid Id);
         Task DeleteFarmByUserIdAsync(Guid userId);
     }

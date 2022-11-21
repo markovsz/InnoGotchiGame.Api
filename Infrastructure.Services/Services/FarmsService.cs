@@ -85,9 +85,12 @@ namespace Infrastructure.Services.Services
             return farmsDto;
         }
 
-        public async Task UpdateFarmAsync(FarmUpdatingDto farmDto)
+        public async Task UpdateFarmAsync(FarmUpdatingDto farmDto, Guid userId)
         {
-            var farm = _mapper.Map<Farm>(farmDto);
+            var farm = await _repositoryManager.Farms.GetFarmByIdAsync(farmDto.Id, false);
+            if (farm.UserId != userId)
+                throw new InvalidOperationException("you can't update this farm");
+            var farmForUpdating = _mapper.Map<Farm>(farmDto);
             _repositoryManager.Farms.UpdateFarm(farm);
             await _repositoryManager.SaveChangeAsync();
         }
