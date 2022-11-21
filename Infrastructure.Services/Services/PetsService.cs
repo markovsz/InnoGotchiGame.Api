@@ -32,8 +32,12 @@ namespace Infrastructure.Services.Services
             _dateTimeConverter = dateTimeConverter;
         }
 
-        public async Task<Guid> CreatePetAsync(PetCreatingDto petDto)
+        public async Task<Guid> CreatePetAsync(PetCreatingDto petDto, Guid userId)
         {
+            var user = await _repositoryManager.Farms.GetFarmByIdAsync(petDto.FarmId, false);
+            if (user.UserId != userId)
+                throw new InvalidOperationException("you don't have permissions");
+
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
             var pet = _mapper.Map<Pet>(petDto);
@@ -60,9 +64,13 @@ namespace Infrastructure.Services.Services
             await _repositoryManager.SaveChangeAsync();
         }
 
-        public async Task FeedPetAsync(Guid petId)
+        public async Task FeedPetAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
+            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
+            var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
+            if (!friendFarms.Where(e => e.Pets.Where(p => p.Id.Equals(petId)).Any()).Any() && farm.UserId != userId)
+                throw new InvalidOperationException("you can't feed this pet");
 
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             await UpdatePetVitalSignsAsync(pet, now);
@@ -77,9 +85,13 @@ namespace Infrastructure.Services.Services
             await _repositoryManager.SaveChangeAsync();
         }
 
-        public async Task QuenchPetThirstAsync(Guid petId)
+        public async Task QuenchPetThirstAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
+            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
+            var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
+            if (!friendFarms.Where(e => e.Pets.Where(p => p.Id.Equals(petId)).Any()).Any() && farm.UserId != userId)
+                throw new InvalidOperationException("you can't feed this pet");
 
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             await UpdatePetVitalSignsAsync(pet, now);
@@ -123,11 +135,16 @@ namespace Infrastructure.Services.Services
             return petsDto;
         }
 
-        public async Task UpdatePetAsync(Guid petId, PetUpdatingDto petDto)
+        public async Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId)
         {
-            var pet = _mapper.Map<Pet>(petDto);
-            pet.Id = petId;
-            _repositoryManager.Pets.UpdatePet(pet);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petDto.petId, false);
+            var farm = await _repositoryManager.Farms.GetFarmByIdAsync(pet.FarmId, false);
+            if (farm.UserId != userId)
+                throw new InvalidOperationException("you can't update this pet");
+
+            var petForUpdating = _mapper.Map<Pet>(petDto);
+            pet.Id = petDto.petId;
+            _repositoryManager.Pets.UpdatePet(petForUpdating);
             await _repositoryManager.SaveChangeAsync();
         }
 

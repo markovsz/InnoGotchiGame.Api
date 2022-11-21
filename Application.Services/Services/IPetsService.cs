@@ -9,13 +9,13 @@ namespace Application.Services.Services
 {
     public interface IPetsService
     {
-        Task<Guid> CreatePetAsync(PetCreatingDto petDto);
-        Task FeedPetAsync(Guid petId);
-        Task QuenchPetThirstAsync(Guid petId);
+        Task<Guid> CreatePetAsync(PetCreatingDto petDto, Guid userId);
+        Task FeedPetAsync(Guid petId, Guid userId);
+        Task QuenchPetThirstAsync(Guid petId, Guid userId);
         Task<PetReadingDto> GetPetByIdAsync(Guid petId);
         Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId);
         Task<IEnumerable<PetMinReadingDto>> GetPetsAsync();
-        Task UpdatePetAsync(Guid petId, PetUpdatingDto petDto);
+        Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId);
         Task DeletePetByIdAsync(Guid petId);
     }
 }

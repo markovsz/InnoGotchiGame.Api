@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Filters;
 
 namespace WebApi.Controllers
 {
@@ -23,10 +24,11 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpPost]
-        public async Task<IActionResult> CreatePetAsync([FromBody] PetCreatingDto petDto)
+        public async Task<IActionResult> CreatePetAsync([FromBody] PetCreatingDto petDto, Guid userId)
         {
-            var petId = await _petsService.CreatePetAsync(petDto);
+            var petId = await _petsService.CreatePetAsync(petDto, userId);
             return Created($"{petId}", new { Id = petId });
         }
 
@@ -55,26 +57,29 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpPost("pet/{petId}/feed")]
-        public async Task<IActionResult> FeedPetAsync(Guid petId)
+        public async Task<IActionResult> FeedPetAsync(Guid petId, Guid userId)
         {
-            await _petsService.FeedPetAsync(petId);
+            await _petsService.FeedPetAsync(petId, userId);
             return NoContent();
         }
 
         [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpPost("pet/{petId}/thristQuenching")] //TODO: change it's address
-        public async Task<IActionResult> QuenchPetThirstAsync(Guid petId)
+        public async Task<IActionResult> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
-            await _petsService.QuenchPetThirstAsync(petId);
+            await _petsService.QuenchPetThirstAsync(petId, userId);
             return NoContent();
         }
 
         [Authorize]
-        [HttpPut("pet/{petId}")]
-        public async Task<IActionResult> UpdatePetAsync(Guid petId, [FromBody] PetUpdatingDto petDto)
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpPut("pet")]
+        public async Task<IActionResult> UpdatePetAsync([FromBody] PetUpdatingDto petDto, Guid userId)
         {
-            await _petsService.UpdatePetAsync(petId, petDto);
+            await _petsService.UpdatePetAsync(petDto, userId);
             return NoContent();
         }
     }
