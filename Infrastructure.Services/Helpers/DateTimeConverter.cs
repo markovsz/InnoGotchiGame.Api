@@ -27,8 +27,7 @@ namespace Infrastructure.Services.Helpers
 
         public int GetYears(long time)
         {
-            var f = startingDate.AddSeconds(time);
-            return startingDate.AddSeconds(time).Year - startingDate.Year; //TODO: think of it
+            return startingDate.AddSeconds(time).Year - startingDate.Year;
         }
 
         public long GetDays(long time)
