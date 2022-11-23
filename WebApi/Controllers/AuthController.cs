@@ -16,7 +16,7 @@ namespace WebApi.Controllers
             _authService = authService;
         }
 
-        [HttpPost("signIn")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> SignInAsync(UserAuthenticationDto authDto)
         {
             var accessDto = await _authService.SignInAsync(authDto);
