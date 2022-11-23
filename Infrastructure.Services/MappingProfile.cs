@@ -32,6 +32,8 @@ namespace Infrastructure.Services
                 .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
                 .ForMember(e => e.Age, opt => opt.MapFrom(src => new DateTimeConverter().GetYears(new DateTimeConverter().ConvertToPetsTime(DateTime.Now) - src.BirthDate)));
             CreateMap<Pet, PetMinReadingDto>()
+                .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
+                .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
                 .ForMember(e => e.Age, opt => opt.MapFrom(src => new DateTimeConverter().GetYears(new DateTimeConverter().ConvertToPetsTime(DateTime.Now) - src.BirthDate)));
             CreateMap<PetUpdatingDto, Pet>();
 
