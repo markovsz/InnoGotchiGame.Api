@@ -156,10 +156,10 @@ namespace Infrastructure.Services.Services
             var thirstValue = CalculateThirstValueAtTime(pet.ThirstValue, pet.LastPetDetailsUpdatingTime, updationTime);
             pet.HungerValue = hungerValue;
             pet.ThirstValue = thirstValue;
-            pet.LastPetDetailsUpdatingTime = updationTime;
             if (hungerValue >= HungerLevels.NormalMinHungerValue && thirstValue >= ThirstLevels.NormalMinThirstValue)
             {
                 pet.HappinessDaysCount = GetPetHappinessDaysCountAtTime(pet.HappinessDaysCount, pet.LastPetDetailsUpdatingTime, updationTime);
+                pet.LastPetDetailsUpdatingTime = updationTime;
                 return;
             }
             if (!IsPetAlive(hungerValue, thirstValue)) await MakePetDeadAsync(pet, hungerValue, thirstValue, updationTime);
@@ -168,7 +168,7 @@ namespace Infrastructure.Services.Services
         public float CalculateHungerValueAtTime(float hungerValue, long lastPetDetailsUpdatingTime, long time)
         {
             var lastFeedingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime); // in pet's time
-            hungerValue -= lastFeedingTimeSpan * PetSettings.HungerUnitsPerPetsHour; //TODO: keep it in mind, that you don't know, what TotalHours is. Ticks into seconds
+            hungerValue -= lastFeedingTimeSpan * PetSettings.HungerUnitsPerPetsHour;
 
             return hungerValue;
         }
@@ -176,7 +176,7 @@ namespace Infrastructure.Services.Services
         public float CalculateThirstValueAtTime(float thirstValue, long lastPetDetailsUpdatingTime, long time)
         {
             var lastThirstQuenchingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime); // in pet's time
-            thirstValue -= lastThirstQuenchingTimeSpan * PetSettings.ThirstUnitsPerPetsHour; //TODO: keep it in mind, that you don't know, what TotalHours is. Ticks into seconds
+            thirstValue -= lastThirstQuenchingTimeSpan * PetSettings.ThirstUnitsPerPetsHour;
             return thirstValue;
         }
 
