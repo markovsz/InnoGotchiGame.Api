@@ -55,6 +55,13 @@ namespace Infrastructure.Services.Services
             return farmDto;
         }
 
+        public async Task<FarmMinReadingDto> GetMinFarmByUserIdAsync(Guid userId)
+        {
+            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
+            var farmDto = _mapper.Map<FarmMinReadingDto>(farm);
+            return farmDto;
+        }
+
         public async Task<IEnumerable<FarmMinReadingDto>> GetFriendFarmsAsync(Guid userId)
         {
             var farms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);

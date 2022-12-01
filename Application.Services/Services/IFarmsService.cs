@@ -11,6 +11,7 @@ namespace Application.Services.Services
     {
         Task<Guid> CreateFarmAsync(Guid userId, FarmCreatingDto farmDto);
         Task<FarmReadingDto> GetFarmByUserIdAsync(Guid userId);
+        Task<FarmMinReadingDto> GetMinFarmByUserIdAsync(Guid userId);
         Task<IEnumerable<FarmMinReadingDto>> GetFriendFarmsAsync(Guid userId);
         Task<IEnumerable<FarmMinReadingDto>> GetFarmsAsync();
         Task UpdateFarmAsync(FarmUpdatingDto farmDto, Guid userId);
