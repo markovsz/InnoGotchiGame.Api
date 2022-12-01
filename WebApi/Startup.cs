@@ -36,6 +36,7 @@ namespace WebApi
             services.ConfigureServices();
             services.ConfigureJwt(Configuration);
             services.ConfigureFilters();
+            services.AddCors();
             services.AddControllers();
             services.ConfigureSwagger();
         }
@@ -50,10 +51,15 @@ namespace WebApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
             }
 
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
+
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
