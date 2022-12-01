@@ -64,7 +64,7 @@ namespace Infrastructure.Services.Services
             await _repositoryManager.SaveChangeAsync();
         }
 
-        public async Task FeedPetAsync(Guid petId, Guid userId)
+        public async Task<string> FeedPetAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
@@ -83,9 +83,10 @@ namespace Infrastructure.Services.Services
             await _feedingEventsService.CreateFeedingEventAsync(new FeedingEventCreatingDto { PetId = pet.Id });
             pet.HungerValue += PetSettings.FeedingUnit;
             await _repositoryManager.SaveChangeAsync();
+            return HungerLevels.GetHungerLevelName(pet.HungerValue);
         }
 
-        public async Task QuenchPetThirstAsync(Guid petId, Guid userId)
+        public async Task<string> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
@@ -104,6 +105,7 @@ namespace Infrastructure.Services.Services
             await _thirstQuenchingEventsService.CreateThirstQuenchingEventAsync(new ThirstQuenchingEventCreatingDto { PetId = pet.Id });
             pet.ThirstValue += PetSettings.ThirstQuenchingUnit;
             await _repositoryManager.SaveChangeAsync();
+            return ThirstLevels.GetThirstLevelName(pet.ThirstValue);
         }
 
         public async Task<PetReadingDto> GetPetByIdAsync(Guid petId)

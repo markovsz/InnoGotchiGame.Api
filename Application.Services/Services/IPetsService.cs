@@ -10,8 +10,8 @@ namespace Application.Services.Services
     public interface IPetsService
     {
         Task<Guid> CreatePetAsync(PetCreatingDto petDto, Guid userId);
-        Task FeedPetAsync(Guid petId, Guid userId);
-        Task QuenchPetThirstAsync(Guid petId, Guid userId);
+        Task<string> FeedPetAsync(Guid petId, Guid userId);
+        Task<string> QuenchPetThirstAsync(Guid petId, Guid userId);
         Task<PetReadingDto> GetPetByIdAsync(Guid petId);
         Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId);
         Task<IEnumerable<PetMinReadingDto>> GetPetsAsync();
