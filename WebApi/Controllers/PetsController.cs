@@ -61,17 +61,17 @@ namespace WebApi.Controllers
         [HttpPost("pet/{petId}/feed")]
         public async Task<IActionResult> FeedPetAsync(Guid petId, Guid userId)
         {
-            await _petsService.FeedPetAsync(petId, userId);
-            return NoContent();
+            var currentHungerLevel = await _petsService.FeedPetAsync(petId, userId);
+            return Ok(Content(currentHungerLevel));
         }
 
         [Authorize]
         [ServiceFilter(typeof(ExtractUserIdFilter))]
-        [HttpPost("pet/{petId}/thristQuenching")] //TODO: change it's address
+        [HttpPost("pet/{petId}/give-drink")]
         public async Task<IActionResult> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
-            await _petsService.QuenchPetThirstAsync(petId, userId);
-            return NoContent();
+            var currentThirstLevel = await _petsService.QuenchPetThirstAsync(petId, userId);
+            return Ok(Content(currentThirstLevel));
         }
 
         [Authorize]
