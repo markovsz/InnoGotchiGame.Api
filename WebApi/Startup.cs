@@ -1,5 +1,9 @@
+using Application.Services.Helpers;
+using Application.Services.Services;
+using AutoMapper;
 using Infrastructure.Services;
 using Infrastructure.Services.Helpers;
+using Infrastructure.Services.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,8 +35,8 @@ namespace WebApi
             services.ConfigureDbContext(Configuration);
             services.ConfigureRepositoryManager();
             services.ConfigureIdentity();
+            services.ConfigureServiceHelpers();
             services.AddAutoMapper(typeof(MappingProfile));
-            services.AddScoped<DateTimeConverter>();
             services.ConfigureServices();
             services.ConfigureJwt(Configuration);
             services.ConfigureFilters();

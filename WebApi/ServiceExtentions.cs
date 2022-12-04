@@ -1,9 +1,9 @@
-﻿using Application.Services.Services;
+﻿using Application.Services.Helpers;
+using Application.Services.Services;
 using Domain.Core.Models;
 using Domain.Interfaces;
-using Domain.Interfaces.Repositories;
 using Infrastructure.Data;
-using Infrastructure.Data.Repositories;
+using Infrastructure.Services.Helpers;
 using Infrastructure.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +29,12 @@ namespace WebApi
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
             services.AddScoped<IRepositoryManager, RepositoryManager>();
+        }
+
+        public static void ConfigureServiceHelpers(this IServiceCollection services)
+        {
+            services.AddSingleton<IDateTimeConverter, DateTimeConverter>();
+            services.AddScoped<IPetStatsCalculatingService, PetStatsCalculatingService>();
         }
 
         public static void ConfigureServices(this IServiceCollection services)
