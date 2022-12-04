@@ -1,10 +1,9 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
-using Application.Services.DataTransferObjects.Reading;
+using Application.Services.Helpers;
 using Application.Services.Services;
 using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
-using Infrastructure.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +15,9 @@ namespace Infrastructure.Services.Services
     {
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
-        private DateTimeConverter _dateTimeConverter;
+        private IDateTimeConverter _dateTimeConverter;
 
-        public ThirstQuenchingEventsService(IRepositoryManager repositoryManager, IMapper mapper, DateTimeConverter dateTimeConverter)
+        public ThirstQuenchingEventsService(IRepositoryManager repositoryManager, IMapper mapper, IDateTimeConverter dateTimeConverter)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
