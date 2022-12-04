@@ -45,6 +45,11 @@ namespace Infrastructure.Services
             CreateMap<FeedingEventCreatingDto, FeedingEvent>();
 
             CreateMap<ThirstQuenchingEventCreatingDto, ThirstQuenchingEvent>();
+
+            CreateMap<FarmFriend, FarmFriendReadingDto>()
+                .ForMember(e => e.FirstName, opt => opt.MapFrom(src => src.UserInfo.FirstName))
+                .ForMember(e => e.LastName, opt => opt.MapFrom(src => src.UserInfo.LastName))
+                .ForMember(e => e.PictureSrc, opt => opt.MapFrom(src => src.UserInfo.PictureSrc));
         }
     }
 }
