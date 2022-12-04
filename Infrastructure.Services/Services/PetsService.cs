@@ -1,17 +1,18 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Reading;
 using Application.Services.DataTransferObjects.Updating;
+using Application.Services.Helpers;
 using Application.Services.Services;
 using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Services.Exceptions;
+using Infrastructure.Services.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using Infrastructure.Services.Helpers;
-using Infrastructure.Services.Exceptions;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Services
 {
@@ -21,14 +22,16 @@ namespace Infrastructure.Services.Services
         private IThirstQuenchingEventsService _thirstQuenchingEventsService;
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
-        private DateTimeConverter _dateTimeConverter;
+        private IDateTimeConverter _dateTimeConverter;
+        private IPetStatsCalculatingService _petStatsCalculatingService;
 
-        public PetsService(IFeedingEventsService feedingEventsService, IThirstQuenchingEventsService thirstQuenchingEventsService, IRepositoryManager repositoryManager, IMapper mapper, DateTimeConverter dateTimeConverter)
+        public PetsService(IFeedingEventsService feedingEventsService, IThirstQuenchingEventsService thirstQuenchingEventsService, IRepositoryManager repositoryManager, IMapper mapper, IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter)
         {
             _feedingEventsService = feedingEventsService;
             _thirstQuenchingEventsService = thirstQuenchingEventsService;
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _petStatsCalculatingService = petStatsCalculatingService;
             _dateTimeConverter = dateTimeConverter;
         }
 
@@ -47,7 +50,7 @@ namespace Infrastructure.Services.Services
             pet.ThirstValue = ThirstLevels.FullMinThirstValue;
             pet.IsAlive = true;
             pet.HappinessDaysCount = 0;
-            pet.DeathDate = CalculateDeathDate(pet.HungerValue, pet.ThirstValue, now);
+            pet.DeathDate = _petStatsCalculatingService.CalculateDeathDate(pet.HungerValue, pet.ThirstValue, now);
             pet.LastPetDetailsUpdatingTime = now;
             await _repositoryManager.SaveChangeAsync();
             var feedingEvent = new FeedingEventCreatingDto { PetId = pet.Id };
@@ -66,14 +69,15 @@ namespace Infrastructure.Services.Services
 
         public async Task<string> FeedPetAsync(Guid petId, Guid userId)
         {
+
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
             var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
             if (!friendFarms.Where(e => e.Pets.Where(p => p.Id.Equals(petId)).Any()).Any() && farm.UserId != userId)
                 throw new InvalidOperationException("you can't feed this pet");
 
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            await UpdatePetVitalSignsAsync(pet, now);
             if (!pet.IsAlive)
                 throw new PetIsDeadException("you can't feed a dead pet");
 
@@ -89,13 +93,13 @@ namespace Infrastructure.Services.Services
         public async Task<string> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
             var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
             if (!friendFarms.Where(e => e.Pets.Where(p => p.Id.Equals(petId)).Any()).Any() && farm.UserId != userId)
                 throw new InvalidOperationException("you can't feed this pet");
 
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            await UpdatePetVitalSignsAsync(pet, now);
             if (!pet.IsAlive) 
                 throw new PetIsDeadException("you can't feed a dead pet");
 
@@ -111,8 +115,6 @@ namespace Infrastructure.Services.Services
         public async Task<PetReadingDto> GetPetByIdAsync(Guid petId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            await UpdatePetVitalSignsAsync(pet, now);
             var petDto = _mapper.Map<PetReadingDto>(pet);
             return petDto;
         }
@@ -121,8 +123,6 @@ namespace Infrastructure.Services.Services
         {
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             var pets = await _repositoryManager.Pets.GetPetsAsync(now);
-            foreach (var pet in pets)
-                await UpdatePetVitalSignsAsync(pet, now);
             var petsDto = _mapper.Map<IEnumerable<PetMinReadingDto>>(pets);
             return petsDto;
         }
@@ -131,8 +131,6 @@ namespace Infrastructure.Services.Services
         {
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             var pets = await _repositoryManager.Pets.GetUserPetsAsync(userId, now);
-            foreach (var pet in pets)
-                await UpdatePetVitalSignsAsync(pet, now);
             var petsDto = _mapper.Map<IEnumerable<PetReadingDto>>(pets);
             return petsDto;
         }
@@ -153,64 +151,6 @@ namespace Infrastructure.Services.Services
 
 
 
-        public async Task UpdatePetVitalSignsAsync(Pet pet, long updationTime) {
-            var hungerValue = CalculateHungerValueAtTime(pet.HungerValue, pet.LastPetDetailsUpdatingTime, updationTime);
-            var thirstValue = CalculateThirstValueAtTime(pet.ThirstValue, pet.LastPetDetailsUpdatingTime, updationTime);
-            pet.HungerValue = hungerValue;
-            pet.ThirstValue = thirstValue;
-            if (hungerValue >= HungerLevels.NormalMinHungerValue && thirstValue >= ThirstLevels.NormalMinThirstValue)
-            {
-                pet.HappinessDaysCount = GetPetHappinessDaysCountAtTime(pet.HappinessDaysCount, pet.LastPetDetailsUpdatingTime, updationTime);
-                pet.LastPetDetailsUpdatingTime = updationTime;
-                return;
-            }
-            if (!IsPetAlive(hungerValue, thirstValue)) await MakePetDeadAsync(pet, hungerValue, thirstValue, updationTime);
-        }
-
-        public float CalculateHungerValueAtTime(float hungerValue, long lastPetDetailsUpdatingTime, long time)
-        {
-            var lastFeedingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime); // in pet's time
-            hungerValue -= lastFeedingTimeSpan * PetSettings.HungerUnitsPerPetsHour;
-
-            return hungerValue;
-        }
-
-        public float CalculateThirstValueAtTime(float thirstValue, long lastPetDetailsUpdatingTime, long time)
-        {
-            var lastThirstQuenchingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime); // in pet's time
-            thirstValue -= lastThirstQuenchingTimeSpan * PetSettings.ThirstUnitsPerPetsHour;
-            return thirstValue;
-        }
-
-        public int GetPetHappinessDaysCountAtTime(int happinessDaysCount, long lastPetDetailsUpdatingTime, long time)
-        {
-            var newPetDetailsUpdatingTime = _dateTimeConverter.GetDays(lastPetDetailsUpdatingTime);
-            var today = _dateTimeConverter.GetDays(time);
-            var happinessDays = happinessDaysCount + _dateTimeConverter.SubtractDays(newPetDetailsUpdatingTime, today);
-            return happinessDays;
-        }
-
-        public long CalculateDeathDate(float updatedHungerValue, float updatedThirstValue, long time)
-        {
-            long timeSpanByHungerValue = (long)((updatedHungerValue - HungerLevels.HungerMinHungerValue) / PetSettings.HungerUnitsPerPetsHour * 3600);
-            long timeSpanByThirstValue = (long)((updatedThirstValue - ThirstLevels.ThirstyMinThirstValue) / PetSettings.ThirstUnitsPerPetsHour * 3600);
-            return time + (timeSpanByHungerValue > timeSpanByThirstValue ? timeSpanByThirstValue : timeSpanByHungerValue);
-        }
-
-        public bool IsPetAlive(float hungerValue, float thirstValue)
-        { 
-            if (hungerValue >= HungerLevels.HungerMinHungerValue && thirstValue >= ThirstLevels.ThirstyMinThirstValue) return true;
-            return false;
-        }
-
-        public async Task MakePetDeadAsync(Pet pet, float updatedHungerValue, float updatedThirstValue, long now)
-        {
-            if (IsPetAlive(updatedHungerValue, updatedThirstValue))
-                throw new InvalidOperationException("can't kill the pet");
-            pet.DeathDate = CalculateDeathDate(updatedHungerValue, updatedThirstValue, now);
-            pet.IsAlive = false;
-            _repositoryManager.Pets.UpdatePet(pet);
-            await _repositoryManager.SaveChangeAsync();
-        }
+        
     }
 }
