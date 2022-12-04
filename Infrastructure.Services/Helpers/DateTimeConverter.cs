@@ -1,9 +1,10 @@
-﻿using Infrastructure.Data;
+﻿using Application.Services.Helpers;
+using Infrastructure.Data;
 using System;
 
 namespace Infrastructure.Services.Helpers
 {
-    public class DateTimeConverter
+    public class DateTimeConverter : IDateTimeConverter
     {
         private DateTime startingDate = new DateTime(2022, 1, 1, 0, 0, 0, 0);
 
