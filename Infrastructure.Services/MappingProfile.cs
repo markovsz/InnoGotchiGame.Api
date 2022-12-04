@@ -1,18 +1,18 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Reading;
 using Application.Services.DataTransferObjects.Updating;
+using Application.Services.Helpers;
 using AutoMapper;
 using Domain.Core.Models;
 using Infrastructure.Data;
 using Infrastructure.Services.Helpers;
 using System;
-using System.Linq;
 
 namespace Infrastructure.Services
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public MappingProfile(IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter)
         {
             CreateMap<UserCreatingDto, User>();
             CreateMap<UserCreatingDto, UserInfo>();
@@ -28,13 +28,15 @@ namespace Infrastructure.Services
 
             CreateMap<PetCreatingDto, Pet>();
             CreateMap<Pet, PetReadingDto>()
+                .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSignsAsync(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
                 .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
-                .ForMember(e => e.Age, opt => opt.MapFrom(src => new DateTimeConverter().GetYears(new DateTimeConverter().ConvertToPetsTime(DateTime.Now) - src.BirthDate)));
+                .ForMember(e => e.Age, opt => opt.MapFrom(src => dateTimeConverter.GetYears(dateTimeConverter.ConvertToPetsTime(DateTime.Now) - src.BirthDate)));
             CreateMap<Pet, PetMinReadingDto>()
+                .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSignsAsync(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
                 .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
-                .ForMember(e => e.Age, opt => opt.MapFrom(src => new DateTimeConverter().GetYears(new DateTimeConverter().ConvertToPetsTime(DateTime.Now) - src.BirthDate)));
+                .ForMember(e => e.Age, opt => opt.MapFrom(src => dateTimeConverter.GetYears(dateTimeConverter.ConvertToPetsTime(DateTime.Now) - src.BirthDate)));
             CreateMap<PetUpdatingDto, Pet>();
 
             CreateMap<FarmFriendCreatingDto, FarmFriend>();
