@@ -1,8 +1,10 @@
 ﻿using Application.Services.Helpers;
 using Application.Services.Services;
+using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Services;
 using Infrastructure.Services.Helpers;
 using Infrastructure.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,6 +49,14 @@ namespace WebApi
             services.AddScoped<IFeedingEventsService, FeedingEventsService>();
             services.AddScoped<IThirstQuenchingEventsService, ThirstQuenchingEventsService>();
             services.AddScoped<IUsersService, UsersService>();
+        }
+
+        public static void ConfigureAutoMapper(this IServiceCollection services)
+        {
+            services.AddScoped(provider => new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile(provider.GetService<IPetStatsCalculatingService>(), provider.GetService<IDateTimeConverter>()));
+            }).CreateMapper());
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)

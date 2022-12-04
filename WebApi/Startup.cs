@@ -36,7 +36,7 @@ namespace WebApi
             services.ConfigureRepositoryManager();
             services.ConfigureIdentity();
             services.ConfigureServiceHelpers();
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.ConfigureAutoMapper();
             services.ConfigureServices();
             services.ConfigureJwt(Configuration);
             services.ConfigureFilters();
