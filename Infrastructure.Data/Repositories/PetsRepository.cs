@@ -55,6 +55,7 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
+            .Where(e => e.IsAlive)
             .Select(e => e.HappinessDaysCount + (int)(((now - now % (60 * 60 * 24)) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24)))
             .AverageAsync();
 
