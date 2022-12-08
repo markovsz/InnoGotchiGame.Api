@@ -71,21 +71,27 @@ namespace Infrastructure.Services.Services
         {
 
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
+            bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
             var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
-            if (!friendFarms.Where(e => e.Pets.Where(p => p.Id.Equals(petId)).Any()).Any() && farm.UserId != userId)
+            var isItFriendsPet = friendFarms
+                                    .Where(e => e.Pets
+                                                .Where(p => p.Id.Equals(petId))
+                                                .Any())
+                                    .Any();
+            if (!isItFriendsPet && farm.UserId != userId)
                 throw new InvalidOperationException("you can't feed this pet");
 
-            if (!pet.IsAlive)
+            if (!isAlive)
                 throw new PetIsDeadException("you can't feed a dead pet");
 
             if (pet.HungerValue >= HungerLevels.FullMinHungerValue)
                 throw new PetIsAlreadyFullException("your pet is already full");
 
             await _feedingEventsService.CreateFeedingEventAsync(new FeedingEventCreatingDto { PetId = pet.Id });
-            pet.HungerValue += PetSettings.FeedingUnit;
+            if(pet.IsAlive) pet.HungerValue += PetSettings.FeedingUnit;
             await _repositoryManager.SaveChangeAsync();
             return HungerLevels.GetHungerLevelName(pet.HungerValue);
         }
@@ -93,21 +99,27 @@ namespace Infrastructure.Services.Services
         public async Task<string> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
+            bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
             var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
-            if (!friendFarms.Where(e => e.Pets.Where(p => p.Id.Equals(petId)).Any()).Any() && farm.UserId != userId)
+            var isItFriendsPet = friendFarms
+                                    .Where(e => e.Pets
+                                                .Where(p => p.Id.Equals(petId))
+                                                .Any())
+                                    .Any();
+            if (!isItFriendsPet && farm.UserId != userId)
                 throw new InvalidOperationException("you can't feed this pet");
 
-            if (!pet.IsAlive) 
+            if (!isAlive) 
                 throw new PetIsDeadException("you can't feed a dead pet");
 
             if (pet.ThirstValue >= ThirstLevels.FullMinThirstValue)
                 throw new PetIsAlreadyFullException("your pet is already full");
 
             await _thirstQuenchingEventsService.CreateThirstQuenchingEventAsync(new ThirstQuenchingEventCreatingDto { PetId = pet.Id });
-            pet.ThirstValue += PetSettings.ThirstQuenchingUnit;
+            if (pet.IsAlive) pet.ThirstValue += PetSettings.ThirstQuenchingUnit;
             await _repositoryManager.SaveChangeAsync();
             return ThirstLevels.GetThirstLevelName(pet.ThirstValue);
         }
