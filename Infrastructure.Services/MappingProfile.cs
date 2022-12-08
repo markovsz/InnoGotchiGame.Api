@@ -12,7 +12,7 @@ namespace Infrastructure.Services
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile(IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter)
+        public MappingProfile(IPetStatsCalculatingService petStatsCalculatingService, IFarmStatsCalculatingService farmStatsCalculatingService, IDateTimeConverter dateTimeConverter)
         {
             CreateMap<UserCreatingDto, User>();
             CreateMap<UserCreatingDto, UserInfo>();
@@ -22,8 +22,10 @@ namespace Infrastructure.Services
             CreateMap<FarmCreatingDto, Farm>();
             CreateMap<Farm, FarmReadingDto>()
                 .ForMember(e => e.FarmFriends, opt => opt.MapFrom(src => src.FarmFriends))
-                .ForMember(e => e.Pets, opt => opt.MapFrom(src => src.Pets));
-            CreateMap<Farm, FarmMinReadingDto>();
+                .ForMember(e => e.Pets, opt => opt.MapFrom(src => src.Pets))
+                .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(DateTime.Now)).Result);
+            CreateMap<Farm, FarmMinReadingDto>()
+                .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateMinFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(DateTime.Now)).Result);
             CreateMap<FarmUpdatingDto, Farm>();
 
             CreateMap<PetCreatingDto, Pet>();

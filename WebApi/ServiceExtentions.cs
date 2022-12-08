@@ -37,6 +37,7 @@ namespace WebApi
         {
             services.AddSingleton<IDateTimeConverter, DateTimeConverter>();
             services.AddScoped<IPetStatsCalculatingService, PetStatsCalculatingService>();
+            services.AddScoped<IFarmStatsCalculatingService, FarmStatsCalculatingService>();
         }
 
         public static void ConfigureServices(this IServiceCollection services)
@@ -55,7 +56,7 @@ namespace WebApi
         {
             services.AddScoped(provider => new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new MappingProfile(provider.GetService<IPetStatsCalculatingService>(), provider.GetService<IDateTimeConverter>()));
+                cfg.AddProfile(new MappingProfile(provider.GetService<IPetStatsCalculatingService>(), provider.GetService<IFarmStatsCalculatingService>(), provider.GetService<IDateTimeConverter>()));
             }).CreateMapper());
         }
 
