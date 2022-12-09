@@ -20,6 +20,7 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<UserInfo> GetUserInfoByUserIdAsync(Guid userId, bool trackChanges) =>
             await GetByCondition(e => e.UserId.Equals(userId), trackChanges)
+            .Include(e => e.User)
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<UserInfo>> GetUsersInfoAsync() =>

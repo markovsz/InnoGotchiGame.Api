@@ -16,8 +16,10 @@ namespace Infrastructure.Services
         {
             CreateMap<UserCreatingDto, User>();
             CreateMap<UserCreatingDto, UserInfo>();
-            CreateMap<UserInfo, UserReadingDto>();
-            CreateMap<UserInfoUpdatingDto, UserInfo>();
+            CreateMap<UserInfo, UserMinReadingDto>();
+            CreateMap<UserInfo, UserReadingDto>()
+                .ForMember(e => e.Email, opt => opt.MapFrom(src => src.User.Email));
+            CreateMap<UserUpdatingDto, UserInfo>();
 
             CreateMap<FarmCreatingDto, Farm>();
             CreateMap<Farm, FarmReadingDto>()
