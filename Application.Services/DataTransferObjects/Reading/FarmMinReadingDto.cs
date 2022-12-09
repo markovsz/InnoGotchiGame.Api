@@ -12,5 +12,7 @@ namespace Application.Services.DataTransferObjects.Reading
         public float AverageThirstQuenchingTime { get; set; }
         public int AverageHappinessDaysCount { get; set; }
         public int AveragePetsAge { get; set; }
+
+        public UserMinReadingDto UserInfo { get; set; }
     }
 }

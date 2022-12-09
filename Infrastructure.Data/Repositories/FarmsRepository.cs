@@ -27,6 +27,7 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Pets)
             .Include(e => e.FarmFriends)
                 .ThenInclude(e => e.UserInfo)
+            .Include(e => e.UserInfo)
             .FirstOrDefaultAsync();
         
         public async Task<Farm> GetFarmByUserIdAsync(Guid userId, bool trackChanges) =>
@@ -34,16 +35,19 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Pets)
             .Include(e => e.FarmFriends)
                 .ThenInclude(e => e.UserInfo)
+            .Include(e => e.UserInfo)
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Farm>> GetFarmsAsync() => 
             await GetAll(false)
+            .Include(e => e.UserInfo)
             .ToListAsync();
 
         public async Task<IEnumerable<Farm>> GetFriendFarmsAsync(Guid userId) =>
             await _context.FarmFriends
             .Include(e => e.Farm)
                 .ThenInclude(e => e.Pets)
+            .Include(e => e.UserInfo)
             .Where(e => e.UserId.Equals(userId))
             .Select(e => e.Farm)
             .ToListAsync();

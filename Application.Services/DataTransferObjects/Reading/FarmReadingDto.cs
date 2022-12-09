@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Core.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Application.Services.DataTransferObjects.Reading
@@ -13,6 +14,7 @@ namespace Application.Services.DataTransferObjects.Reading
         public float AverageThirstQuenchingTime { get; set; } // in days
         public int AverageHappinessDaysCount { get; set; }
         public int AveragePetsAge { get; set; }
+        public UserMinReadingDto UserInfo { get; set; }
 
         public IEnumerable<PetReadingDto> Pets { get; set; }
         public IEnumerable<FarmFriendReadingDto> FarmFriends { get; set; }

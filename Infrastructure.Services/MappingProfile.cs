@@ -25,8 +25,10 @@ namespace Infrastructure.Services
             CreateMap<Farm, FarmReadingDto>()
                 .ForMember(e => e.FarmFriends, opt => opt.MapFrom(src => src.FarmFriends))
                 .ForMember(e => e.Pets, opt => opt.MapFrom(src => src.Pets))
+                .ForMember(e => e.UserInfo, opt => opt.MapFrom(src => src.UserInfo))
                 .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(DateTime.Now)).Result);
             CreateMap<Farm, FarmMinReadingDto>()
+                .ForMember(e => e.UserInfo, opt => opt.MapFrom(src => src.UserInfo))
                 .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateMinFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(DateTime.Now)).Result);
             CreateMap<FarmUpdatingDto, Farm>();
 
