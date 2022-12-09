@@ -11,6 +11,7 @@ namespace Application.Services.Services
     {
         Task<Guid> CreateUserAsync(UserCreatingDto userDto);
         Task<UserReadingDto> GetUserInfoByIdAsync(Guid userId);
+        Task<UserMinReadingDto> GetMinUserInfoByIdAsync(Guid userId);
         Task UpdateUserAsync(Guid userId, UserUpdatingDto userDto);
         Task ChangePasswordAsync(Guid userId, PasswordChangingDto passwordUpdatingDto);
         Task DeleteUserByIdAsync(Guid userId);

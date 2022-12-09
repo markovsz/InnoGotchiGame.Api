@@ -77,6 +77,13 @@ namespace Infrastructure.Services.Services
             return userInfoDto;
         }
 
+        public async Task<UserMinReadingDto> GetMinUserInfoByIdAsync(Guid userId)
+        {
+            var userInfo = await _repositoryManager.UsersInfo.GetUserInfoByUserIdAsync(userId, false);
+            var userInfoDto = _mapper.Map<UserMinReadingDto>(userInfo);
+            return userInfoDto;
+        }
+
         public async Task UpdateUserAsync(Guid userId, UserUpdatingDto userDto)
         {
             var userInfo = _mapper.Map<UserInfo>(userDto);
