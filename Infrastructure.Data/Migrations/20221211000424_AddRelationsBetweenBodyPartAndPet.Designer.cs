@@ -4,14 +4,16 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20221211000424_AddRelationsBetweenBodyPartAndPet")]
+    partial class AddRelationsBetweenBodyPartAndPet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,13 +93,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("BirthDate")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("BodyId")
+                    b.Property<Guid?>("BodyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<long>("DeathDate")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("EyesId")
+                    b.Property<Guid?>("EyesId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("FarmId")
@@ -115,13 +117,13 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("LastPetDetailsUpdatingTime")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("MouthId")
+                    b.Property<Guid?>("MouthId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("NoseId")
+                    b.Property<Guid?>("NoseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<float>("ThirstValue")
@@ -158,27 +160,27 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eeb3126f-5421-401a-9f5e-eb101936d30c"),
+                            Id = new Guid("9d20a4a5-7e72-4b0c-b200-506e143deba7"),
                             PictureName = "body1.svg"
                         },
                         new
                         {
-                            Id = new Guid("3285f353-f5d9-4390-8429-08c63465a1f3"),
+                            Id = new Guid("2cd0fcf5-445c-4db7-8230-091106f2678e"),
                             PictureName = "body2.svg"
                         },
                         new
                         {
-                            Id = new Guid("f8c0cf9b-9221-4b46-8e61-386434c9f124"),
+                            Id = new Guid("1c362acf-c7c1-4cec-9a98-188d0a638ce0"),
                             PictureName = "body3.svg"
                         },
                         new
                         {
-                            Id = new Guid("d961ed82-9f5c-4a54-997e-82d222eeb310"),
+                            Id = new Guid("adb04539-36b2-44af-8b27-a8085e684131"),
                             PictureName = "body4.svg"
                         },
                         new
                         {
-                            Id = new Guid("4238c4aa-4e98-4d8f-afc1-2cc5f6f78d33"),
+                            Id = new Guid("6a810767-e665-483a-b5d0-454d002b462c"),
                             PictureName = "body5.svg"
                         });
                 });
@@ -199,32 +201,32 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("734bf663-48f5-4bb8-922f-a70004d78cad"),
+                            Id = new Guid("0eac09d8-a68d-4c5a-8bb7-7762e89b5737"),
                             PictureName = "eyes1.svg"
                         },
                         new
                         {
-                            Id = new Guid("b12cbcdc-c0f0-4cdf-8fec-f6810893f765"),
+                            Id = new Guid("56bafcc5-5895-48fe-8d43-0d176f559ec2"),
                             PictureName = "eyes2.svg"
                         },
                         new
                         {
-                            Id = new Guid("c6b70385-1f68-4f16-b1dc-9ca2d37ae0ff"),
+                            Id = new Guid("5f3d130e-d0d1-43a0-adcb-2798698da8da"),
                             PictureName = "eyes3.svg"
                         },
                         new
                         {
-                            Id = new Guid("64562f69-6e1e-4112-aaaa-c2419285fc48"),
+                            Id = new Guid("8d0424d6-bacb-4ece-af97-bd5c69fd6735"),
                             PictureName = "eyes4.svg"
                         },
                         new
                         {
-                            Id = new Guid("0ac4c0aa-b4c5-46d3-a63d-c03f0804578b"),
+                            Id = new Guid("553fec7b-1951-4093-91ff-95d8f290a58d"),
                             PictureName = "eyes5.svg"
                         },
                         new
                         {
-                            Id = new Guid("d4eecee5-bcad-4447-9bd2-fd90691c5f52"),
+                            Id = new Guid("690f72a2-add7-44d4-89ec-f0a804c36069"),
                             PictureName = "eyes6.svg"
                         });
                 });
@@ -245,27 +247,27 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("754db423-3ce9-4d23-a8fa-73305ba840d2"),
+                            Id = new Guid("37db6fd5-18c9-4e93-96c3-b8c87bf8a7f4"),
                             PictureName = "mouth1.svg"
                         },
                         new
                         {
-                            Id = new Guid("5fb6493f-891b-47fd-90e8-618c6c8b4858"),
+                            Id = new Guid("2b098a09-b3c5-4f34-9504-3c022501a2d8"),
                             PictureName = "mouth2.svg"
                         },
                         new
                         {
-                            Id = new Guid("30d729b8-942c-43f1-a024-93165821c0ad"),
+                            Id = new Guid("446371b4-6151-4d6f-8a78-0c068812bab3"),
                             PictureName = "mouth3.svg"
                         },
                         new
                         {
-                            Id = new Guid("1398a244-a1df-4979-bd76-724c16cce7c8"),
+                            Id = new Guid("6293b4da-84e0-46df-93bb-332f00cc9322"),
                             PictureName = "mouth4.svg"
                         },
                         new
                         {
-                            Id = new Guid("91274d57-d0ef-4cc5-a61a-21fa44ed49a0"),
+                            Id = new Guid("e6fe3c44-ae45-465d-99d5-1b22c1328a86"),
                             PictureName = "mouth5.svg"
                         });
                 });
@@ -286,32 +288,32 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("92a44395-bf44-4ad7-a6f9-a1e5c3b3a399"),
+                            Id = new Guid("9b2207d0-2d03-4a2a-a107-8368ab1218ea"),
                             PictureName = "nose1.svg"
                         },
                         new
                         {
-                            Id = new Guid("51e6953f-1b87-43da-98fc-1fac21a142a1"),
+                            Id = new Guid("98630e08-6485-4e15-bc49-0853b29c1502"),
                             PictureName = "nose2.svg"
                         },
                         new
                         {
-                            Id = new Guid("a400fab5-369e-497f-a33d-c0bf3c732164"),
+                            Id = new Guid("e879e1a6-c97d-4316-bf16-688768ea4086"),
                             PictureName = "nose3.svg"
                         },
                         new
                         {
-                            Id = new Guid("a821f41e-9103-41de-89b3-490536a4226c"),
+                            Id = new Guid("7f6aaff4-e6f4-4806-b042-d571db120802"),
                             PictureName = "nose4.svg"
                         },
                         new
                         {
-                            Id = new Guid("b61ce33f-31ed-4dd3-b057-ad38d6a94a4a"),
+                            Id = new Guid("d51d5890-1e1c-44f3-bcd3-5c65d1909ffb"),
                             PictureName = "nose5.svg"
                         },
                         new
                         {
-                            Id = new Guid("aa18337c-aa14-4ba9-a166-f9dea84d84bd"),
+                            Id = new Guid("5ca558cf-409f-4ec1-bde4-8632216bc6b3"),
                             PictureName = "nose6.svg"
                         });
                 });
@@ -453,8 +455,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d10077b0-1f6f-4af3-91af-6f21dab5c507"),
-                            ConcurrencyStamp = "fe2a8b13-4eca-4cdd-9508-5b1c80cf8599",
+                            Id = new Guid("2815fc3b-77fd-4f3a-aa0f-51a7e038b179"),
+                            ConcurrencyStamp = "e84e1524-9e46-4805-8928-e22a66c7c072",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -607,14 +609,12 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Models.PetBody", "Body")
                         .WithMany("RelatedPets")
                         .HasForeignKey("BodyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Core.Models.PetEyes", "Eyes")
                         .WithMany("RelatedPets")
                         .HasForeignKey("EyesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Core.Models.Farm", "Farm")
                         .WithMany("Pets")
@@ -625,14 +625,12 @@ namespace Infrastructure.Data.Migrations
                     b.HasOne("Domain.Core.Models.PetMouth", "Mouth")
                         .WithMany("RelatedPets")
                         .HasForeignKey("MouthId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Core.Models.PetNose", "Nose")
                         .WithMany("RelatedPets")
                         .HasForeignKey("NoseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Body");
 
