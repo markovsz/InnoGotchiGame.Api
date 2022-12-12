@@ -62,6 +62,8 @@ namespace WebApi
                 .AllowAnyHeader()
             );
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
