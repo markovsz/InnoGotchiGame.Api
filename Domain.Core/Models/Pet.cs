@@ -33,17 +33,21 @@ namespace Domain.Core.Models
         public long DeathDate { get; set; } //in seconds
 
         public Guid BodyId { get; set; }
-        int BodyPictureX { get; set; }
-        int BodyPictureY { get; set; }
+        public int BodyPictureX { get; set; }
+        public int BodyPictureY { get; set; }
+        public float BodyPictureScale { get; set; }
         public Guid EyesId { get; set; }
-        int EyesPictureX { get; set; }
-        int EyesPictureY { get; set; }
+        public int EyesPictureX { get; set; }
+        public int EyesPictureY { get; set; }
+        public float EyesPictureScale { get; set; }
         public Guid NoseId { get; set; }
-        int NosePictureX { get; set; }
-        int NosePictureY { get; set; }
+        public int NosePictureX { get; set; }
+        public int NosePictureY { get; set; }
+        public float NosePictureScale { get; set; }
         public Guid MouthId { get; set; }
-        int MouthPictureX { get; set; }
-        int MouthPictureY { get; set; }
+        public int MouthPictureX { get; set; }
+        public int MouthPictureY { get; set; }
+        public float MouthPictureScale { get; set; }
 
         public Farm Farm { get; set; }
         public IEnumerable<FeedingEvent> FeedingEvents { get; set; }
