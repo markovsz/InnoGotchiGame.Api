@@ -129,19 +129,19 @@ namespace Infrastructure.Data.Migrations
                 nullable: false,
                 defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "BodyPictureX",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "BodyPictureY",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
             migrationBuilder.AddColumn<float>(
                 name: "EyesPictureScale",
@@ -150,19 +150,19 @@ namespace Infrastructure.Data.Migrations
                 nullable: false,
                 defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "EyesPictureX",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "EyesPictureY",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
             migrationBuilder.AddColumn<float>(
                 name: "MouthPictureScale",
@@ -171,19 +171,19 @@ namespace Infrastructure.Data.Migrations
                 nullable: false,
                 defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "MouthPictureX",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "MouthPictureY",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
             migrationBuilder.AddColumn<float>(
                 name: "NosePictureScale",
@@ -192,35 +192,35 @@ namespace Infrastructure.Data.Migrations
                 nullable: false,
                 defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "NosePictureX",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<float>(
                 name: "NosePictureY",
                 table: "Pets",
-                type: "int",
+                type: "real",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0f);
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("84192b58-815d-47f0-a05d-c4370ec8ab2b"), "d84b4c8f-e265-482d-9344-04e8d35d7ac0", "user", "USER" });
+                values: new object[] { new Guid("f7a5f86b-df22-41ab-8aaf-5c328930745d"), "11d0f27e-4e46-4854-b8cf-c68f90722475", "user", "USER" });
 
             migrationBuilder.InsertData(
                 table: "PetBodies",
                 columns: new[] { "Id", "PictureName" },
                 values: new object[,]
                 {
-                    { new Guid("6097c11f-168a-4a9b-bf72-85e135c428b3"), "body5.svg" },
-                    { new Guid("64740897-c7c1-45be-8487-03eb46f4c885"), "body4.svg" },
-                    { new Guid("686fcc2b-bc4c-462c-b1d8-0626fa83b79f"), "body1.svg" },
-                    { new Guid("e06841c3-b0be-494b-9945-e2bdbf939f62"), "body2.svg" },
-                    { new Guid("66042d94-c41d-4b22-ad9f-188bec102e76"), "body3.svg" }
+                    { new Guid("d78cbaee-85ff-4751-b7dc-d7b6eb643efd"), "body5.svg" },
+                    { new Guid("4be4cdd6-d01f-4ac4-8abc-36716625d014"), "body4.svg" },
+                    { new Guid("50a1708c-c974-4301-93aa-bd878cae7c6e"), "body1.svg" },
+                    { new Guid("758b0a50-2a2c-4e9d-8e37-9d0fdd58378a"), "body2.svg" },
+                    { new Guid("70057dfe-7f2b-4b00-8172-3c4ddbd278f0"), "body3.svg" }
                 });
 
             migrationBuilder.InsertData(
@@ -228,12 +228,12 @@ namespace Infrastructure.Data.Migrations
                 columns: new[] { "Id", "PictureName" },
                 values: new object[,]
                 {
-                    { new Guid("16aca063-e1d6-4565-9428-eb70796524f7"), "eyes1.svg" },
-                    { new Guid("afa33b26-5134-45a3-ae0b-53835444cde2"), "eyes2.svg" },
-                    { new Guid("eb96250d-7352-4372-a66b-e57e1f7b3fe2"), "eyes3.svg" },
-                    { new Guid("46cbdf3d-9f2e-47c2-ac18-540b8164ef29"), "eyes4.svg" },
-                    { new Guid("e9b80f5a-df15-4989-84ef-7cfe45a77048"), "eyes5.svg" },
-                    { new Guid("b55778f4-d8e9-49a6-b5fb-5def3c3cffcd"), "eyes6.svg" }
+                    { new Guid("7780469f-8b3c-4cda-9dab-72841f6fb480"), "eyes1.svg" },
+                    { new Guid("a319b320-c551-4e47-a719-d12857d2b065"), "eyes2.svg" },
+                    { new Guid("3c05be97-c855-42c3-93b1-f73541080a4e"), "eyes3.svg" },
+                    { new Guid("2cff9355-e5f8-4531-b055-466df7af0f60"), "eyes4.svg" },
+                    { new Guid("ea15bce9-8585-4a9e-9aab-ca1149254fc4"), "eyes5.svg" },
+                    { new Guid("8a2905ca-3644-4d82-9b17-123a6014bc63"), "eyes6.svg" }
                 });
 
             migrationBuilder.InsertData(
@@ -241,11 +241,11 @@ namespace Infrastructure.Data.Migrations
                 columns: new[] { "Id", "PictureName" },
                 values: new object[,]
                 {
-                    { new Guid("1d9c2b6e-a515-4602-bcfc-27221d241375"), "mouth5.svg" },
-                    { new Guid("e6d5b118-02b4-41ba-9ed0-520314a0755d"), "mouth4.svg" },
-                    { new Guid("ac9c2ac8-2c69-41fb-9c28-2d7c9e9a5b37"), "mouth3.svg" },
-                    { new Guid("620b66c1-160c-4c81-ac10-49375aab26ce"), "mouth2.svg" },
-                    { new Guid("9727d94f-2ddd-4e88-a542-9adf6133c3dc"), "mouth1.svg" }
+                    { new Guid("ef5ab534-8349-4111-a069-a7967b977ee8"), "mouth5.svg" },
+                    { new Guid("b4f33b5a-306f-4ca7-97c3-6f4b8a542c1c"), "mouth4.svg" },
+                    { new Guid("bbda15ef-cd54-4bc0-866b-3c108fdc1833"), "mouth3.svg" },
+                    { new Guid("358f962c-b4b6-4b7a-b5f4-4204f5b7ea45"), "mouth2.svg" },
+                    { new Guid("bab6c8dd-b2fc-41a2-bef9-56462f31c1dd"), "mouth1.svg" }
                 });
 
             migrationBuilder.InsertData(
@@ -253,12 +253,12 @@ namespace Infrastructure.Data.Migrations
                 columns: new[] { "Id", "PictureName" },
                 values: new object[,]
                 {
-                    { new Guid("6ff5eeb0-3a7b-4483-949a-fdf329b91fde"), "nose6.svg" },
-                    { new Guid("f03fbc63-088f-4d53-bf7a-a775a73d4182"), "nose1.svg" },
-                    { new Guid("a0662f61-fd12-4fb3-aa64-6b5054195243"), "nose2.svg" },
-                    { new Guid("c6aa1087-2cec-4d4f-8362-37ae2c6bc0f4"), "nose3.svg" },
-                    { new Guid("da30c7bd-f2db-4793-8ae4-b5817ee83860"), "nose4.svg" },
-                    { new Guid("c7393c86-2a6a-44b7-aef9-4c15559c51ed"), "nose5.svg" }
+                    { new Guid("9bc6dfeb-67f3-4e70-b662-dc7a3265da66"), "nose6.svg" },
+                    { new Guid("32f9dbea-ae69-4a72-b267-014bc769d9ee"), "nose1.svg" },
+                    { new Guid("b2deb895-1d14-4774-8fba-7ffc4ed4711d"), "nose2.svg" },
+                    { new Guid("df853877-2040-49fa-ae4d-7bec04e376f5"), "nose3.svg" },
+                    { new Guid("d64abfc8-e5f1-4344-8699-47356d146d2b"), "nose4.svg" },
+                    { new Guid("e5cf70db-3ce3-4570-8f35-c0ebc9527328"), "nose5.svg" }
                 });
         }
 
@@ -267,117 +267,117 @@ namespace Infrastructure.Data.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: new Guid("84192b58-815d-47f0-a05d-c4370ec8ab2b"));
+                keyValue: new Guid("f7a5f86b-df22-41ab-8aaf-5c328930745d"));
 
             migrationBuilder.DeleteData(
                 table: "PetBodies",
                 keyColumn: "Id",
-                keyValue: new Guid("6097c11f-168a-4a9b-bf72-85e135c428b3"));
+                keyValue: new Guid("4be4cdd6-d01f-4ac4-8abc-36716625d014"));
 
             migrationBuilder.DeleteData(
                 table: "PetBodies",
                 keyColumn: "Id",
-                keyValue: new Guid("64740897-c7c1-45be-8487-03eb46f4c885"));
+                keyValue: new Guid("50a1708c-c974-4301-93aa-bd878cae7c6e"));
 
             migrationBuilder.DeleteData(
                 table: "PetBodies",
                 keyColumn: "Id",
-                keyValue: new Guid("66042d94-c41d-4b22-ad9f-188bec102e76"));
+                keyValue: new Guid("70057dfe-7f2b-4b00-8172-3c4ddbd278f0"));
 
             migrationBuilder.DeleteData(
                 table: "PetBodies",
                 keyColumn: "Id",
-                keyValue: new Guid("686fcc2b-bc4c-462c-b1d8-0626fa83b79f"));
+                keyValue: new Guid("758b0a50-2a2c-4e9d-8e37-9d0fdd58378a"));
 
             migrationBuilder.DeleteData(
                 table: "PetBodies",
                 keyColumn: "Id",
-                keyValue: new Guid("e06841c3-b0be-494b-9945-e2bdbf939f62"));
+                keyValue: new Guid("d78cbaee-85ff-4751-b7dc-d7b6eb643efd"));
 
             migrationBuilder.DeleteData(
                 table: "PetEyes",
                 keyColumn: "Id",
-                keyValue: new Guid("16aca063-e1d6-4565-9428-eb70796524f7"));
+                keyValue: new Guid("2cff9355-e5f8-4531-b055-466df7af0f60"));
 
             migrationBuilder.DeleteData(
                 table: "PetEyes",
                 keyColumn: "Id",
-                keyValue: new Guid("46cbdf3d-9f2e-47c2-ac18-540b8164ef29"));
+                keyValue: new Guid("3c05be97-c855-42c3-93b1-f73541080a4e"));
 
             migrationBuilder.DeleteData(
                 table: "PetEyes",
                 keyColumn: "Id",
-                keyValue: new Guid("afa33b26-5134-45a3-ae0b-53835444cde2"));
+                keyValue: new Guid("7780469f-8b3c-4cda-9dab-72841f6fb480"));
 
             migrationBuilder.DeleteData(
                 table: "PetEyes",
                 keyColumn: "Id",
-                keyValue: new Guid("b55778f4-d8e9-49a6-b5fb-5def3c3cffcd"));
+                keyValue: new Guid("8a2905ca-3644-4d82-9b17-123a6014bc63"));
 
             migrationBuilder.DeleteData(
                 table: "PetEyes",
                 keyColumn: "Id",
-                keyValue: new Guid("e9b80f5a-df15-4989-84ef-7cfe45a77048"));
+                keyValue: new Guid("a319b320-c551-4e47-a719-d12857d2b065"));
 
             migrationBuilder.DeleteData(
                 table: "PetEyes",
                 keyColumn: "Id",
-                keyValue: new Guid("eb96250d-7352-4372-a66b-e57e1f7b3fe2"));
+                keyValue: new Guid("ea15bce9-8585-4a9e-9aab-ca1149254fc4"));
 
             migrationBuilder.DeleteData(
                 table: "PetMouths",
                 keyColumn: "Id",
-                keyValue: new Guid("1d9c2b6e-a515-4602-bcfc-27221d241375"));
+                keyValue: new Guid("358f962c-b4b6-4b7a-b5f4-4204f5b7ea45"));
 
             migrationBuilder.DeleteData(
                 table: "PetMouths",
                 keyColumn: "Id",
-                keyValue: new Guid("620b66c1-160c-4c81-ac10-49375aab26ce"));
+                keyValue: new Guid("b4f33b5a-306f-4ca7-97c3-6f4b8a542c1c"));
 
             migrationBuilder.DeleteData(
                 table: "PetMouths",
                 keyColumn: "Id",
-                keyValue: new Guid("9727d94f-2ddd-4e88-a542-9adf6133c3dc"));
+                keyValue: new Guid("bab6c8dd-b2fc-41a2-bef9-56462f31c1dd"));
 
             migrationBuilder.DeleteData(
                 table: "PetMouths",
                 keyColumn: "Id",
-                keyValue: new Guid("ac9c2ac8-2c69-41fb-9c28-2d7c9e9a5b37"));
+                keyValue: new Guid("bbda15ef-cd54-4bc0-866b-3c108fdc1833"));
 
             migrationBuilder.DeleteData(
                 table: "PetMouths",
                 keyColumn: "Id",
-                keyValue: new Guid("e6d5b118-02b4-41ba-9ed0-520314a0755d"));
+                keyValue: new Guid("ef5ab534-8349-4111-a069-a7967b977ee8"));
 
             migrationBuilder.DeleteData(
                 table: "PetNoses",
                 keyColumn: "Id",
-                keyValue: new Guid("6ff5eeb0-3a7b-4483-949a-fdf329b91fde"));
+                keyValue: new Guid("32f9dbea-ae69-4a72-b267-014bc769d9ee"));
 
             migrationBuilder.DeleteData(
                 table: "PetNoses",
                 keyColumn: "Id",
-                keyValue: new Guid("a0662f61-fd12-4fb3-aa64-6b5054195243"));
+                keyValue: new Guid("9bc6dfeb-67f3-4e70-b662-dc7a3265da66"));
 
             migrationBuilder.DeleteData(
                 table: "PetNoses",
                 keyColumn: "Id",
-                keyValue: new Guid("c6aa1087-2cec-4d4f-8362-37ae2c6bc0f4"));
+                keyValue: new Guid("b2deb895-1d14-4774-8fba-7ffc4ed4711d"));
 
             migrationBuilder.DeleteData(
                 table: "PetNoses",
                 keyColumn: "Id",
-                keyValue: new Guid("c7393c86-2a6a-44b7-aef9-4c15559c51ed"));
+                keyValue: new Guid("d64abfc8-e5f1-4344-8699-47356d146d2b"));
 
             migrationBuilder.DeleteData(
                 table: "PetNoses",
                 keyColumn: "Id",
-                keyValue: new Guid("da30c7bd-f2db-4793-8ae4-b5817ee83860"));
+                keyValue: new Guid("df853877-2040-49fa-ae4d-7bec04e376f5"));
 
             migrationBuilder.DeleteData(
                 table: "PetNoses",
                 keyColumn: "Id",
-                keyValue: new Guid("f03fbc63-088f-4d53-bf7a-a775a73d4182"));
+                keyValue: new Guid("e5cf70db-3ce3-4570-8f35-c0ebc9527328"));
 
             migrationBuilder.DropColumn(
                 name: "BodyPictureScale",

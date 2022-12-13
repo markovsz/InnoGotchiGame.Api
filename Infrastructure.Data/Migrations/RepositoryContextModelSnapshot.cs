@@ -97,11 +97,11 @@ namespace Infrastructure.Data.Migrations
                     b.Property<float>("BodyPictureScale")
                         .HasColumnType("real");
 
-                    b.Property<int>("BodyPictureX")
-                        .HasColumnType("int");
+                    b.Property<float>("BodyPictureX")
+                        .HasColumnType("real");
 
-                    b.Property<int>("BodyPictureY")
-                        .HasColumnType("int");
+                    b.Property<float>("BodyPictureY")
+                        .HasColumnType("real");
 
                     b.Property<long>("DeathDate")
                         .HasColumnType("bigint");
@@ -112,11 +112,11 @@ namespace Infrastructure.Data.Migrations
                     b.Property<float>("EyesPictureScale")
                         .HasColumnType("real");
 
-                    b.Property<int>("EyesPictureX")
-                        .HasColumnType("int");
+                    b.Property<float>("EyesPictureX")
+                        .HasColumnType("real");
 
-                    b.Property<int>("EyesPictureY")
-                        .HasColumnType("int");
+                    b.Property<float>("EyesPictureY")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("FarmId")
                         .HasColumnType("uniqueidentifier");
@@ -139,11 +139,11 @@ namespace Infrastructure.Data.Migrations
                     b.Property<float>("MouthPictureScale")
                         .HasColumnType("real");
 
-                    b.Property<int>("MouthPictureX")
-                        .HasColumnType("int");
+                    b.Property<float>("MouthPictureX")
+                        .HasColumnType("real");
 
-                    b.Property<int>("MouthPictureY")
-                        .HasColumnType("int");
+                    b.Property<float>("MouthPictureY")
+                        .HasColumnType("real");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -154,11 +154,11 @@ namespace Infrastructure.Data.Migrations
                     b.Property<float>("NosePictureScale")
                         .HasColumnType("real");
 
-                    b.Property<int>("NosePictureX")
-                        .HasColumnType("int");
+                    b.Property<float>("NosePictureX")
+                        .HasColumnType("real");
 
-                    b.Property<int>("NosePictureY")
-                        .HasColumnType("int");
+                    b.Property<float>("NosePictureY")
+                        .HasColumnType("real");
 
                     b.Property<float>("ThirstValue")
                         .HasColumnType("real");
@@ -194,27 +194,27 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("686fcc2b-bc4c-462c-b1d8-0626fa83b79f"),
+                            Id = new Guid("50a1708c-c974-4301-93aa-bd878cae7c6e"),
                             PictureName = "body1.svg"
                         },
                         new
                         {
-                            Id = new Guid("e06841c3-b0be-494b-9945-e2bdbf939f62"),
+                            Id = new Guid("758b0a50-2a2c-4e9d-8e37-9d0fdd58378a"),
                             PictureName = "body2.svg"
                         },
                         new
                         {
-                            Id = new Guid("66042d94-c41d-4b22-ad9f-188bec102e76"),
+                            Id = new Guid("70057dfe-7f2b-4b00-8172-3c4ddbd278f0"),
                             PictureName = "body3.svg"
                         },
                         new
                         {
-                            Id = new Guid("64740897-c7c1-45be-8487-03eb46f4c885"),
+                            Id = new Guid("4be4cdd6-d01f-4ac4-8abc-36716625d014"),
                             PictureName = "body4.svg"
                         },
                         new
                         {
-                            Id = new Guid("6097c11f-168a-4a9b-bf72-85e135c428b3"),
+                            Id = new Guid("d78cbaee-85ff-4751-b7dc-d7b6eb643efd"),
                             PictureName = "body5.svg"
                         });
                 });
@@ -235,32 +235,32 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("16aca063-e1d6-4565-9428-eb70796524f7"),
+                            Id = new Guid("7780469f-8b3c-4cda-9dab-72841f6fb480"),
                             PictureName = "eyes1.svg"
                         },
                         new
                         {
-                            Id = new Guid("afa33b26-5134-45a3-ae0b-53835444cde2"),
+                            Id = new Guid("a319b320-c551-4e47-a719-d12857d2b065"),
                             PictureName = "eyes2.svg"
                         },
                         new
                         {
-                            Id = new Guid("eb96250d-7352-4372-a66b-e57e1f7b3fe2"),
+                            Id = new Guid("3c05be97-c855-42c3-93b1-f73541080a4e"),
                             PictureName = "eyes3.svg"
                         },
                         new
                         {
-                            Id = new Guid("46cbdf3d-9f2e-47c2-ac18-540b8164ef29"),
+                            Id = new Guid("2cff9355-e5f8-4531-b055-466df7af0f60"),
                             PictureName = "eyes4.svg"
                         },
                         new
                         {
-                            Id = new Guid("e9b80f5a-df15-4989-84ef-7cfe45a77048"),
+                            Id = new Guid("ea15bce9-8585-4a9e-9aab-ca1149254fc4"),
                             PictureName = "eyes5.svg"
                         },
                         new
                         {
-                            Id = new Guid("b55778f4-d8e9-49a6-b5fb-5def3c3cffcd"),
+                            Id = new Guid("8a2905ca-3644-4d82-9b17-123a6014bc63"),
                             PictureName = "eyes6.svg"
                         });
                 });
@@ -281,27 +281,27 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9727d94f-2ddd-4e88-a542-9adf6133c3dc"),
+                            Id = new Guid("bab6c8dd-b2fc-41a2-bef9-56462f31c1dd"),
                             PictureName = "mouth1.svg"
                         },
                         new
                         {
-                            Id = new Guid("620b66c1-160c-4c81-ac10-49375aab26ce"),
+                            Id = new Guid("358f962c-b4b6-4b7a-b5f4-4204f5b7ea45"),
                             PictureName = "mouth2.svg"
                         },
                         new
                         {
-                            Id = new Guid("ac9c2ac8-2c69-41fb-9c28-2d7c9e9a5b37"),
+                            Id = new Guid("bbda15ef-cd54-4bc0-866b-3c108fdc1833"),
                             PictureName = "mouth3.svg"
                         },
                         new
                         {
-                            Id = new Guid("e6d5b118-02b4-41ba-9ed0-520314a0755d"),
+                            Id = new Guid("b4f33b5a-306f-4ca7-97c3-6f4b8a542c1c"),
                             PictureName = "mouth4.svg"
                         },
                         new
                         {
-                            Id = new Guid("1d9c2b6e-a515-4602-bcfc-27221d241375"),
+                            Id = new Guid("ef5ab534-8349-4111-a069-a7967b977ee8"),
                             PictureName = "mouth5.svg"
                         });
                 });
@@ -322,32 +322,32 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f03fbc63-088f-4d53-bf7a-a775a73d4182"),
+                            Id = new Guid("32f9dbea-ae69-4a72-b267-014bc769d9ee"),
                             PictureName = "nose1.svg"
                         },
                         new
                         {
-                            Id = new Guid("a0662f61-fd12-4fb3-aa64-6b5054195243"),
+                            Id = new Guid("b2deb895-1d14-4774-8fba-7ffc4ed4711d"),
                             PictureName = "nose2.svg"
                         },
                         new
                         {
-                            Id = new Guid("c6aa1087-2cec-4d4f-8362-37ae2c6bc0f4"),
+                            Id = new Guid("df853877-2040-49fa-ae4d-7bec04e376f5"),
                             PictureName = "nose3.svg"
                         },
                         new
                         {
-                            Id = new Guid("da30c7bd-f2db-4793-8ae4-b5817ee83860"),
+                            Id = new Guid("d64abfc8-e5f1-4344-8699-47356d146d2b"),
                             PictureName = "nose4.svg"
                         },
                         new
                         {
-                            Id = new Guid("c7393c86-2a6a-44b7-aef9-4c15559c51ed"),
+                            Id = new Guid("e5cf70db-3ce3-4570-8f35-c0ebc9527328"),
                             PictureName = "nose5.svg"
                         },
                         new
                         {
-                            Id = new Guid("6ff5eeb0-3a7b-4483-949a-fdf329b91fde"),
+                            Id = new Guid("9bc6dfeb-67f3-4e70-b662-dc7a3265da66"),
                             PictureName = "nose6.svg"
                         });
                 });
@@ -489,8 +489,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("84192b58-815d-47f0-a05d-c4370ec8ab2b"),
-                            ConcurrencyStamp = "d84b4c8f-e265-482d-9344-04e8d35d7ac0",
+                            Id = new Guid("f7a5f86b-df22-41ab-8aaf-5c328930745d"),
+                            ConcurrencyStamp = "11d0f27e-4e46-4854-b8cf-c68f90722475",
                             Name = "user",
                             NormalizedName = "USER"
                         });
