@@ -14,6 +14,10 @@ namespace Domain.Interfaces
         IFarmFriendsRepository FarmFriends { get; }
         IFeedingEventsRepository FeedingEvents { get; }
         IThirstQuenchingEventsRepository ThirstQuenchingEvents { get; }
+        IPetBodiesRepository PetBodies { get; }
+        IPetEyesRepository PetEyes { get; }
+        IPetMouthsRepository PetMouths { get; }
+        IPetNosesRepository PetNoses { get; }
         IUsersInfoRepository UsersInfo { get; }
 
         Task SaveChangeAsync();
