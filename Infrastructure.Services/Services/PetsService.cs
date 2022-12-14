@@ -52,6 +52,40 @@ namespace Infrastructure.Services.Services
             pet.HappinessDaysCount = 0;
             pet.DeathDate = _petStatsCalculatingService.CalculateDeathDate(pet.HungerValue, pet.ThirstValue, now);
             pet.LastPetDetailsUpdatingTime = now;
+
+            var petBody = await _repositoryManager.PetBodies.GetPetBodyByNameAsync(petDto.BodyPicName);
+            if (petBody is null)
+                throw new InvalidOperationException("invalid pet's body pic name");
+            pet.BodyId = petBody.Id;
+            pet.BodyPictureX = petDto.BodyPictureX;
+            pet.BodyPictureY = petDto.BodyPictureY;
+            pet.BodyPictureScale = petDto.BodyPictureScale;
+
+            var petEyes = await _repositoryManager.PetEyes.GetPetEyesByNameAsync(petDto.EyesPicName);
+            if (petEyes is null)
+                throw new InvalidOperationException("invalid pet's eyes pic name");
+            pet.EyesId = petEyes.Id;
+            pet.EyesPictureX = petDto.EyesPictureX;
+            pet.EyesPictureY = petDto.EyesPictureY;
+            pet.EyesPictureScale = petDto.EyesPictureScale;
+
+            var petMouth = await _repositoryManager.PetMouths.GetPetMouthByNameAsync(petDto.MouthPicName);
+            if (petMouth is null)
+                throw new InvalidOperationException("invalid pet's mouth pic name");
+            pet.MouthId = petMouth.Id;
+            pet.MouthPictureX = petDto.MouthPictureX;
+            pet.MouthPictureY = petDto.MouthPictureY;
+            pet.MouthPictureScale = petDto.MouthPictureScale;
+
+            var petNose = await _repositoryManager.PetNoses.GetPetNoseByNameAsync(petDto.NosePicName);
+            if (petNose is null)
+                throw new InvalidOperationException("invalid pet's nose pic name");
+            pet.NoseId = petNose.Id;
+            pet.NosePictureX = petDto.NosePictureX;
+            pet.NosePictureY = petDto.NosePictureY;
+            pet.NosePictureScale = petDto.NosePictureScale;
+
+
             await _repositoryManager.SaveChangeAsync();
             var feedingEvent = new FeedingEventCreatingDto { PetId = pet.Id };
             await _feedingEventsService.CreateFeedingEventAsync(feedingEvent);
