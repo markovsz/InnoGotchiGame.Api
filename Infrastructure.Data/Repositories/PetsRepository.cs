@@ -21,6 +21,10 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<Pet> GetPetByIdAsync(Guid petId, bool trackChanges) =>
             await GetByCondition(e => e.Id.Equals(petId), trackChanges)
+            .Include(e => e.Body)
+            .Include(e => e.Eyes)
+            .Include(e => e.Mouth)
+            .Include(e => e.Nose)
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Pet>> GetPetsAsync(long now) =>
