@@ -49,6 +49,7 @@ namespace WebApi
             services.AddScoped<IFarmFriendsService, FarmFriendsService>();
             services.AddScoped<IFeedingEventsService, FeedingEventsService>();
             services.AddScoped<IThirstQuenchingEventsService, ThirstQuenchingEventsService>();
+            services.AddScoped<IBodyPartsService, BodyPartsService>();
             services.AddScoped<IUsersService, UsersService>();
         }
 
