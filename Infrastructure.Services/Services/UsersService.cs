@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Services.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -26,11 +27,6 @@ namespace Infrastructure.Services.Services
             _repositoryManager = repositoryManager;
             _userManager = userManager;
             _mapper = mapper;
-        }
-
-        public Task ChangePasswordAsync(Guid userId, PasswordChangingDto passwordUpdatingDto)
-        {
-            throw new NotImplementedException();
         }
 
         private string GetErrors(IdentityResult result)
@@ -90,6 +86,17 @@ namespace Infrastructure.Services.Services
             userInfo.UserId = userId;
             _repositoryManager.UsersInfo.UpdateUserInfo(userInfo);
             await _repositoryManager.SaveChangeAsync();
+        }
+
+        public async Task ChangePasswordAsync(Guid userId, PasswordChangingDto passwordChangingDto)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var isValidPassword = await _userManager.CheckPasswordAsync(user, passwordChangingDto.OldPassword);
+            if (!isValidPassword)
+                throw new AccessException("invalid old password");
+            var result = await _userManager.ChangePasswordAsync(user, passwordChangingDto.OldPassword, passwordChangingDto.NewPassword);
+            if (!result.Succeeded)
+                throw new InvalidOperationException("password changing went wrong");
         }
     }
 }

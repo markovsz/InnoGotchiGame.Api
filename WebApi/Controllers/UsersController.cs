@@ -1,4 +1,5 @@
-﻿using Application.Services.DataTransferObjects.Creating;
+﻿using Application.Services.DataTransferObjects;
+using Application.Services.DataTransferObjects.Creating;
 using Application.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -43,6 +44,15 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteUserByIdAsync(Guid userId)
         {
             await _usersService.DeleteUserByIdAsync(userId);
+            return NoContent();
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpPut("my-profile/new-password")]
+        public async Task<IActionResult> ChangePasswordAsync(Guid userId, [FromBody] PasswordChangingDto passwordChangingDto)
+        {
+            await _usersService.ChangePasswordAsync(userId, passwordChangingDto);
             return NoContent();
         }
     }
