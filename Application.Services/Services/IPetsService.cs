@@ -16,6 +16,6 @@ namespace Application.Services.Services
         Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId);
         Task<IEnumerable<PetMinReadingDto>> GetPetsAsync();
         Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId);
-        Task DeletePetByIdAsync(Guid petId);
+        Task DeletePetByIdAsync(Guid petId, Guid userId);
     }
 }

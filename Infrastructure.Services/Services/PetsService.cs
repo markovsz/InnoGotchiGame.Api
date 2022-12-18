@@ -37,9 +37,11 @@ namespace Infrastructure.Services.Services
 
         public async Task<Guid> CreatePetAsync(PetCreatingDto petDto, Guid userId)
         {
-            var user = await _repositoryManager.Farms.GetFarmByIdAsync(petDto.FarmId, false);
-            if (user.UserId != userId)
-                throw new InvalidOperationException("you don't have permissions");
+            var farm = await _repositoryManager.Farms.GetFarmByIdAsync(petDto.FarmId, false);
+            if (farm is null)
+                throw new EntityNotFoundException("invalid farm id");
+            if (farm.UserId != userId)
+                throw new AccessException("you don't have permissions");
 
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
@@ -55,7 +57,7 @@ namespace Infrastructure.Services.Services
 
             var petBody = await _repositoryManager.PetBodies.GetPetBodyByNameAsync(petDto.BodyPicName);
             if (petBody is null)
-                throw new InvalidOperationException("invalid pet's body pic name");
+                throw new IncorrectRequestDataException("invalid pet's body pic name");
             pet.BodyId = petBody.Id;
             pet.BodyPictureX = petDto.BodyPictureX;
             pet.BodyPictureY = petDto.BodyPictureY;
@@ -63,7 +65,7 @@ namespace Infrastructure.Services.Services
 
             var petEyes = await _repositoryManager.PetEyes.GetPetEyesByNameAsync(petDto.EyesPicName);
             if (petEyes is null)
-                throw new InvalidOperationException("invalid pet's eyes pic name");
+                throw new IncorrectRequestDataException("invalid pet's eyes pic name");
             pet.EyesId = petEyes.Id;
             pet.EyesPictureX = petDto.EyesPictureX;
             pet.EyesPictureY = petDto.EyesPictureY;
@@ -71,7 +73,7 @@ namespace Infrastructure.Services.Services
 
             var petMouth = await _repositoryManager.PetMouths.GetPetMouthByNameAsync(petDto.MouthPicName);
             if (petMouth is null)
-                throw new InvalidOperationException("invalid pet's mouth pic name");
+                throw new IncorrectRequestDataException("invalid pet's mouth pic name");
             pet.MouthId = petMouth.Id;
             pet.MouthPictureX = petDto.MouthPictureX;
             pet.MouthPictureY = petDto.MouthPictureY;
@@ -79,7 +81,7 @@ namespace Infrastructure.Services.Services
 
             var petNose = await _repositoryManager.PetNoses.GetPetNoseByNameAsync(petDto.NosePicName);
             if (petNose is null)
-                throw new InvalidOperationException("invalid pet's nose pic name");
+                throw new IncorrectRequestDataException("invalid pet's nose pic name");
             pet.NoseId = petNose.Id;
             pet.NosePictureX = petDto.NosePictureX;
             pet.NosePictureY = petDto.NosePictureY;
@@ -94,9 +96,14 @@ namespace Infrastructure.Services.Services
             return pet.Id;
         }
 
-        public async Task DeletePetByIdAsync(Guid petId)
+        public async Task DeletePetByIdAsync(Guid petId, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
+            if (pet is null)
+                throw new EntityNotFoundException("pet with such id doesn't exist");
+            var isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
+            if (!isMinePet)
+                throw new AccessException("you can't feed this pet");
             _repositoryManager.Pets.DeletePet(pet);
             await _repositoryManager.SaveChangeAsync();
         }
@@ -108,15 +115,10 @@ namespace Infrastructure.Services.Services
             bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
-            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
-            var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
-            var isItFriendsPet = friendFarms
-                                    .Where(e => e.Pets
-                                                .Where(p => p.Id.Equals(petId))
-                                                .Any())
-                                    .Any();
-            if (!isItFriendsPet && farm.UserId != userId)
-                throw new InvalidOperationException("you can't feed this pet");
+            bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
+            bool isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
+            if (!isFriendsPet && !isMinePet)
+                throw new AccessException("you can't feed this pet");
 
             if (!isAlive)
                 throw new PetIsDeadException("you can't feed a dead pet");
@@ -136,15 +138,10 @@ namespace Infrastructure.Services.Services
             bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
-            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
-            var friendFarms = await _repositoryManager.Farms.GetFriendFarmsAsync(userId);
-            var isItFriendsPet = friendFarms
-                                    .Where(e => e.Pets
-                                                .Where(p => p.Id.Equals(petId))
-                                                .Any())
-                                    .Any();
-            if (!isItFriendsPet && farm.UserId != userId)
-                throw new InvalidOperationException("you can't feed this pet");
+            bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
+            bool isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
+            if (!isFriendsPet && !isMinePet)
+                throw new AccessException("you can't feed this pet");
 
             if (!isAlive) 
                 throw new PetIsDeadException("you can't feed a dead pet");
@@ -161,6 +158,8 @@ namespace Infrastructure.Services.Services
         public async Task<PetReadingDto> GetPetByIdAsync(Guid petId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
+            if (pet is null)
+                throw new EntityNotFoundException("pet was't found");
             var petDto = _mapper.Map<PetReadingDto>(pet);
             return petDto;
         }
@@ -184,9 +183,11 @@ namespace Infrastructure.Services.Services
         public async Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId)
         {
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petDto.petId, false);
-            var farm = await _repositoryManager.Farms.GetFarmByIdAsync(pet.FarmId, false);
-            if (farm.UserId != userId)
-                throw new InvalidOperationException("you can't update this pet");
+            if (pet is null)
+                throw new EntityNotFoundException("pet was't found");
+            var isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
+            if (!isMinePet)
+                throw new AccessException("you can't update this pet");
 
             var petForUpdating = _mapper.Map<Pet>(petDto);
             pet.Id = petDto.petId;
@@ -194,9 +195,21 @@ namespace Infrastructure.Services.Services
             await _repositoryManager.SaveChangeAsync();
         }
 
+        private async Task<bool> IsPetOfFriendsFarmAsync(Pet pet, Guid userId)
+        {
+            var farm = await _repositoryManager.Farms.GetFarmByIdAsync(pet.FarmId, false);
+            var friendsFarm = await _repositoryManager.Farms.GetFriendFarmAsync(userId, farm.UserId);
+            if (friendsFarm is not null)
+                return true;
+            return false;
+        }
 
-
-
-        
+        private async Task<bool> IsPetOfUsersFarmAsync(Pet pet, Guid userId)
+        {
+            var farm = await _repositoryManager.Farms.GetFarmByIdAsync(pet.FarmId, false);
+            if (farm is not null && farm.UserId == userId)
+                return true;
+            return false;
+        }
     }
 }

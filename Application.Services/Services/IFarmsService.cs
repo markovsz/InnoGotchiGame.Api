@@ -12,12 +12,12 @@ namespace Application.Services.Services
         Task<Guid> CreateFarmAsync(Guid userId, FarmCreatingDto farmDto);
         Task<FarmReadingDto> GetFarmByUserIdAsync(Guid userId);
         Task<FarmMinReadingDto> GetMinFarmByUserIdAsync(Guid userId);
-        Task<FarmReadingDto> GetFarmByIdAsync(Guid farmId);
-        Task<FarmMinReadingDto> GetMinFarmByIdAsync(Guid farmId);
+        Task<FarmReadingDto> GetFarmByIdAsync(Guid farmId, Guid userId);
+        Task<FarmMinReadingDto> GetMinFarmByIdAsync(Guid farmId, Guid userId);
         Task<IEnumerable<FarmMinReadingDto>> GetFriendFarmsAsync(Guid userId);
         Task<IEnumerable<FarmMinReadingDto>> GetFarmsAsync();
         Task UpdateFarmAsync(FarmUpdatingDto farmDto, Guid userId);
-        Task DeleteFarmByIdAsync(Guid Id);
+        Task DeleteFarmByIdAsync(Guid farmId, Guid userId);
         Task DeleteFarmByUserIdAsync(Guid userId);
     }
 }
