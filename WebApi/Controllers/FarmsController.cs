@@ -41,6 +41,15 @@ namespace WebApi.Controllers
 
         [Authorize]
         [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpGet("farm/{farmId}")]
+        public async Task<IActionResult> GetFarmByIdAsync(Guid farmId, Guid userId)
+        {
+            var farmDto = await _farmsService.GetFarmByIdAsync(farmId, userId);
+            return Ok(farmDto);
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpGet("my-farm")]
         public async Task<IActionResult> GetMyFarmAsync(Guid userId)
         {
