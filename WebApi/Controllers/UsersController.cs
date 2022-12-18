@@ -1,5 +1,6 @@
 ﻿using Application.Services.DataTransferObjects;
 using Application.Services.DataTransferObjects.Creating;
+using Application.Services.DataTransferObjects.Updating;
 using Application.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -31,11 +32,30 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("{userId}", Name = "GetUserInfo")]
-        public async Task<IActionResult> GetUserInfoByIdAsync(Guid userId)
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpGet("my-profile")]
+        public async Task<IActionResult> GetMyProfileDetailsAsync(Guid userId)
         {
             var userInfo = await _usersService.GetUserInfoByIdAsync(userId);
             return Ok(userInfo);
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpGet("my-profile/min")]
+        public async Task<IActionResult> GetMyMinProfileDetailsAsync(Guid userId)
+        {
+            var userInfo = await _usersService.GetMinUserInfoByIdAsync(userId);
+            return Ok(userInfo);
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpPut("my-profile")]
+        public async Task<IActionResult> UpdateUserByIdAsync(Guid userId, [FromBody] UserUpdatingDto userDto)
+        {
+            await _usersService.UpdateUserAsync(userId, userDto);
+            return NoContent();
         }
 
         [Authorize]
