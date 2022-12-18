@@ -43,6 +43,15 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.UserInfo)
             .ToListAsync();
 
+        public async Task<Farm> GetFriendFarmAsync(Guid userId, Guid friendId) =>
+            await _context.FarmFriends
+            .Include(e => e.Farm)
+                .ThenInclude(e => e.Pets)
+            .Include(e => e.UserInfo)
+            .Where(e => e.UserId.Equals(userId) && e.Farm.UserId.Equals(friendId))
+            .Select(e => e.Farm)
+            .FirstOrDefaultAsync();
+
         public async Task<IEnumerable<Farm>> GetFriendFarmsAsync(Guid userId) =>
             await _context.FarmFriends
             .Include(e => e.Farm)
