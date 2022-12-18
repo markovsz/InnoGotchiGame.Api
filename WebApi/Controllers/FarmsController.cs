@@ -24,6 +24,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpPost]
         public async Task<IActionResult> CreateFarmAsync(Guid userId, [FromBody] FarmCreatingDto farmDto)
         {
