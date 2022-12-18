@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Middlewares;
 
 namespace WebApi
 {
@@ -61,6 +62,8 @@ namespace WebApi
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
+
+            app.UseMiddleware<ExceptionHandler>();
 
             app.UseStaticFiles();
 
