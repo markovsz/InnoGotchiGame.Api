@@ -27,6 +27,9 @@ namespace Infrastructure.Services.Services
             var user = await _userManager.FindByEmailAsync(userDto.Email);
             if (user is null)
                 throw new UserWasntFoundException("user wasn't found");
+            var isValidPassword = await _userManager.CheckPasswordAsync(user, userDto.Password);
+            if (!isValidPassword)
+                throw new AccessException("invalid old password");
             var jwtToken = await _jwtTokensGeneratorService.CreateJwtToken(user);
             return new UserAccessDto { JwtToken = jwtToken };
         }
