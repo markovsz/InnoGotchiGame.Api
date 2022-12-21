@@ -42,6 +42,7 @@ namespace WebApi
 
         public static void ConfigureServices(this IServiceCollection services)
         {
+            services.AddScoped<IPicturesService, PicturesService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IJwtTokensGeneratorService, JwtTokensGeneratorService>();
             services.AddScoped<IPetsService, PetsService>();

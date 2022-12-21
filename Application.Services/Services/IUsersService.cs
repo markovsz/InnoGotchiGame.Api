@@ -13,6 +13,7 @@ namespace Application.Services.Services
         Task<UserReadingDto> GetUserInfoByIdAsync(Guid userId);
         Task<UserMinReadingDto> GetMinUserInfoByIdAsync(Guid userId);
         Task UpdateUserAsync(Guid userId, UserUpdatingDto userDto);
+        Task UpdateUserAvatarAsync(Guid userId, string avatarPicName);
         Task ChangePasswordAsync(Guid userId, PasswordChangingDto passwordUpdatingDto);
         Task DeleteUserByIdAsync(Guid userId);
     }

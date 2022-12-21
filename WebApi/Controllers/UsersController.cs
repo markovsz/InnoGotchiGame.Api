@@ -18,10 +18,12 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private IUsersService _usersService;
+        private IPicturesService _picturesService;
 
-        public UsersController(IUsersService usersService)
+        public UsersController(IUsersService usersService, IPicturesService picturesService)
         {
             _usersService = usersService;
+            _picturesService = picturesService;
         }
 
         [HttpPost]
@@ -74,6 +76,16 @@ namespace WebApi.Controllers
         {
             await _usersService.ChangePasswordAsync(userId, passwordChangingDto);
             return NoContent();
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
+        [HttpPost("my-profile/avatar")]
+        public async Task<IActionResult> CreateAvatar(Guid userId, [FromBody] string pictureBase64)
+        {
+            var pictureName = _picturesService.CreatePicture(pictureBase64);
+            await _usersService.UpdateUserAvatarAsync(userId, pictureName);
+            return Created($"/images/{pictureName}", pictureName);
         }
     }
 }

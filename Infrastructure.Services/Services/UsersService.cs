@@ -9,6 +9,7 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 
@@ -20,13 +21,15 @@ namespace Infrastructure.Services.Services
         private IRepositoryManager _repositoryManager;
         private UserManager<User> _userManager;
         private IMapper _mapper;
+        private IConfiguration _configuration;
 
-        public UsersService(IFarmsService farmsService, IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper)
+        public UsersService(IFarmsService farmsService, IRepositoryManager repositoryManager, UserManager<User> userManager, IMapper mapper, IConfiguration configuration)
         {
             _farmsService = farmsService;
             _repositoryManager = repositoryManager;
             _userManager = userManager;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         private string GetErrors(IdentityResult result)
@@ -49,9 +52,12 @@ namespace Infrastructure.Services.Services
             result = await _userManager.AddToRoleAsync(user, UserRoles.User);
             if (!result.Succeeded) throw new InvalidOperationException(GetErrors(result));
 
-            var userInfoDto = _mapper.Map<UserInfo>(userDto);
-            userInfoDto.UserId = user.Id;
-            await _repositoryManager.UsersInfo.CreateUserInfoAsync(userInfoDto);
+            var avatarPlaceholderName = _configuration.GetSection("Pictures").GetSection("avatarPlaceholder").Value;
+
+            var userInfo = _mapper.Map<UserInfo>(userDto);
+            userInfo.UserId = user.Id;
+            userInfo.PictureSrc = avatarPlaceholderName;
+            await _repositoryManager.UsersInfo.CreateUserInfoAsync(userInfo);
             await _repositoryManager.SaveChangeAsync();
 
             return user.Id;
@@ -85,6 +91,13 @@ namespace Infrastructure.Services.Services
             var userInfo = _mapper.Map<UserInfo>(userDto);
             userInfo.UserId = userId;
             _repositoryManager.UsersInfo.UpdateUserInfo(userInfo);
+            await _repositoryManager.SaveChangeAsync();
+        }
+
+        public async Task UpdateUserAvatarAsync(Guid userId, string avatarPicName)
+        {
+            var userInfo = await _repositoryManager.UsersInfo.GetUserInfoByUserIdAsync(userId, true);
+            userInfo.PictureSrc = avatarPicName;
             await _repositoryManager.SaveChangeAsync();
         }
 
