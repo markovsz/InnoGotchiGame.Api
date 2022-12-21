@@ -54,7 +54,7 @@ namespace WebApi.Controllers
         [HttpGet("my-farm")]
         public async Task<IActionResult> GetMyFarmAsync(Guid userId)
         {
-            var farmDto = await _farmsService.GetFarmByUserIdAsync(userId);
+            var farmDto = await _farmsService.GetMinFarmByUserIdAsync(userId);
             return Ok(farmDto);
         }
 
