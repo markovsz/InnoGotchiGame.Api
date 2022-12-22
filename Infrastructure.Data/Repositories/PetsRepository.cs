@@ -25,6 +25,8 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Eyes)
             .Include(e => e.Mouth)
             .Include(e => e.Nose)
+            .Include(e => e.Farm)
+                .ThenInclude(e => e.FarmFriends)
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Pet>> GetPetsAsync(long now) =>

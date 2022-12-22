@@ -7,6 +7,7 @@ using Domain.Core.Models;
 using Infrastructure.Data;
 using Infrastructure.Services.Helpers;
 using System;
+using System.Linq;
 
 namespace Infrastructure.Services
 {
@@ -41,7 +42,9 @@ namespace Infrastructure.Services
                 .ForMember(e => e.BodyPicName, opt => opt.MapFrom(src => src.Body.PictureName))
                 .ForMember(e => e.EyesPicName, opt => opt.MapFrom(src => src.Eyes.PictureName))
                 .ForMember(e => e.MouthPicName, opt => opt.MapFrom(src => src.Mouth.PictureName))
-                .ForMember(e => e.NosePicName, opt => opt.MapFrom(src => src.Nose.PictureName));
+                .ForMember(e => e.NosePicName, opt => opt.MapFrom(src => src.Nose.PictureName))
+                .ForMember(e => e.Friends, opt => opt.MapFrom(src => src.Farm.FarmFriends.Select(e => e.UserId)))
+                .ForMember(e => e.UserId, opt => opt.MapFrom(src => src.Farm.UserId));
             CreateMap<Pet, PetMinReadingDto>()
                 .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSignsAsync(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
