@@ -33,14 +33,6 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetFarmByUserIdAsync(Guid userId)
-        {
-            var farmDto = await _farmsService.GetFarmByUserIdAsync(userId);
-            return Ok(farmDto);
-        }
-
-        [Authorize]
         [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpGet("farm/{farmId}")]
         public async Task<IActionResult> GetFarmByIdAsync(Guid farmId, Guid userId)
@@ -77,14 +69,7 @@ namespace WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("all")]
-        public async Task<IActionResult> GetFarmsAsync()
-        {
-            var farms = await _farmsService.GetFarmsAsync();
-            return Ok(farms);
-        }
-
-        [Authorize]
+        [ServiceFilter(typeof(ExtractUserIdFilter))]
         [HttpPut("farm")]
         public async Task<IActionResult> UpdateFarmAsync([FromBody] FarmUpdatingDto farmDto, Guid userId)
         {
