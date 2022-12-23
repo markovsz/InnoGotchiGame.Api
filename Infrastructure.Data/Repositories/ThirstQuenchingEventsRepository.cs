@@ -28,6 +28,12 @@ namespace Infrastructure.Data.Repositories
             .Where(e => e.PetId.Equals(petId))
             .ToListAsync();
 
+        public async Task<IEnumerable<ThirstQuenchingEvent>> GetFarmThirstQuenchingEventsAsync(Guid farmId) =>
+            await GetAll(false)
+            .Include(e => e.Pet)
+            .Where(e => e.Pet.FarmId.Equals(farmId))
+            .ToListAsync();
+
         public void UpdateThirstQuenchingEvent(ThirstQuenchingEvent thirstQuenchingEvent) => Update(thirstQuenchingEvent);
 
         public async Task<ThirstQuenchingEvent> GetLastPetThirstQuenchingEventAsync(Guid petId, bool trackChanges) =>

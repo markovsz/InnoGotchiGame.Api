@@ -38,6 +38,12 @@ namespace Infrastructure.Data.Repositories
             await GetByCondition(e => e.PetId.Equals(petId), false)
             .ToListAsync();
 
+        public async Task<IEnumerable<FeedingEvent>> GetFarmFeedingEventsAsync(Guid farmId) =>
+            await GetAll(false)
+            .Include(e => e.Pet)
+            .Where(e => e.Pet.FarmId.Equals(farmId))
+            .ToListAsync();
+
         public void UpdateFeedingEvent(FeedingEvent feedingEvent) => Update(feedingEvent);
     }
 }

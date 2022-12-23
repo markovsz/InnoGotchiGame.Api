@@ -38,6 +38,8 @@ namespace WebApi
             services.AddSingleton<IDateTimeConverter, DateTimeConverter>();
             services.AddScoped<IPetStatsCalculatingService, PetStatsCalculatingService>();
             services.AddScoped<IFarmStatsCalculatingService, FarmStatsCalculatingService>();
+            services.AddScoped<IFeedingFarmStatsService, FeedingFarmStatsService>();
+            services.AddScoped<IThirstQuenchingFarmStatsService, ThirstQuenchingFarmStatsService>();
         }
 
         public static void ConfigureServices(this IServiceCollection services)
