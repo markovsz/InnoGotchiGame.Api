@@ -1,5 +1,6 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Updating;
+using Application.Services.Helpers;
 using Application.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,14 @@ namespace WebApi.Controllers
     public class FarmsController : ControllerBase
     {
         private IFarmsService _farmsService;
+        private IValidationHelper<FarmCreatingDto> _farmCreatingDtoValidator;
+        private IValidationHelper<FarmUpdatingDto> _farmUpdatingDtoValidator;
 
-        public FarmsController(IFarmsService farmsService)
+        public FarmsController(IFarmsService farmsService, IValidationHelper<FarmCreatingDto> farmCreatingDtoValidator, IValidationHelper<FarmUpdatingDto> farmUpdatingDtoValidator)
         {
             _farmsService = farmsService;
+            _farmCreatingDtoValidator = farmCreatingDtoValidator;
+            _farmUpdatingDtoValidator = farmUpdatingDtoValidator;
         }
 
         [Authorize]
@@ -28,6 +33,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateFarmAsync(Guid userId, [FromBody] FarmCreatingDto farmDto)
         {
+            await _farmCreatingDtoValidator.ValidateAsync(farmDto);
             var farmId = await _farmsService.CreateFarmAsync(userId, farmDto);
             return Created($"{farmId}", new { Id = farmId });
         }
@@ -73,6 +79,7 @@ namespace WebApi.Controllers
         [HttpPut("farm")]
         public async Task<IActionResult> UpdateFarmAsync([FromBody] FarmUpdatingDto farmDto, Guid userId)
         {
+            await _farmUpdatingDtoValidator.ValidateAsync(farmDto);
             await _farmsService.UpdateFarmAsync(farmDto, userId);
             return NoContent();
         }

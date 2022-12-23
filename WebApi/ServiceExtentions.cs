@@ -1,12 +1,17 @@
-﻿using Application.Services.Helpers;
+﻿using Application.Services.DataTransferObjects;
+using Application.Services.DataTransferObjects.Creating;
+using Application.Services.DataTransferObjects.Updating;
+using Application.Services.Helpers;
 using Application.Services.Services;
 using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
+using FluentValidation;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using Infrastructure.Services.Helpers;
 using Infrastructure.Services.Services;
+using Infrastructure.Services.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +59,27 @@ namespace WebApi
             services.AddScoped<IThirstQuenchingEventsService, ThirstQuenchingEventsService>();
             services.AddScoped<IBodyPartsService, BodyPartsService>();
             services.AddScoped<IUsersService, UsersService>();
+        }
+
+        public static void ConfigureFluentValidator(this IServiceCollection services)
+        {
+            services.AddScoped<IValidator<FarmCreatingDto>, FarmCreatingDtoValidator>();
+            services.AddScoped<IValidator<FarmUpdatingDto>, FarmUpdatingDtoValidator>();
+            services.AddScoped<IValidator<PetCreatingDto>, PetCreatingDtoValidator>();
+            services.AddScoped<IValidator<PetUpdatingDto>, PetUpdatingDtoValidator>();
+            services.AddScoped<IValidator<UserAuthenticationDto>, UserAuthenticationDtoValidator>();
+            services.AddScoped<IValidator<UserCreatingDto>, UserCreatingDtoValidator>();
+            services.AddScoped<IValidator<UserUpdatingDto>, UserUpdatingDtoValidator>();
+            services.AddScoped<IValidator<PasswordChangingDto>, PasswordChangingDtoValidator>();
+
+            services.AddScoped<IValidationHelper<FarmCreatingDto>, ValidationHelper<FarmCreatingDto>>();
+            services.AddScoped<IValidationHelper<FarmUpdatingDto>, ValidationHelper<FarmUpdatingDto>>();
+            services.AddScoped<IValidationHelper<PetCreatingDto>, ValidationHelper<PetCreatingDto>>();
+            services.AddScoped<IValidationHelper<PetUpdatingDto>, ValidationHelper<PetUpdatingDto>>();
+            services.AddScoped<IValidationHelper<UserAuthenticationDto>, ValidationHelper<UserAuthenticationDto>>();
+            services.AddScoped<IValidationHelper<UserCreatingDto>, ValidationHelper<UserCreatingDto>>();
+            services.AddScoped<IValidationHelper<UserUpdatingDto>, ValidationHelper<UserUpdatingDto>>();
+            services.AddScoped<IValidationHelper<PasswordChangingDto>, ValidationHelper<PasswordChangingDto>>();
         }
 
         public static void ConfigureAutoMapper(this IServiceCollection services)

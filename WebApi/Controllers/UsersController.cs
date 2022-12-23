@@ -1,6 +1,7 @@
 ﻿using Application.Services.DataTransferObjects;
 using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Updating;
+using Application.Services.Helpers;
 using Application.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,16 +20,23 @@ namespace WebApi.Controllers
     {
         private IUsersService _usersService;
         private IPicturesService _picturesService;
+        private IValidationHelper<UserCreatingDto> _userCreatingDtoValidator;
+        private IValidationHelper<UserUpdatingDto> _userUpdatingDtoValidator;
+        private IValidationHelper<PasswordChangingDto> _passwordChangingDtoValidator;
 
-        public UsersController(IUsersService usersService, IPicturesService picturesService)
+        public UsersController(IUsersService usersService, IPicturesService picturesService, IValidationHelper<UserCreatingDto> userCreatingDtoValidator, IValidationHelper<UserUpdatingDto> userUpdatingDtoValidator, IValidationHelper<PasswordChangingDto> passwordChangingDtoValidator)
         {
             _usersService = usersService;
             _picturesService = picturesService;
+            _userCreatingDtoValidator = userCreatingDtoValidator;
+            _userUpdatingDtoValidator = userUpdatingDtoValidator;
+            _passwordChangingDtoValidator = passwordChangingDtoValidator;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserCreatingDto userDto)
         {
+            await _userCreatingDtoValidator.ValidateAsync(userDto);
             var userId = await _usersService.CreateUserAsync(userDto);
             return Created($"{userId}", new { Id = userId});
         }
@@ -56,6 +64,7 @@ namespace WebApi.Controllers
         [HttpPut("my-profile")]
         public async Task<IActionResult> UpdateUserByIdAsync(Guid userId, [FromBody] UserUpdatingDto userDto)
         {
+            await _userUpdatingDtoValidator.ValidateAsync(userDto);
             await _usersService.UpdateUserAsync(userId, userDto);
             return NoContent();
         }
@@ -74,6 +83,7 @@ namespace WebApi.Controllers
         [HttpPut("my-profile/new-password")]
         public async Task<IActionResult> ChangePasswordAsync(Guid userId, [FromBody] PasswordChangingDto passwordChangingDto)
         {
+            await _passwordChangingDtoValidator.ValidateAsync(passwordChangingDto);
             await _usersService.ChangePasswordAsync(userId, passwordChangingDto);
             return NoContent();
         }

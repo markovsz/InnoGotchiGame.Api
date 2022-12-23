@@ -43,6 +43,7 @@ namespace WebApi
             services.ConfigureFilters();
             services.AddCors();
             services.AddControllers();
+            services.ConfigureFluentValidator();
             services.ConfigureSwagger();
         }
 

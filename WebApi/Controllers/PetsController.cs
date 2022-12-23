@@ -1,5 +1,6 @@
 ﻿using Application.Services.DataTransferObjects.Creating;
 using Application.Services.DataTransferObjects.Updating;
+using Application.Services.Helpers;
 using Application.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,14 @@ namespace WebApi.Controllers
     public class PetsController : ControllerBase
     {
         private IPetsService _petsService;
+        private IValidationHelper<PetCreatingDto> _petCreatingDtoValidator;
+        private IValidationHelper<PetUpdatingDto> _petUpdatingDtoValidator;
 
-        public PetsController(IPetsService petsService)
+        public PetsController(IPetsService petsService, IValidationHelper<PetCreatingDto> petCreatingDtoValidator, IValidationHelper<PetUpdatingDto> petUpdatingDtoValidator)
         {
             _petsService = petsService;
+            _petCreatingDtoValidator = petCreatingDtoValidator;
+            _petUpdatingDtoValidator = petUpdatingDtoValidator;
         }
 
         [Authorize]
@@ -28,6 +33,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePetAsync([FromBody] PetCreatingDto petDto, Guid userId)
         {
+            await _petCreatingDtoValidator.ValidateAsync(petDto);
             var petId = await _petsService.CreatePetAsync(petDto, userId);
             return Created($"{petId}", new { Id = petId });
         }
@@ -79,6 +85,7 @@ namespace WebApi.Controllers
         [HttpPut("pet")]
         public async Task<IActionResult> UpdatePetAsync([FromBody] PetUpdatingDto petDto, Guid userId)
         {
+            await _petUpdatingDtoValidator.ValidateAsync(petDto);
             await _petsService.UpdatePetAsync(petDto, userId);
             return NoContent();
         }
