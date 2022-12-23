@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
+using Infrastructure.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,17 +23,23 @@ namespace Infrastructure.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<Guid> CreateFarmFriendAsync(FarmFriendCreatingDto farmFriendDto)
+        public async Task<Guid> CreateFarmFriendAsync(FarmFriendCreatingDto farmFriendDto, Guid userId)
         {
+            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
+            if (farm.Id != farmFriendDto.FarmId)
+                throw new AccessException("you can't invite friends to a other's farm");
             var farmFriend = _mapper.Map<FarmFriend>(farmFriendDto);
             await _repositoryManager.FarmFriends.CreateFarmFriendAsync(farmFriend);
             await _repositoryManager.SaveChangeAsync();
             return farmFriend.Id;
         }
 
-        public async Task DeleteFarmFriendByIdAsync(Guid farmFriendId)
+        public async Task DeleteFarmFriendByIdAsync(Guid farmFriendId, Guid userId)
         {
+            var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
             var farmFriend = await _repositoryManager.FarmFriends.GetFarmFriendByIdAsync(farmFriendId, false);
+            if (farm.Id != farmFriend.FarmId)
+                throw new AccessException("you can't delete friends from an other's farm");
             _repositoryManager.FarmFriends.DeleteFarmFriend(farmFriend);
             await _repositoryManager.SaveChangeAsync();
         }

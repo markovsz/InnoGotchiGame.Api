@@ -10,8 +10,8 @@ namespace Application.Services.Services
 {
     public interface IFarmFriendsService
     {
-        Task<Guid> CreateFarmFriendAsync(FarmFriendCreatingDto farmFriendDto);
+        Task<Guid> CreateFarmFriendAsync(FarmFriendCreatingDto farmFriendDto, Guid userId);
         Task<IEnumerable<FarmFriendReadingDto>> GetUserFarmFriendsAsync(Guid userId);
-        Task DeleteFarmFriendByIdAsync(Guid farmFriendId);
+        Task DeleteFarmFriendByIdAsync(Guid farmFriendId, Guid userId);
     }
 }
