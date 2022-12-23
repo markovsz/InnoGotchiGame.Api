@@ -43,20 +43,5 @@ namespace Infrastructure.Services.Services
             _repositoryManager.FeedingEvents.DeleteFeedingEvent(feedingEvent);
             await _repositoryManager.SaveChangeAsync();
         }
-
-        public async Task<double> GetAverageTimeBetweenFeedingAsync(Guid petId)
-        {
-            var hungerDays = await _repositoryManager.FeedingEvents.GetHungerDaysAsync(petId);
-            var spansBetweenFeeding = new List<double>();
-            var hungerDaysEnumerator = hungerDays.GetEnumerator();
-            hungerDaysEnumerator.MoveNext();
-            var thirstyDayPrev = hungerDaysEnumerator.Current;
-            while (hungerDaysEnumerator.MoveNext())
-            {
-                var thirstyDay = hungerDaysEnumerator.Current;
-                spansBetweenFeeding.Add(thirstyDayPrev - thirstyDay);
-            }
-            return _dateTimeConverter.GetTotalDays((long)spansBetweenFeeding.Average());
-        }
     }
 }

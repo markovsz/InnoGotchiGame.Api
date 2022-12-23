@@ -9,7 +9,6 @@ namespace Application.Services.Services
     public interface IThirstQuenchingEventsService
     {
         Task<Guid> CreateThirstQuenchingEventAsync(ThirstQuenchingEventCreatingDto thirstQuenchingEventDto);
-        Task<double> GetAverageTimeBetweenThirstQuenchingAsync(Guid petId);
         Task DeleteThirstQuenchingEventByIdAsync(Guid eventId);
     }
 }

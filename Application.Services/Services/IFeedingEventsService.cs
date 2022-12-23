@@ -12,7 +12,6 @@ namespace Application.Services.Services
     public interface IFeedingEventsService
     {
         Task<Guid> CreateFeedingEventAsync(FeedingEventCreatingDto thirstQuenchingEventDto);
-        Task<double> GetAverageTimeBetweenFeedingAsync(Guid petId);
         Task DeleteFeedingEventByIdAsync(Guid eventId);
     }
 }

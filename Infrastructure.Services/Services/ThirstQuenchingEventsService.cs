@@ -44,20 +44,5 @@ namespace Infrastructure.Services.Services
             _repositoryManager.ThirstQuenchingEvents.DeleteThirstQuenchingEvent(feedingEvent);
             await _repositoryManager.SaveChangeAsync();
         }
-
-        public async Task<double> GetAverageTimeBetweenThirstQuenchingAsync(Guid petId)
-        {
-            var thirstyDays = await _repositoryManager.ThirstQuenchingEvents.GetThirstyDaysAsync(petId);
-            var spansBetweenThirstQuenching = new List<double>();
-            var thirstyDaysEnumerator = thirstyDays.GetEnumerator();
-            thirstyDaysEnumerator.MoveNext();
-            var thirstyDayPrev = thirstyDaysEnumerator.Current;
-            while(thirstyDaysEnumerator.MoveNext())
-            {
-                var thirstyDay = thirstyDaysEnumerator.Current;
-                spansBetweenThirstQuenching.Add(thirstyDayPrev - thirstyDay);
-            }
-            return _dateTimeConverter.GetTotalDays((long)spansBetweenThirstQuenching.Average());
-        }
     }
 }
