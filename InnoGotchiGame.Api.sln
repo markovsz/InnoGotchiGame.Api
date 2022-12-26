@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{BDD1DF03-86EA-4222-96FD-7379687B32E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{BDD1DF03-86EA-4222-96FD-7379687B32E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Core", "Domain.Core\Domain.Core.csproj", "{0433BC84-3236-472B-8DC9-70E5E5CD06C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Core", "Domain.Core\Domain.Core.csproj", "{0433BC84-3236-472B-8DC9-70E5E5CD06C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Interfaces", "Domain.Interfaces\Domain.Interfaces.csproj", "{ECD4FBDA-6219-4516-A13E-9FF6244B0ABE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Interfaces", "Domain.Interfaces\Domain.Interfaces.csproj", "{ECD4FBDA-6219-4516-A13E-9FF6244B0ABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Services", "Application.Services\Application.Services.csproj", "{60B78043-E349-496A-A7FC-3F7C72811B30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Services", "Application.Services\Application.Services.csproj", "{60B78043-E349-496A-A7FC-3F7C72811B30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Data", "Infrastructure.Data\Infrastructure.Data.csproj", "{6604A160-3BA5-46DF-ACC3-4D9DD685956E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Data", "Infrastructure.Data\Infrastructure.Data.csproj", "{6604A160-3BA5-46DF-ACC3-4D9DD685956E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Services", "Infrastructure.Services\Infrastructure.Services.csproj", "{721E6CA6-10D4-4C18-832F-5B01FC3BD4DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Services", "Infrastructure.Services\Infrastructure.Services.csproj", "{721E6CA6-10D4-4C18-832F-5B01FC3BD4DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{5BE05DF9-5BD3-4610-BA05-36E8EA33037A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{721E6CA6-10D4-4C18-832F-5B01FC3BD4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{721E6CA6-10D4-4C18-832F-5B01FC3BD4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{721E6CA6-10D4-4C18-832F-5B01FC3BD4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BE05DF9-5BD3-4610-BA05-36E8EA33037A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BE05DF9-5BD3-4610-BA05-36E8EA33037A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BE05DF9-5BD3-4610-BA05-36E8EA33037A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BE05DF9-5BD3-4610-BA05-36E8EA33037A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
