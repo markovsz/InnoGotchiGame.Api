@@ -45,7 +45,7 @@ namespace Infrastructure.Services.Services
 
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
-            var pet = _mapper.Map<Pet>(petDto);
+            var pet = _mapper.Map<PetCreatingDto, Pet>(petDto);
             await _repositoryManager.Pets.CreatePetAsync(pet);
             pet.BirthDate = now;
             pet.HungerValue = HungerLevels.FullMinHungerValue;
@@ -114,7 +114,7 @@ namespace Infrastructure.Services.Services
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
             bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
+            pet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, now);
             bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
             bool isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
             if (!isFriendsPet && !isMinePet)
@@ -137,7 +137,7 @@ namespace Infrastructure.Services.Services
             var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
             bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            pet = _petStatsCalculatingService.UpdatePetVitalSignsAsync(pet, now);
+            pet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, now);
             bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
             bool isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
             if (!isFriendsPet && !isMinePet)

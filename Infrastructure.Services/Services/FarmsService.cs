@@ -29,7 +29,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<Guid> CreateFarmAsync(Guid userId, FarmCreatingDto farmDto)
         {
-            var farm = _mapper.Map<Farm>(farmDto);
+            var farm = _mapper.Map<FarmCreatingDto, Farm>(farmDto);
             farm.UserId = userId;
             await _repositoryManager.Farms.CreateFarmAsync(farm);
             await _repositoryManager.SaveChangeAsync();

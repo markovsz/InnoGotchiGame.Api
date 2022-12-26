@@ -43,7 +43,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<Guid> CreateUserAsync(UserCreatingDto userDto)
         {
-            var user = _mapper.Map<User>(userDto);
+            var user = _mapper.Map<UserCreatingDto, User>(userDto);
             user.UserName = userDto.Email;
             var result = await _userManager.CreateAsync(user);
             if (!result.Succeeded) throw new InvalidOperationException(GetErrors(result));
@@ -54,7 +54,7 @@ namespace Infrastructure.Services.Services
 
             var avatarPlaceholderName = _configuration.GetSection("Pictures").GetSection("avatarPlaceholder").Value;
 
-            var userInfo = _mapper.Map<UserInfo>(userDto);
+            var userInfo = _mapper.Map<UserCreatingDto, UserInfo>(userDto);
             userInfo.UserId = user.Id;
             userInfo.PictureSrc = avatarPlaceholderName;
             await _repositoryManager.UsersInfo.CreateUserInfoAsync(userInfo);

@@ -28,7 +28,7 @@ namespace Infrastructure.Services.Services
             var farm = await _repositoryManager.Farms.GetFarmByUserIdAsync(userId, false);
             if (farm.Id != farmFriendDto.FarmId)
                 throw new AccessException("you can't invite friends to a other's farm");
-            var farmFriend = _mapper.Map<FarmFriend>(farmFriendDto);
+            var farmFriend = _mapper.Map<FarmFriendCreatingDto, FarmFriend>(farmFriendDto);
             await _repositoryManager.FarmFriends.CreateFarmFriendAsync(farmFriend);
             await _repositoryManager.SaveChangeAsync();
             return farmFriend.Id;
@@ -47,7 +47,7 @@ namespace Infrastructure.Services.Services
         public async Task<IEnumerable<FarmFriendReadingDto>> GetUserFarmFriendsAsync(Guid userId)
         {
             var farmFriends = await _repositoryManager.FarmFriends.GetFarmFriendsByUserIdAsync(userId);
-            var farmFriendsDto = _mapper.Map<IEnumerable<FarmFriendReadingDto>>(farmFriends);
+            var farmFriendsDto = _mapper.Map<IEnumerable<FarmFriend>, IEnumerable<FarmFriendReadingDto>>(farmFriends);
             return farmFriendsDto;
         }
     }
