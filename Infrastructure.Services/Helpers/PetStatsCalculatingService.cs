@@ -3,21 +3,20 @@ using Domain.Core.Models;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services.Helpers;
+using System;
 
 namespace Infrastructure.Services.Helpers
 {
     public class PetStatsCalculatingService : IPetStatsCalculatingService
     {
-        private IRepositoryManager _repositoryManager;
         private IDateTimeConverter _dateTimeConverter;
 
-        public PetStatsCalculatingService(IRepositoryManager repositoryManager, IDateTimeConverter dateTimeConverter)
+        public PetStatsCalculatingService(IDateTimeConverter dateTimeConverter)
         {
-            _repositoryManager = repositoryManager;
             _dateTimeConverter = dateTimeConverter;
         }
 
-        public Pet UpdatePetVitalSignsAsync(Pet pet, long updationTime)
+        public Pet UpdatePetVitalSigns(Pet pet, long updationTime) //TODO: delete Async
         {
             var hungerValue = CalculateHungerValueAtTime(pet.HungerValue, pet.LastPetDetailsUpdatingTime, updationTime);
             var thirstValue = CalculateThirstValueAtTime(pet.ThirstValue, pet.LastPetDetailsUpdatingTime, updationTime);
