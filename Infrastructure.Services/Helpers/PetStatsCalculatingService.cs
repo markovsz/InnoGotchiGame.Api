@@ -28,7 +28,7 @@ namespace Infrastructure.Services.Helpers
                 pet.LastPetDetailsUpdatingTime = updationTime;
             }
             pet.DeathDate = CalculateDeathDate(hungerValue, thirstValue, updationTime);
-            if (!IsPetAlive(hungerValue, thirstValue))
+            if (pet.IsAlive && !IsPetAlive(hungerValue, thirstValue))
             {
                 pet.IsAlive = false;
                 pet.HappinessDaysCount = 0;
