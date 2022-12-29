@@ -66,6 +66,13 @@ namespace Infrastructure.Services.Helpers
             return time + (timeSpanByHungerValue > timeSpanByThirstValue ? timeSpanByThirstValue : timeSpanByHungerValue);
         }
 
+        public int CalculatePetAge(Pet pet, long currentTime)
+        {
+            if (!pet.IsAlive)
+                return _dateTimeConverter.GetYears(pet.DeathDate - pet.BirthDate);
+            return _dateTimeConverter.GetYears(currentTime - pet.BirthDate);
+        }
+
         public bool IsPetAlive(float hungerValue, float thirstValue)
         {
             if (hungerValue >= HungerLevels.HungerMinHungerValue && thirstValue >= ThirstLevels.ThirstyMinThirstValue) return true;
