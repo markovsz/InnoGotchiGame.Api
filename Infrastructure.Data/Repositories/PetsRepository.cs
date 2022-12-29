@@ -68,7 +68,7 @@ namespace Infrastructure.Data.Repositories
 
         public async Task<double> GetFarmAveragePetsAgeAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
-            .Select(e => (now - e.BirthDate) / (60 * 60 * 24 * 365))
+            .Select(e => e.DeathDate > now ? (now - e.BirthDate) / (60 * 60 * 24 * 365) : (e.DeathDate - e.BirthDate) / (60 * 60 * 24 * 365))
             .DefaultIfEmpty()
             .AverageAsync();
 
