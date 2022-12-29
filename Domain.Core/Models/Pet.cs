@@ -19,6 +19,32 @@ namespace Domain.Core.Models
             IsAlive = pet.IsAlive;
             HappinessDaysCount = pet.HappinessDaysCount;
             LastPetDetailsUpdatingTime = pet.LastPetDetailsUpdatingTime;
+
+            BodyId = pet.BodyId;
+            BodyPictureScale = pet.BodyPictureScale;
+            BodyPictureX = pet.BodyPictureX;
+            BodyPictureY = pet.BodyPictureY;
+            Body = pet.Body;
+
+            EyesId = pet.EyesId;
+            EyesPictureScale = pet.EyesPictureScale;
+            EyesPictureX = pet.EyesPictureX;
+            EyesPictureY = pet.EyesPictureY;
+            Eyes = pet.Eyes;
+
+            MouthId = pet.MouthId;
+            MouthPictureScale = pet.MouthPictureScale;
+            MouthPictureX = pet.MouthPictureX;
+            MouthPictureY = pet.MouthPictureY;
+            Mouth = pet.Mouth;
+
+            NoseId = pet.NoseId;
+            NosePictureScale = pet.NosePictureScale;
+            NosePictureX = pet.NosePictureX;
+            NosePictureY = pet.NosePictureY;
+            Nose = pet.Nose;
+
+            Farm = pet.Farm;
         }
 
         public Guid Id { get; set; }
