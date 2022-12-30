@@ -6,6 +6,7 @@ using Application.Services.Services;
 using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
+using Domain.Interfaces.RequestParameters;
 using Infrastructure.Data;
 using Infrastructure.Services.Exceptions;
 using Infrastructure.Services.Helpers;
@@ -164,12 +165,16 @@ namespace Infrastructure.Services.Services
             return petDto;
         }
 
-        public async Task<IEnumerable<PetMinReadingDto>> GetPetsAsync()
+        public async Task<PetsPaginationDto> GetPetsAsync(PetParameters parameters)
         {
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            var pets = await _repositoryManager.Pets.GetPetsAsync(now);
-            var petsDto = _mapper.Map<IEnumerable<PetMinReadingDto>>(pets);
-            return petsDto;
+            var pets = await _repositoryManager.Pets.GetPetsAsync(parameters, now);
+            var petsCount = await _repositoryManager.Pets.GetPetsCountAsync(now);
+
+            var paginationDto = new PetsPaginationDto();
+            paginationDto.Pets = _mapper.Map<IEnumerable<PetMinReadingDto>>(pets);
+            paginationDto.PagesCount = petsCount;
+            return paginationDto;
         }
 
         public async Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId)

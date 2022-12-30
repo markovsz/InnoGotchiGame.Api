@@ -1,5 +1,7 @@
 ﻿using Domain.Core.Models;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.RequestParameters;
+using Infrastructure.Data.ParameterHandlers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,14 +31,20 @@ namespace Infrastructure.Data.Repositories
                 .ThenInclude(e => e.FarmFriends)
             .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Pet>> GetPetsAsync(long now) =>
+        public async Task<IEnumerable<Pet>> GetPetsAsync(PetParameters parameters, long now) =>
             await GetAll(false)
             .Where(e => e.DeathDate > now)
             .Select(e => new Pet(e){ 
                 HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
             })
             .OrderByDescending(e => e.HappinessDaysCount)
+            .PetParametersHandler(parameters)
             .ToListAsync();
+
+        public async Task<int> GetPetsCountAsync(long now) =>
+            await GetAll(false)
+            .Where(e => e.DeathDate > now)
+            .CountAsync();
 
         public async Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId, long now) =>
             await GetAll(false)

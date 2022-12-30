@@ -2,9 +2,11 @@
 using Application.Services.DataTransferObjects.Updating;
 using Application.Services.Helpers;
 using Application.Services.Services;
+using Domain.Interfaces.RequestParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,10 +58,12 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpGet("all")]
-        public async Task<IActionResult> GetPetsAsync()
+        public async Task<IActionResult> GetPetsAsync([FromQuery] PetParameters parameters)
         {
-            var pets = await _petsService.GetPetsAsync();
-            return Ok(pets);
+            var pets = await _petsService.GetPetsAsync(parameters);
+
+            Response.Headers.Add("X-Pagination-Page-Count", JsonConvert.SerializeObject(pets.PagesCount));
+            return Ok(pets.Pets);
         }
 
         [Authorize]
