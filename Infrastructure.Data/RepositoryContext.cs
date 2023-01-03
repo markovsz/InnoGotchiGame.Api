@@ -35,10 +35,10 @@ namespace Infrastructure.Data
 			modelBuilder.Entity<Pet>().HasKey(e => e.Id);
 			modelBuilder.Entity<Pet>().Property(e => e.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Pet>().HasOne(e => e.Farm).WithMany(e => e.Pets).HasForeignKey(e => e.FarmId);
-            modelBuilder.Entity<Pet>().HasOne(e => e.Body).WithMany(e => e.RelatedPets).HasForeignKey(e => e.BodyId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Pet>().HasOne(e => e.Eyes).WithMany(e => e.RelatedPets).HasForeignKey(e => e.EyesId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Pet>().HasOne(e => e.Nose).WithMany(e => e.RelatedPets).HasForeignKey(e => e.NoseId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Pet>().HasOne(e => e.Mouth).WithMany(e => e.RelatedPets).HasForeignKey(e => e.MouthId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Pet>().HasOne(e => e.Body).WithMany(e => e.RelatedPets).HasForeignKey(e => e.BodyId);
+            modelBuilder.Entity<Pet>().HasOne(e => e.Eyes).WithMany(e => e.RelatedPets).HasForeignKey(e => e.EyesId);
+            modelBuilder.Entity<Pet>().HasOne(e => e.Nose).WithMany(e => e.RelatedPets).HasForeignKey(e => e.NoseId);
+            modelBuilder.Entity<Pet>().HasOne(e => e.Mouth).WithMany(e => e.RelatedPets).HasForeignKey(e => e.MouthId);
 
 			modelBuilder.Entity<FarmFriend>().HasKey(e => e.Id);
 			modelBuilder.Entity<FarmFriend>().Property(e => e.Id).ValueGeneratedOnAdd();
