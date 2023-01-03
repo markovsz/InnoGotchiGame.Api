@@ -99,7 +99,8 @@ namespace Infrastructure.Services.Services
 
         public async Task DeletePetByIdAsync(Guid petId, Guid userId)
         {
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, now, false);
             if (pet is null)
                 throw new EntityNotFoundException("pet with such id doesn't exist");
             var isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
@@ -111,10 +112,9 @@ namespace Infrastructure.Services.Services
 
         public async Task<string> FeedPetAsync(Guid petId, Guid userId)
         {
-
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
-            bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, now, true);
+            bool isAlive = pet.IsAlive;
             pet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, now);
             bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
             bool isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
@@ -135,9 +135,9 @@ namespace Infrastructure.Services.Services
 
         public async Task<string> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, true);
-            bool isAlive = pet.IsAlive;
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, now, true);
+            bool isAlive = pet.IsAlive;
             pet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, now);
             bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
             bool isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
@@ -158,7 +158,8 @@ namespace Infrastructure.Services.Services
 
         public async Task<PetReadingDto> GetPetByIdAsync(Guid petId)
         {
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, false);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petId, now, false);
             if (pet is null)
                 throw new EntityNotFoundException("pet was't found");
             var petDto = _mapper.Map<PetReadingDto>(pet);
@@ -170,6 +171,7 @@ namespace Infrastructure.Services.Services
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
             var pets = await _repositoryManager.Pets.GetPetsAsync(parameters, now);
             var petsCount = await _repositoryManager.Pets.GetPetsCountAsync(now);
+            petsCount = (petsCount + PetParameters.PageSize - 1) / PetParameters.PageSize;
 
             var paginationDto = new PetsPaginationDto();
             paginationDto.Pets = _mapper.Map<IEnumerable<PetMinReadingDto>>(pets);
@@ -187,7 +189,8 @@ namespace Infrastructure.Services.Services
 
         public async Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId)
         {
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petDto.petId, false);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(petDto.petId, now, false);
             if (pet is null)
                 throw new EntityNotFoundException("pet was't found");
             var isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
