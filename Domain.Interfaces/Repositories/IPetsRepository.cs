@@ -9,7 +9,8 @@ namespace Domain.Interfaces.Repositories
     public interface IPetsRepository
     {
         Task CreatePetAsync(Pet pet);
-        Task<Pet> GetPetByIdAsync(Guid petId, long now, bool trackChanges);
+        Task<Pet> GetTrackablePetByIdAsync(Guid petId, long now);
+        Task<Pet> GetUntrackablePetByIdAsync(Guid petId, long now);
         Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId, long now);
         Task<IEnumerable<Pet>> GetPetsAsync(PetParameters parameters, long now);
         Task<int> GetPetsCountAsync(long now);

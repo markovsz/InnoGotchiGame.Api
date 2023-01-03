@@ -121,7 +121,7 @@ namespace UnitTests.ServiceTests
                 .Returns(Task.FromResult(Guid.NewGuid()));
 
             petsRepositoryMock = new Mock<IPetsRepository>();
-            petsRepositoryMock.Setup(e => e.GetPetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<bool>()))
+            petsRepositoryMock.Setup(e => e.GetUntrackablePetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>()))
                 .Returns((Guid id, long now, bool tc) => 
                     Task.FromResult(pets
                         .Where(e => e.Id.Equals(id))

@@ -30,7 +30,7 @@ namespace Infrastructure.Services.Services
             feedingEvent.FeedingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(feedingEventDto.PetId, now, false);
+            var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(feedingEventDto.PetId, now);
             feedingEvent.HungerValueBefore = pet.HungerValue;
 
             await _repositoryManager.FeedingEvents.CreateFeedingEventAsync(feedingEvent);
