@@ -111,10 +111,10 @@ namespace UnitTests.HelperTests
 
 
             petsRepositoryMock = new Mock<IPetsRepository>();
-            petsRepositoryMock.Setup(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>()))
+            petsRepositoryMock.Setup(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()))
                 .Returns(Task.FromResult(pets.Where(e => e.IsAlive).Count()))
                 .Verifiable();
-            petsRepositoryMock.Setup(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>()))
+            petsRepositoryMock.Setup(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()))
                 .Returns(Task.FromResult(pets.Where(e => !e.IsAlive).Count()))
                 .Verifiable();
             petsRepositoryMock.Setup(e => e.GetFarmAverageHappinessDaysCountAsync(It.IsAny<Guid>(), It.IsAny<long>()))
@@ -162,8 +162,8 @@ namespace UnitTests.HelperTests
             var farmReadingDto = await farmStatsCalculatingService.UpdateFarmStatsAsync(farmDto, now);
 
             //Assert
-            petsRepositoryMock.Verify(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>()));
-            petsRepositoryMock.Verify(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>()));
+            petsRepositoryMock.Verify(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()));
+            petsRepositoryMock.Verify(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()));
             petsRepositoryMock.Verify(e => e.GetFarmAverageHappinessDaysCountAsync(It.IsAny<Guid>(), It.IsAny<long>()));
             petsRepositoryMock.Verify(e => e.GetFarmAveragePetsAgeAsync(It.IsAny<Guid>(), It.IsAny<long>()));
             feedingFarmStatsServiceMock.Verify(e => e.GetFarmAverageTimeBetweenFeedingAsync(It.IsAny<Guid>()));
@@ -192,8 +192,8 @@ namespace UnitTests.HelperTests
             var farmReadingDto = await farmStatsCalculatingService.UpdateMinFarmStatsAsync(farmDto, now);
 
             //Assert
-            petsRepositoryMock.Verify(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>()));
-            petsRepositoryMock.Verify(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>()));
+            petsRepositoryMock.Verify(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()));
+            petsRepositoryMock.Verify(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()));
             petsRepositoryMock.Verify(e => e.GetFarmAverageHappinessDaysCountAsync(It.IsAny<Guid>(), It.IsAny<long>()));
             petsRepositoryMock.Verify(e => e.GetFarmAveragePetsAgeAsync(It.IsAny<Guid>(), It.IsAny<long>()));
             feedingFarmStatsServiceMock.Verify(e => e.GetFarmAverageTimeBetweenFeedingAsync(It.IsAny<Guid>()));
