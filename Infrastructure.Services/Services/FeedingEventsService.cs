@@ -29,7 +29,8 @@ namespace Infrastructure.Services.Services
             var feedingEvent = _mapper.Map<FeedingEvent>(feedingEventDto);
             feedingEvent.FeedingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(feedingEventDto.PetId, false);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(feedingEventDto.PetId, now, false);
             feedingEvent.HungerValueBefore = pet.HungerValue;
 
             await _repositoryManager.FeedingEvents.CreateFeedingEventAsync(feedingEvent);
