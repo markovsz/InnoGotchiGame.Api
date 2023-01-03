@@ -30,7 +30,7 @@ namespace Infrastructure.Services.Services
             thirstQuenchingEvent.ThirstQuenchingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
             var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(thirstQuenchingEvent.PetId, now, false);
+            var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(thirstQuenchingEvent.PetId, now);
             thirstQuenchingEvent.ThirstValueBefore = pet.HungerValue;
 
             await _repositoryManager.ThirstQuenchingEvents.CreateThirstQuenchingEventAsync(thirstQuenchingEvent);

@@ -21,8 +21,18 @@ namespace Infrastructure.Data.Repositories
 
         public void DeletePet(Pet pet) => Delete(pet);
 
-        public async Task<Pet> GetPetByIdAsync(Guid petId, long now, bool trackChanges) =>
-            await GetByCondition(e => e.Id.Equals(petId), trackChanges)
+        public async Task<Pet> GetTrackablePetByIdAsync(Guid petId, long now) =>
+            await GetByCondition(e => e.Id.Equals(petId), true)
+            .Include(e => e.Body)
+            .Include(e => e.Eyes)
+            .Include(e => e.Mouth)
+            .Include(e => e.Nose)
+            .Include(e => e.Farm)
+                .ThenInclude(e => e.FarmFriends)
+            .FirstOrDefaultAsync();
+
+        public async Task<Pet> GetUntrackablePetByIdAsync(Guid petId, long now) =>
+            await GetByCondition(e => e.Id.Equals(petId), false)
             .Include(e => e.Body)
             .Include(e => e.Eyes)
             .Include(e => e.Mouth)

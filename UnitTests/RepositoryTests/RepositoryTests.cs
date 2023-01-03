@@ -177,7 +177,7 @@ namespace UnitTests.RepositoryTests
             var petId = context.Pets.Where(e => e.Name.Equals(petName)).FirstOrDefault().Id;
 
             //Act
-            var readPet = await petsRepository.GetPetByIdAsync(petId, currentTime, false);
+            var readPet = await petsRepository.GetUntrackablePetByIdAsync(petId, currentTime);
 
             //Assert
             Assert.Equal(petId, readPet.Id);
