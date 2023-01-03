@@ -44,7 +44,11 @@ namespace Infrastructure.Services
                 .ForMember(e => e.MouthPicName, opt => opt.MapFrom(src => src.Mouth.PictureName))
                 .ForMember(e => e.NosePicName, opt => opt.MapFrom(src => src.Nose.PictureName))
                 .ForMember(e => e.Friends, opt => opt.MapFrom(src => src.Farm.FarmFriends.Select(e => e.UserId)))
-                .ForMember(e => e.UserId, opt => opt.MapFrom(src => src.Farm.UserId));
+                .ForMember(e => e.UserId, opt => opt.MapFrom(src => src.Farm.UserId))
+                .ForMember(e => e.HungerInProcents, opt => opt.MapFrom(src => petStatsCalculatingService.GetHungerInPercents(src.HungerValue)))
+                .ForMember(e => e.ThirstInProcents, opt => opt.MapFrom(src => petStatsCalculatingService.GetThirstInPercents(src.ThirstValue)))
+                .ForMember(e => e.HungerInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetHungerInPercentsPerRealHour()))
+                .ForMember(e => e.ThirstInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetThirstInPercentsPerRealHour()));
             CreateMap<Pet, PetMinReadingDto>()
                 .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSigns(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))

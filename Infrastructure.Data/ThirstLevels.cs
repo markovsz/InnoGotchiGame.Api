@@ -19,6 +19,7 @@ namespace Infrastructure.Data
         public static readonly float ThirstyMinThirstValue = ThirstLevelsList[1].Item2;
         public static readonly float NormalMinThirstValue = ThirstLevelsList[2].Item2;
         public static readonly float FullMinThirstValue = ThirstLevelsList[3].Item2;
+        public static readonly float FullMaxThirstValue = 100.0f;
 
         public static string GetThirstLevelName(float thirstValue)
         {

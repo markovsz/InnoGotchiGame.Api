@@ -19,6 +19,7 @@ namespace Infrastructure.Data
         public static readonly float HungerMinHungerValue = HungerLevelsList[1].Item2;
         public static readonly float NormalMinHungerValue = HungerLevelsList[2].Item2;
         public static readonly float FullMinHungerValue = HungerLevelsList[3].Item2;
+        public static readonly float FullMaxHungerValue = 100.0f;
 
         public static string GetHungerLevelName(float hungerValue)
         {

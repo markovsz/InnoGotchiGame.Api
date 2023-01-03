@@ -11,6 +11,10 @@ namespace Application.Services.Helpers
         int GetPetHappinessDaysCountAtTime(int happinessDaysCount, long lastPetDetailsUpdatingTime, long time);
         long CalculateDeathDate(float updatedHungerValue, float updatedThirstValue, long time);
         int CalculatePetAge(Pet pet, long currentTime);
+        float GetHungerInPercents(float hungerValue);
+        float GetThirstInPercents(float thirstValue);
+        float GetHungerInPercentsPerRealHour();
+        float GetThirstInPercentsPerRealHour();
         bool IsPetAlive(float hungerValue, float thirstValue);
     }
 }

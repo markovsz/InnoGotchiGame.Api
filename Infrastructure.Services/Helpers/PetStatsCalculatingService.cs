@@ -73,6 +73,28 @@ namespace Infrastructure.Services.Helpers
             return _dateTimeConverter.GetYears(currentTime - pet.BirthDate);
         }
 
+        public float GetHungerInPercents(float hungerValue)
+        {
+            var hungerInPercents = (hungerValue - HungerLevels.HungerMinHungerValue) / (HungerLevels.FullMaxHungerValue - HungerLevels.HungerMinHungerValue) * 100.0f;
+            return (hungerInPercents > 0 ? hungerInPercents : 0);
+        }
+
+        public float GetThirstInPercents(float thirstValue)
+        {
+            var thirstInPercents = (thirstValue - ThirstLevels.ThirstyMinThirstValue) / (ThirstLevels.FullMaxThirstValue - ThirstLevels.ThirstyMinThirstValue) * 100.0f;
+            return (thirstInPercents > 0 ? thirstInPercents : 0);
+        }
+
+        public float GetHungerInPercentsPerRealHour()
+        {
+            return PetSettings.HungerUnitsPerPetsHour * PetSettings.PetsTimeConstant;
+        }
+
+        public float GetThirstInPercentsPerRealHour()
+        {
+            return PetSettings.ThirstUnitsPerPetsHour * PetSettings.PetsTimeConstant;
+        }
+
         public bool IsPetAlive(float hungerValue, float thirstValue)
         {
             if (hungerValue >= HungerLevels.HungerMinHungerValue && thirstValue >= ThirstLevels.ThirstyMinThirstValue) return true;
