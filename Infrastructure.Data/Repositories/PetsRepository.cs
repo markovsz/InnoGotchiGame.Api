@@ -29,6 +29,10 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Nose)
             .Include(e => e.Farm)
                 .ThenInclude(e => e.FarmFriends)
+            .Select(e => new Pet(e)
+            {
+                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+            })
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Pet>> GetPetsAsync(PetParameters parameters, long now) =>
