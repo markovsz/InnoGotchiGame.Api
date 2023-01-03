@@ -44,6 +44,10 @@ namespace WebApi.Middlewares
             {
                 await HandleExceptionAsync(context, ex.Message, HttpStatusCode.NotFound);
             }
+            catch (EntityAlreadyExistsException ex)
+            {
+                await HandleExceptionAsync(context, ex.Message, HttpStatusCode.BadRequest);
+            }
             catch (AccessException ex)
             {
                 await HandleExceptionAsync(context, ex.Message, HttpStatusCode.Forbidden);
