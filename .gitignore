@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Static images
-**/wwwroot/images
+**/wwwroot/images/*
+!**/wwwroot/images/body-parts

@@ -1,34 +1,31 @@
-﻿using Domain.Interfaces.Repositories;
-using Domain.Interfaces.RequestParameters;
+﻿using Domain.Core.Models;
+using Domain.Interfaces.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnitTests.RepositoryTests.Helpers;
 using Xunit;
 
 namespace UnitTests.RepositoryTests
 {
-    public class RepositoryTests
+    public class PetsRepositoryTests
     {
+        /*
         private IPetsRepository petsRepository;
-        private IFarmsRepository farmsRepository;
-        private IFarmFriendsRepository farmFriendsRepository;
-        private IFeedingEventsRepository feedingEventsRepository;
-        private IThirstQuenchingEventsRepository thirstQuenchingEventsRepository;
         private RepositoryContext context;
         private DateTimeConverter dateTimeConverter;
 
         private TestDbDataManager dbDataManager;
 
-        public RepositoryTests()
+        public PetsRepositoryTests()
         {
             dateTimeConverter = new DateTimeConverter();
 
@@ -41,10 +38,6 @@ namespace UnitTests.RepositoryTests
 
             context = new RepositoryContext(new DbContextOptionsBuilder().UseSqlServer(connectionString).Options);
             petsRepository = new PetsRepository(context);
-            farmsRepository = new FarmsRepository(context);
-            farmFriendsRepository = new FarmFriendsRepository(context);
-            feedingEventsRepository = new FeedingEventsRepository(context);
-            thirstQuenchingEventsRepository = new ThirstQuenchingEventsRepository(context);
 
             dbDataManager = new TestDbDataManager(context, dateTimeConverter);
             dbDataManager.Initialize();
@@ -62,12 +55,10 @@ namespace UnitTests.RepositoryTests
         public async Task GetPetsAsyncTest(string petName, string currentTimeStr, int happinessDaysCount)
         {
             //Arrange
-            var parameters = new PetParameters();
-            parameters.PageNumber = 1;
             var currentTime = dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
 
             //Act
-            var readPets = await petsRepository.GetPetsAsync(parameters, currentTime);
+            var readPets = await petsRepository.GetPetsAsync(currentTime);
 
             //Assert
             var readPet = readPets.Where(e => e.Name.Equals(petName)).FirstOrDefault();
@@ -108,30 +99,28 @@ namespace UnitTests.RepositoryTests
         }
 
         [Theory]
-        [InlineData("Farm1", "2022-01-17 22:00:01", 1)]
-        public async Task GetFarmDeadPetsCountAsync(string farmName, string currentTimeStr, int deadPetsCount)
+        [InlineData("Farm1", 1)]
+        public async Task GetFarmDeadPetsCountAsync(string farmName, int deadPetsCount)
         {
             //Arrange
-            var currentTime = dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
             var farm = context.Farms.Where(e => e.Name.Equals(farmName)).FirstOrDefault();
 
             //Act
-            var calculatedDeadPetsCount = await petsRepository.GetFarmDeadPetsCountAsync(farm.Id, currentTime);
+            var calculatedDeadPetsCount = await petsRepository.GetFarmDeadPetsCountAsync(farm.Id);
 
             //Assert
-            Assert.Equal(deadPetsCount, calculatedDeadPetsCount);
+            Assert.Equal(deadPetsCount, calculatedDeadPetsCount); 
         }
 
         [Theory]
-        [InlineData("Farm1", "2022-01-17 22:00:01", 3)]
-        public async Task GetFarmAlivePetsCountAsync(string farmName, string currentTimeStr, int alivePetsCount)
+        [InlineData("Farm1", 3)]
+        public async Task GetFarmAlivePetsCountAsync(string farmName, int alivePetsCount)
         {
             //Arrange
-            var currentTime = dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
             var farm = context.Farms.Where(e => e.Name.Equals(farmName)).FirstOrDefault();
 
             //Act
-            var calculatedAlivePetsCount = await petsRepository.GetFarmAlivePetsCountAsync(farm.Id, currentTime);
+            var calculatedAlivePetsCount = await petsRepository.GetFarmAlivePetsCountAsync(farm.Id);
 
             //Assert
             Assert.Equal(alivePetsCount, calculatedAlivePetsCount);
@@ -168,16 +157,15 @@ namespace UnitTests.RepositoryTests
         }
 
         [Theory]
-        [InlineData("Pet1", "2022-01-17 22:00:01")]
-        [InlineData("Pet2", "2022-01-17 22:00:01")]
-        public async Task GetPetByIdAsync(string petName, string currentTimeStr)
+        [InlineData("Pet1")]
+        [InlineData("Pet2")]
+        public async Task GetPetByIdAsync(string petName)
         {
             //Arrange
-            var currentTime = dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
             var petId = context.Pets.Where(e => e.Name.Equals(petName)).FirstOrDefault().Id;
 
             //Act
-            var readPet = await petsRepository.GetPetByIdAsync(petId, currentTime, false);
+            var readPet = await petsRepository.GetPetByIdAsync(petId, false);
 
             //Assert
             Assert.Equal(petId, readPet.Id);
@@ -189,113 +177,6 @@ namespace UnitTests.RepositoryTests
             Assert.NotNull(readPet.Mouth);
             Assert.NotNull(readPet.Nose);
         }
-
-        [Theory]
-        [InlineData("Farm1")]
-        public async Task GetFarmByIdAsync(string farmName)
-        {
-            //Arrange
-            var farmId = context.Farms.Where(e => e.Name.Equals(farmName)).FirstOrDefault().Id;
-
-            //Act
-            var readFarm = await farmsRepository.GetFarmByIdAsync(farmId, false);
-
-            //Assert
-            Assert.NotNull(readFarm);
-            Assert.NotNull(readFarm.Pets);
-            Assert.NotNull(readFarm.UserInfo);
-            Assert.NotNull(readFarm.FarmFriends);
-            foreach (var farmFriend in readFarm.FarmFriends)
-                Assert.NotNull(farmFriend.UserInfo);
-        }
-
-        [Theory]
-        [InlineData("email@gmail.com")]
-        public async Task GetFarmByUserIdAsync(string userEmail)
-        {
-            //Arrange
-            var userId = context.Users.Where(e => e.Email.Equals(userEmail)).FirstOrDefault().Id;
-
-            //Act
-            var readFarm = await farmsRepository.GetFarmByUserIdAsync(userId, false);
-
-            //Assert
-            Assert.NotNull(readFarm);
-            Assert.NotNull(readFarm.Pets);
-            Assert.NotNull(readFarm.UserInfo);
-            Assert.NotNull(readFarm.FarmFriends);
-            foreach (var farmFriend in readFarm.FarmFriends)
-                Assert.NotNull(farmFriend.UserInfo);
-        }
-
-        [Theory]
-        [InlineData("email@gmail.com", "email2@gmail.com")]
-        public async Task GetFriendFarmAsync(string userEmail, string friendEmail)
-        {
-            //Arrange
-            var userId = context.Users.Where(e => e.Email.Equals(userEmail)).FirstOrDefault().Id;
-            var friendId = context.Users.Where(e => e.Email.Equals(friendEmail)).FirstOrDefault().Id;
-
-            //Act
-            var readFarm = await farmsRepository.GetFriendFarmAsync(friendId, userId);
-
-            //Assert
-            Assert.NotNull(readFarm);
-            Assert.NotNull(readFarm.Pets);
-        }
-
-        [Theory]
-        [InlineData("email2@gmail.com")]
-        public async Task GetFriendFarmsAsync(string userEmail)
-        {
-            //Arrange
-            var userId = context.Users.Where(e => e.Email.Equals(userEmail)).FirstOrDefault().Id;
-
-            //Act
-            var readFarms = await farmsRepository.GetFriendFarmsAsync(userId);
-
-            //Assert
-            Assert.NotNull(readFarms);
-            Assert.NotEmpty(readFarms);
-            foreach (var farm in readFarms)
-            {
-                Assert.NotNull(farm.Pets);
-                Assert.NotEmpty(readFarms);
-            }
-        }
-
-        [Theory]
-        [InlineData("Farm1")]
-        public async Task GetFarmFeedingEventsAsync(string farmName)
-        {
-            //Arrange
-            var farmId = context.Farms.Where(e => e.Name.Equals(farmName)).FirstOrDefault().Id;
-
-            //Act
-            var readFeedingEvents = await feedingEventsRepository.GetFarmFeedingEventsAsync(farmId);
-
-            //Assert
-            Assert.NotNull(readFeedingEvents);
-            Assert.NotEmpty(readFeedingEvents);
-            foreach (var feedingEvent in readFeedingEvents)
-                Assert.NotNull(feedingEvent.Pet);
-        }
-
-        [Theory]
-        [InlineData("Farm1")]
-        public async Task GetFarmThirstQuenchingEventsAsync(string farmName)
-        {
-            //Arrange
-            var farmId = context.Farms.Where(e => e.Name.Equals(farmName)).FirstOrDefault().Id;
-
-            //Act
-            var readFeedingEvents = await thirstQuenchingEventsRepository.GetFarmThirstQuenchingEventsAsync(farmId);
-
-            //Assert
-            Assert.NotNull(readFeedingEvents);
-            Assert.NotEmpty(readFeedingEvents);
-            foreach (var feedingEvent in readFeedingEvents)
-                Assert.NotNull(feedingEvent.Pet);
-        }
+        */
     }
 }

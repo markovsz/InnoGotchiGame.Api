@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Core.Models;
 using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
+using Domain.Interfaces.RequestParameters;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using Infrastructure.Services.Exceptions;
@@ -120,13 +121,13 @@ namespace UnitTests.ServiceTests
                 .Returns(Task.FromResult(Guid.NewGuid()));
 
             petsRepositoryMock = new Mock<IPetsRepository>();
-            petsRepositoryMock.Setup(e => e.GetPetByIdAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
-                .Returns((Guid id, bool tc) => 
+            petsRepositoryMock.Setup(e => e.GetPetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>(), It.IsAny<bool>()))
+                .Returns((Guid id, long now, bool tc) => 
                     Task.FromResult(pets
                         .Where(e => e.Id.Equals(id))
                         .FirstOrDefault()))
                 .Verifiable();
-            petsRepositoryMock.Setup(e => e.GetPetsAsync(It.IsAny<long>()))
+            petsRepositoryMock.Setup(e => e.GetPetsAsync(It.IsAny<PetParameters>(), It.IsAny<long>()))
                 .Returns(Task.FromResult((IEnumerable<Pet>)pets))
                 .Verifiable();
             petsRepositoryMock.Setup(e => e.CreatePetAsync(It.IsAny<Pet>()))

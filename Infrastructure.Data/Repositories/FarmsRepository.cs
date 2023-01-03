@@ -38,6 +38,10 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.UserInfo)
             .FirstOrDefaultAsync();
 
+        public async Task<Farm> GetFarmByNameAsync(string farmName, bool trackChanges) =>
+            await GetByCondition(e => e.Name.Equals(farmName), trackChanges)
+            .FirstOrDefaultAsync();
+
         public async Task<IEnumerable<Farm>> GetFarmsAsync() => 
             await GetAll(false)
             .Include(e => e.UserInfo)

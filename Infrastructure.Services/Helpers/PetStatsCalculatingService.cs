@@ -28,11 +28,12 @@ namespace Infrastructure.Services.Helpers
                 pet.LastPetDetailsUpdatingTime = updationTime;
             }
             pet.DeathDate = CalculateDeathDate(hungerValue, thirstValue, updationTime);
-            if (pet.IsAlive && !IsPetAlive(hungerValue, thirstValue))
+            if (updationTime > pet.DeathDate && pet.LastPetDetailsUpdatingTime < pet.DeathDate)
             {
                 pet.IsAlive = false;
                 pet.HappinessDaysCount = 0;
             }
+            pet.LastPetDetailsUpdatingTime = updationTime;
             return pet;
         }
 
@@ -71,6 +72,28 @@ namespace Infrastructure.Services.Helpers
             if (!pet.IsAlive)
                 return _dateTimeConverter.GetYears(pet.DeathDate - pet.BirthDate);
             return _dateTimeConverter.GetYears(currentTime - pet.BirthDate);
+        }
+
+        public float GetHungerInPercents(float hungerValue)
+        {
+            var hungerInPercents = (hungerValue - HungerLevels.HungerMinHungerValue) / (HungerLevels.FullMaxHungerValue - HungerLevels.HungerMinHungerValue) * 100.0f;
+            return (hungerInPercents > 0 ? hungerInPercents : 0);
+        }
+
+        public float GetThirstInPercents(float thirstValue)
+        {
+            var thirstInPercents = (thirstValue - ThirstLevels.ThirstyMinThirstValue) / (ThirstLevels.FullMaxThirstValue - ThirstLevels.ThirstyMinThirstValue) * 100.0f;
+            return (thirstInPercents > 0 ? thirstInPercents : 0);
+        }
+
+        public float GetHungerInPercentsPerRealHour()
+        {
+            return PetSettings.HungerUnitsPerPetsHour * PetSettings.PetsTimeConstant;
+        }
+
+        public float GetThirstInPercentsPerRealHour()
+        {
+            return PetSettings.ThirstUnitsPerPetsHour * PetSettings.PetsTimeConstant;
         }
 
         public bool IsPetAlive(float hungerValue, float thirstValue)

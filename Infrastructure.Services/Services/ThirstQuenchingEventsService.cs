@@ -29,7 +29,8 @@ namespace Infrastructure.Services.Services
             var thirstQuenchingEvent = _mapper.Map<ThirstQuenchingEvent>(thirstQuenchingEventDto);
             thirstQuenchingEvent.ThirstQuenchingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
 
-            var pet = await _repositoryManager.Pets.GetPetByIdAsync(thirstQuenchingEvent.PetId, false);
+            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var pet = await _repositoryManager.Pets.GetPetByIdAsync(thirstQuenchingEvent.PetId, now, false);
             thirstQuenchingEvent.ThirstValueBefore = pet.HungerValue;
 
             await _repositoryManager.ThirstQuenchingEvents.CreateThirstQuenchingEventAsync(thirstQuenchingEvent);

@@ -25,8 +25,8 @@ namespace Infrastructure.Services.Helpers
 
         public async Task<FarmReadingDto> UpdateFarmStatsAsync(FarmReadingDto farmDto, long now)
         {
-            farmDto.AlivePetsCount = await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farmDto.Id);
-            farmDto.DeadPetsCount = await _repositoryManager.Pets.GetFarmDeadPetsCountAsync(farmDto.Id);
+            farmDto.AlivePetsCount = await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farmDto.Id, now);
+            farmDto.DeadPetsCount = await _repositoryManager.Pets.GetFarmDeadPetsCountAsync(farmDto.Id, now);
             if(farmDto.Pets.Any()) farmDto.AverageHappinessDaysCount = (int)await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farmDto.Id, now);
             if (farmDto.Pets.Any()) farmDto.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farmDto.Id, now);
             farmDto.AverageFeedingTime = (float)await _feedingFarmStatsService.GetFarmAverageTimeBetweenFeedingAsync(farmDto.Id);
@@ -36,10 +36,10 @@ namespace Infrastructure.Services.Helpers
 
         public async Task<FarmMinReadingDto> UpdateMinFarmStatsAsync(FarmMinReadingDto farmDto, long now)
         {
-            farmDto.AlivePetsCount = await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farmDto.Id);
-            farmDto.DeadPetsCount = await _repositoryManager.Pets.GetFarmDeadPetsCountAsync(farmDto.Id);
-            if(await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farmDto.Id) > 0) farmDto.AverageHappinessDaysCount = (int)await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farmDto.Id, now);
-            if (await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farmDto.Id) > 0) farmDto.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farmDto.Id, now);
+            farmDto.AlivePetsCount = await _repositoryManager.Pets.GetFarmAlivePetsCountAsync(farmDto.Id, now);
+            farmDto.DeadPetsCount = await _repositoryManager.Pets.GetFarmDeadPetsCountAsync(farmDto.Id, now);
+            if(farmDto.AlivePetsCount > 0) farmDto.AverageHappinessDaysCount = (int)await _repositoryManager.Pets.GetFarmAverageHappinessDaysCountAsync(farmDto.Id, now);
+            if (farmDto.AlivePetsCount > 0) farmDto.AveragePetsAge = (int)await _repositoryManager.Pets.GetFarmAveragePetsAgeAsync(farmDto.Id, now);
             farmDto.AverageFeedingTime = (float)await _feedingFarmStatsService.GetFarmAverageTimeBetweenFeedingAsync(farmDto.Id);
             farmDto.AverageThirstQuenchingTime = (float)await _thirstQuenchingFarmStatsService.GetFarmAverageTimeBetweenThirstQuenchingAsync(farmDto.Id);
             return farmDto;

@@ -21,7 +21,7 @@ namespace Infrastructure.Data.Repositories
 
         public void DeletePet(Pet pet) => Delete(pet);
 
-        public async Task<Pet> GetPetByIdAsync(Guid petId, bool trackChanges) =>
+        public async Task<Pet> GetPetByIdAsync(Guid petId, long now, bool trackChanges) =>
             await GetByCondition(e => e.Id.Equals(petId), trackChanges)
             .Include(e => e.Body)
             .Include(e => e.Eyes)
@@ -29,6 +29,10 @@ namespace Infrastructure.Data.Repositories
             .Include(e => e.Nose)
             .Include(e => e.Farm)
                 .ThenInclude(e => e.FarmFriends)
+            .Select(e => new Pet(e)
+            {
+                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+            })
             .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<Pet>> GetPetsAsync(PetParameters parameters, long now) =>
@@ -57,19 +61,19 @@ namespace Infrastructure.Data.Repositories
             .OrderByDescending(e => e.HappinessDaysCount)
             .ToListAsync();
 
-        public async Task<int> GetFarmDeadPetsCountAsync(Guid farmId) =>
+        public async Task<int> GetFarmDeadPetsCountAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
-            .Where(e => !e.IsAlive)
+            .Where(e => e.DeathDate < now)
             .CountAsync();
 
-        public async Task<int> GetFarmAlivePetsCountAsync(Guid farmId) =>
+        public async Task<int> GetFarmAlivePetsCountAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
-            .Where(e => e.IsAlive)
+            .Where(e => e.DeathDate > now)
             .CountAsync();
 
         public async Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
-            .Where(e => e.IsAlive)
+            .Where(e => e.DeathDate > now)
             .Select(e => e.HappinessDaysCount + (int)(((now - now % (60 * 60 * 24)) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24)))
             .DefaultIfEmpty()
             .AverageAsync();

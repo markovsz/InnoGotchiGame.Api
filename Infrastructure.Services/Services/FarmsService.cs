@@ -31,6 +31,11 @@ namespace Infrastructure.Services.Services
         {
             var farm = _mapper.Map<FarmCreatingDto, Farm>(farmDto);
             farm.UserId = userId;
+
+            var farmWithSameName = await _repositoryManager.Farms.GetFarmByNameAsync(farmDto.Name, false);
+            if (farmWithSameName is not null)
+                throw new EntityAlreadyExistsException("farm with such a name already exists");
+
             await _repositoryManager.Farms.CreateFarmAsync(farm);
             await _repositoryManager.SaveChangeAsync();
             return farm.Id;
