@@ -28,11 +28,12 @@ namespace Infrastructure.Services.Helpers
                 pet.LastPetDetailsUpdatingTime = updationTime;
             }
             pet.DeathDate = CalculateDeathDate(hungerValue, thirstValue, updationTime);
-            if (pet.IsAlive && !IsPetAlive(hungerValue, thirstValue))
+            if (updationTime > pet.DeathDate && pet.LastPetDetailsUpdatingTime < pet.DeathDate)
             {
                 pet.IsAlive = false;
                 pet.HappinessDaysCount = 0;
             }
+            pet.LastPetDetailsUpdatingTime = updationTime;
             return pet;
         }
 
