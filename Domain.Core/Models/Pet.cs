@@ -16,7 +16,6 @@ namespace Domain.Core.Models
             BirthDate = pet.BirthDate;
             DeathDate = pet.DeathDate;
             FarmId = pet.FarmId;
-            IsAlive = pet.IsAlive;
             HappinessDaysCount = pet.HappinessDaysCount;
             LastPetDetailsUpdatingTime = pet.LastPetDetailsUpdatingTime;
 
@@ -53,7 +52,6 @@ namespace Domain.Core.Models
         public float ThirstValue { get; set; }
         public long BirthDate { get; set; } //in seconds
         public Guid FarmId { get; set; }
-        public bool IsAlive { get; set; }
         public int HappinessDaysCount { get; set; }
         public long LastPetDetailsUpdatingTime { get; set; } //in seconds
         public long DeathDate { get; set; } //in seconds
@@ -82,5 +80,9 @@ namespace Domain.Core.Models
         public PetEyes Eyes { get; set; }
         public PetNose Nose { get; set; }
         public PetMouth Mouth { get; set; }
+
+        public bool IsAlive(long now) {
+            return now < DeathDate;
+        }
     }
 }

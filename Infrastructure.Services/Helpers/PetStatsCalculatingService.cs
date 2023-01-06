@@ -23,14 +23,13 @@ namespace Infrastructure.Services.Helpers
             pet.HungerValue = hungerValue;
             pet.ThirstValue = thirstValue;
             if (hungerValue >= HungerLevels.NormalMinHungerValue && thirstValue >= ThirstLevels.NormalMinThirstValue)
-            {
+            { 
                 pet.HappinessDaysCount = GetPetHappinessDaysCountAtTime(pet.HappinessDaysCount, pet.LastPetDetailsUpdatingTime, updationTime);
                 pet.LastPetDetailsUpdatingTime = updationTime;
             }
             pet.DeathDate = CalculateDeathDate(hungerValue, thirstValue, updationTime);
             if (updationTime > pet.DeathDate && pet.LastPetDetailsUpdatingTime < pet.DeathDate)
             {
-                pet.IsAlive = false;
                 pet.HappinessDaysCount = 0;
             }
             pet.LastPetDetailsUpdatingTime = updationTime;
@@ -69,7 +68,7 @@ namespace Infrastructure.Services.Helpers
 
         public int CalculatePetAge(Pet pet, long currentTime)
         {
-            if (!pet.IsAlive)
+            if (!pet.IsAlive(currentTime))
                 return _dateTimeConverter.GetYears(pet.DeathDate - pet.BirthDate);
             return _dateTimeConverter.GetYears(currentTime - pet.BirthDate);
         }
