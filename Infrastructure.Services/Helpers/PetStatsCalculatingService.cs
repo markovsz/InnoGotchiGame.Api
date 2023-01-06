@@ -23,10 +23,10 @@ namespace Infrastructure.Services.Helpers
             pet.HungerValue = hungerValue;
             pet.ThirstValue = thirstValue;
             if (hungerValue >= HungerLevels.NormalMinHungerValue && thirstValue >= ThirstLevels.NormalMinThirstValue)
-            { 
                 pet.HappinessDaysCount = GetPetHappinessDaysCountAtTime(pet.HappinessDaysCount, pet.LastPetDetailsUpdatingTime, updationTime);
-                pet.LastPetDetailsUpdatingTime = updationTime;
-            }
+            else
+                pet.HappinessDaysCount = 0;
+
             pet.DeathDate = CalculateDeathDate(hungerValue, thirstValue, updationTime);
             if (updationTime > pet.DeathDate && pet.LastPetDetailsUpdatingTime < pet.DeathDate)
             {
