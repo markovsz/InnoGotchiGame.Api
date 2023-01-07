@@ -34,6 +34,8 @@ namespace UnitTests.ServiceTests
         private Farm farm = new Farm();
         private Farm friendFarm = new Farm();
 
+        private DateTime now = new DateTime(2022, 7, 11);
+
 
         private Mock<IFeedingEventsService> feedingEventsServiceMock;
         private Mock<IThirstQuenchingEventsService> thirstQuenchingEventsServiceMock;
@@ -47,6 +49,8 @@ namespace UnitTests.ServiceTests
         private Mock<IPetNosesRepository> nosesRepositoryMock;
 
         private Mock<IRepositoryManager> repositoryManagerMock;
+
+        private Mock<IDateTimeProvider> dateTimeProviderMock;
 
 
         public PetsServiceTests()
@@ -117,7 +121,13 @@ namespace UnitTests.ServiceTests
 
             petsRepositoryMock = new Mock<IPetsRepository>();
             petsRepositoryMock.Setup(e => e.GetUntrackablePetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>()))
-                .Returns((Guid id, long now, bool tc) => 
+                .Returns((Guid id, long now) => 
+                    Task.FromResult(pets
+                        .Where(e => e.Id.Equals(id))
+                        .FirstOrDefault()))
+                .Verifiable();
+            petsRepositoryMock.Setup(e => e.GetTrackablePetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>()))
+                .Returns((Guid id, long now) =>
                     Task.FromResult(pets
                         .Where(e => e.Id.Equals(id))
                         .FirstOrDefault()))
@@ -176,7 +186,10 @@ namespace UnitTests.ServiceTests
             var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(m => m.Map<PetCreatingDto, Pet>(It.IsAny<PetCreatingDto>())).Returns(new Pet());
 
-            petsService = new PetsService(feedingEventsServiceMock.Object, thirstQuenchingEventsServiceMock.Object, repositoryManagerMock.Object, mapperMock.Object, petStatsCalculatingService, dateTimeConverter);
+            dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            dateTimeProviderMock.Setup(e => e.Now).Returns(now);
+
+            petsService = new PetsService(feedingEventsServiceMock.Object, thirstQuenchingEventsServiceMock.Object, repositoryManagerMock.Object, mapperMock.Object, petStatsCalculatingService, dateTimeConverter, dateTimeProviderMock.Object);
         }
 
         [Theory]

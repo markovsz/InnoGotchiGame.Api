@@ -1,4 +1,5 @@
-﻿using Application.Services.Services;
+﻿using Application.Services.Helpers;
+using Application.Services.Services;
 using Domain.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -17,11 +18,13 @@ namespace Infrastructure.Services.Services
     {
         private UserManager<User> _userManager;
         private IConfiguration _configuration;
+        private IDateTimeProvider _dateTimeProvider;
 
-        public JwtTokensGeneratorService(UserManager<User> userManager, IConfiguration configuration)
+        public JwtTokensGeneratorService(UserManager<User> userManager, IDateTimeProvider dateTimeProvider, IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<string> CreateJwtToken(User user)
@@ -61,7 +64,7 @@ namespace Infrastructure.Services.Services
                 issuer: jwtSettings.GetSection("validIssuer").Value,
                 audience: jwtSettings.GetSection("validAudience").Value,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings.GetSection("expires").Value)),
+                expires: _dateTimeProvider.Now.AddMinutes(Convert.ToDouble(jwtSettings.GetSection("expires").Value)),
                 signingCredentials: signingCredentials
             );
             return tokenOptions;

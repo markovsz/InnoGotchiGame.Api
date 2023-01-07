@@ -24,9 +24,10 @@ namespace Infrastructure.Services.Services
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
         private IDateTimeConverter _dateTimeConverter;
+        private IDateTimeProvider _dateTimeProvider;
         private IPetStatsCalculatingService _petStatsCalculatingService;
 
-        public PetsService(IFeedingEventsService feedingEventsService, IThirstQuenchingEventsService thirstQuenchingEventsService, IRepositoryManager repositoryManager, IMapper mapper, IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter)
+        public PetsService(IFeedingEventsService feedingEventsService, IThirstQuenchingEventsService thirstQuenchingEventsService, IRepositoryManager repositoryManager, IMapper mapper, IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter, IDateTimeProvider dateTimeProvider)
         {
             _feedingEventsService = feedingEventsService;
             _thirstQuenchingEventsService = thirstQuenchingEventsService;
@@ -34,6 +35,7 @@ namespace Infrastructure.Services.Services
             _mapper = mapper;
             _petStatsCalculatingService = petStatsCalculatingService;
             _dateTimeConverter = dateTimeConverter;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Guid> CreatePetAsync(PetCreatingDto petDto, Guid userId)
@@ -44,7 +46,7 @@ namespace Infrastructure.Services.Services
             if (farm.UserId != userId)
                 throw new AccessException("you don't have permissions");
 
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
 
             var pet = _mapper.Map<PetCreatingDto, Pet>(petDto);
             await _repositoryManager.Pets.CreatePetAsync(pet);
@@ -98,7 +100,7 @@ namespace Infrastructure.Services.Services
 
         public async Task DeletePetByIdAsync(Guid petId, Guid userId)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(petId, now);
             if (pet is null)
                 throw new EntityNotFoundException("pet with such id doesn't exist");
@@ -111,7 +113,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<string> FeedPetAsync(Guid petId, Guid userId)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetTrackablePetByIdAsync(petId, now);
             pet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, now);
             bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
@@ -133,7 +135,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<string> QuenchPetThirstAsync(Guid petId, Guid userId)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetTrackablePetByIdAsync(petId, now);
             pet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, now);
             bool isFriendsPet = await IsPetOfFriendsFarmAsync(pet, userId);
@@ -155,7 +157,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<PetReadingDto> GetPetByIdAsync(Guid petId)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(petId, now);
             if (pet is null)
                 throw new EntityNotFoundException("pet was't found");
@@ -165,7 +167,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<PetsPaginationDto> GetPetsAsync(PetParameters parameters)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pets = await _repositoryManager.Pets.GetPetsAsync(parameters, now);
             var petsCount = await _repositoryManager.Pets.GetPetsCountAsync(now);
             petsCount = (petsCount + PetParameters.PageSize - 1) / PetParameters.PageSize;
@@ -178,7 +180,7 @@ namespace Infrastructure.Services.Services
 
         public async Task<IEnumerable<PetReadingDto>> GetUserPetsAsync(Guid userId)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pets = await _repositoryManager.Pets.GetUserPetsAsync(userId, now);
             var petsDto = _mapper.Map<IEnumerable<PetReadingDto>>(pets);
             return petsDto;
@@ -186,7 +188,7 @@ namespace Infrastructure.Services.Services
 
         public async Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId)
         {
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(petDto.petId, now);
             if (pet is null)
                 throw new EntityNotFoundException("pet was't found");

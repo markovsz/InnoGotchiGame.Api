@@ -13,7 +13,7 @@ namespace Infrastructure.Services
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile(IPetStatsCalculatingService petStatsCalculatingService, IFarmStatsCalculatingService farmStatsCalculatingService, IDateTimeConverter dateTimeConverter)
+        public MappingProfile(IPetStatsCalculatingService petStatsCalculatingService, IFarmStatsCalculatingService farmStatsCalculatingService, IDateTimeConverter dateTimeConverter, IDateTimeProvider dateTimeProvider)
         {
             CreateMap<UserCreatingDto, User>();
             CreateMap<UserCreatingDto, UserInfo>();
@@ -27,18 +27,18 @@ namespace Infrastructure.Services
                 .ForMember(e => e.FarmFriends, opt => opt.MapFrom(src => src.FarmFriends))
                 .ForMember(e => e.Pets, opt => opt.MapFrom(src => src.Pets))
                 .ForMember(e => e.UserInfo, opt => opt.MapFrom(src => src.UserInfo))
-                .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(DateTime.Now)).Result);
+                .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now)).Result);
             CreateMap<Farm, FarmMinReadingDto>()
                 .ForMember(e => e.UserInfo, opt => opt.MapFrom(src => src.UserInfo))
-                .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateMinFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(DateTime.Now)).Result);
+                .AfterMap((src, dst) => dst = farmStatsCalculatingService.UpdateMinFarmStatsAsync(dst, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now)).Result);
             CreateMap<FarmUpdatingDto, Farm>();
 
             CreateMap<PetCreatingDto, Pet>();
             CreateMap<Pet, PetReadingDto>()
-                .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSigns(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now)))
+                .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSigns(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
                 .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
-                .ForMember(e => e.Age, opt => opt.MapFrom(src => petStatsCalculatingService.CalculatePetAge(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now))))
+                .ForMember(e => e.Age, opt => opt.MapFrom(src => petStatsCalculatingService.CalculatePetAge(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now))))
                 .ForMember(e => e.BodyPicName, opt => opt.MapFrom(src => src.Body.PictureName))
                 .ForMember(e => e.EyesPicName, opt => opt.MapFrom(src => src.Eyes.PictureName))
                 .ForMember(e => e.MouthPicName, opt => opt.MapFrom(src => src.Mouth.PictureName))
@@ -50,10 +50,10 @@ namespace Infrastructure.Services
                 .ForMember(e => e.HungerInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetHungerInPercentsPerRealHour()))
                 .ForMember(e => e.ThirstInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetThirstInPercentsPerRealHour()));
             CreateMap<Pet, PetMinReadingDto>()
-                .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSigns(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now)))
+                .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSigns(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
                 .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
-                .ForMember(e => e.Age, opt => opt.MapFrom(src => petStatsCalculatingService.CalculatePetAge(src, dateTimeConverter.ConvertToPetsTime(DateTime.Now))));
+                .ForMember(e => e.Age, opt => opt.MapFrom(src => petStatsCalculatingService.CalculatePetAge(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now))));
             CreateMap<PetUpdatingDto, Pet>();
 
             CreateMap<FarmFriendCreatingDto, FarmFriend>();
