@@ -94,11 +94,11 @@ namespace UnitTests.HelperTests
 
         [Theory]
         [InlineData(75, 75, "2022-01-17 20:00:01", 3.99543375)]
-        public void CalculateDeathDateTest(float updatedHungerValue, float updatedThirstValue, string currentTimeStr, float expectedAliveDaysCount)
+        public void CalculateDeathDateTest(float updatedHungerValue, float updatedThirstValue, string currentTimeStr, float expectedDeadDaysCount)
         {
             //Arrange
             var currentTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
-            var expectedDeadTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr).AddDays(expectedAliveDaysCount));
+            var expectedDeadTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr).AddDays(expectedDeadDaysCount));
 
             //Act
             var calculatedDeadTime = _petStatsCalculatingService.CalculateDeathDate(updatedHungerValue, updatedThirstValue, currentTime);
@@ -109,7 +109,7 @@ namespace UnitTests.HelperTests
 
         [Theory]
         [InlineData(75.0, 75.0, 3, "2022-01-17 19:00:01", "2022-01-21 20:00:01")]
-        [InlineData(26.0, 26.0, 3, "2022-01-17 19:00:01", "2022-01-17 20:00:01")]
+        [InlineData(26.0, 26.0, 3, "2022-01-17 19:00:01", "2022-01-17 21:00:01")]
         [InlineData(24.0, 24.0, 0, "2022-01-17 19:00:01", "2022-01-17 20:00:01")]
         public void UpdatePetVitalSignsAsyncAsync_PetIsDead(float hungerValue, float thirstValue, int happinessDaysCount, string lastUpdatingTimeStr, string currentTimeStr)
         {
