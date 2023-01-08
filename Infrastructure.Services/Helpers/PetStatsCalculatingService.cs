@@ -4,16 +4,29 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services.Helpers;
 using System;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Helpers
 {
     public class PetStatsCalculatingService : IPetStatsCalculatingService
     {
+        private IRepositoryManager _repositoryManager;
         private IDateTimeConverter _dateTimeConverter;
 
-        public PetStatsCalculatingService(IDateTimeConverter dateTimeConverter)
+        public PetStatsCalculatingService(IRepositoryManager repositoryManager, IDateTimeConverter dateTimeConverter)
         {
+            _repositoryManager = repositoryManager;
             _dateTimeConverter = dateTimeConverter;
+        }
+
+        public async Task UpdateFarmPetsVitalSignsAsync(Guid farmId, long updationTime)
+        {
+            var pets = await _repositoryManager.Pets.GetFarmPetsAsync(farmId, true);
+            foreach (var pet in pets)
+            {
+                UpdatePetVitalSigns(pet, updationTime);
+            }
+            await _repositoryManager.SaveChangeAsync();
         }
 
         public Pet UpdatePetVitalSigns(Pet pet, long updationTime) //TODO: delete Async

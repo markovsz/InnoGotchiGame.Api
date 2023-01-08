@@ -55,6 +55,10 @@ namespace Infrastructure.Data.Repositories
             .PetParametersHandler(parameters)
             .ToListAsync();
 
+        public async Task<IEnumerable<Pet>> GetFarmPetsAsync(Guid farmId, bool trackChanges) =>
+            await GetByCondition(e => e.FarmId.Equals(farmId), trackChanges)
+            .ToListAsync();
+
         public async Task<int> GetPetsCountAsync(long now) =>
             await GetAll(false)
             .Where(e => e.DeathDate > now)
