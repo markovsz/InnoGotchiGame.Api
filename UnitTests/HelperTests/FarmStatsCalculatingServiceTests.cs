@@ -129,9 +129,11 @@ namespace UnitTests.HelperTests
             thirstQuenchingFarmStatsServiceMock = new Mock<IThirstQuenchingFarmStatsService>();
             thirstQuenchingFarmStatsServiceMock.Setup(e => e.GetFarmAverageTimeBetweenThirstQuenchingAsync(It.IsAny<Guid>())).Returns(Task.FromResult((double)averageThirstQuenchingTime));
 
-            var petStatsCalculatingService = new PetStatsCalculatingService(dateTimeConverter);
+            var repositoryManager = repositoryManagerMock.Object;
 
-            farmStatsCalculatingService = new FarmStatsCalculatingService(feedingFarmStatsServiceMock.Object, thirstQuenchingFarmStatsServiceMock.Object, repositoryManagerMock.Object);
+            var petStatsCalculatingService = new PetStatsCalculatingService(repositoryManager, dateTimeConverter);
+
+            farmStatsCalculatingService = new FarmStatsCalculatingService(petStatsCalculatingService, feedingFarmStatsServiceMock.Object, thirstQuenchingFarmStatsServiceMock.Object, repositoryManager);
         }
 
         [Theory]

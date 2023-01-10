@@ -176,12 +176,12 @@ namespace UnitTests.ServiceTests
             repositoryManagerMock.Setup(e => e.PetNoses).Returns(nosesRepositoryMock.Object);
             repositoryManagerMock.Setup(e => e.SaveChangeAsync()).Returns(Task.CompletedTask);
 
-            var petStatsCalculatingService = new PetStatsCalculatingService(dateTimeConverter);
 
             var repositoryManager = repositoryManagerMock.Object;
+            var petStatsCalculatingService = new PetStatsCalculatingService(repositoryManager, dateTimeConverter);
             var feedingFarmStatsService = new FeedingFarmStatsService(repositoryManager, dateTimeConverter);
             var thirstQuenchingFarmStatsService = new ThirstQuenchingFarmStatsService(repositoryManager, dateTimeConverter);
-            var farmStatsCalculatingService = new FarmStatsCalculatingService(feedingFarmStatsService, thirstQuenchingFarmStatsService, repositoryManager);
+            var farmStatsCalculatingService = new FarmStatsCalculatingService(petStatsCalculatingService, feedingFarmStatsService, thirstQuenchingFarmStatsService, repositoryManager);
 
             var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(m => m.Map<PetCreatingDto, Pet>(It.IsAny<PetCreatingDto>())).Returns(new Pet());

@@ -1,6 +1,8 @@
 ﻿using Application.Services.Helpers;
 using Domain.Core.Models;
+using Domain.Interfaces;
 using Infrastructure.Services.Helpers;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +14,15 @@ namespace UnitTests.HelperTests
 {
     public class PetStatsCalculatingServiceTests
     {
+        private Mock<IRepositoryManager> repositoryManagerMock;
         private IDateTimeConverter _dateTimeConverter;
         private PetStatsCalculatingService _petStatsCalculatingService;
 
         public PetStatsCalculatingServiceTests()
         {
             _dateTimeConverter = new DateTimeConverter();
-            _petStatsCalculatingService = new PetStatsCalculatingService(_dateTimeConverter);
+            repositoryManagerMock = new Mock<IRepositoryManager>();
+            _petStatsCalculatingService = new PetStatsCalculatingService(repositoryManagerMock.Object, _dateTimeConverter);
         }
 
         [Theory]
@@ -89,7 +93,7 @@ namespace UnitTests.HelperTests
             var calculatedHappinessDaysCount = _petStatsCalculatingService.GetPetHappinessDaysCountAtTime(happinessDaysCount, lastPetDetailsUpdatingTime, currentTime);
 
             //Assert
-            Assert.Equal(expectedHappinessDaysCount, calculatedHappinessDaysCount);
+            Assert.Equal(expectedHappinessDaysCount, (int)calculatedHappinessDaysCount);
         }
 
         [Theory]

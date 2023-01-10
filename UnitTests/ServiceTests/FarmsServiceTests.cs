@@ -98,9 +98,9 @@ namespace UnitTests.ServiceTests
             repositoryManagerMock.Setup(e => e.Farms).Returns(farmsRepositoryMock.Object);
             repositoryManagerMock.Setup(e => e.SaveChangeAsync()).Returns(Task.CompletedTask);
 
-            var petStatsCalculatingService = new PetStatsCalculatingService(dateTimeConverter);
 
             var repositoryManager = repositoryManagerMock.Object;
+            var petStatsCalculatingService = new PetStatsCalculatingService(repositoryManager, dateTimeConverter);
 
             var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(m => m.Map<FarmCreatingDto, Farm>(It.IsAny<FarmCreatingDto>())).Returns(new Farm());
