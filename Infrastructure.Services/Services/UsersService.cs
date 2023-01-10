@@ -63,7 +63,7 @@ namespace Infrastructure.Services.Services
             return user.Id;
         }
 
-        public async Task DeleteUserByIdAsync(Guid userId) //TODO: user info deletion
+        public async Task DeleteUserByIdAsync(Guid userId)
         {
             var userInfo = await _repositoryManager.UsersInfo.GetUserInfoByUserIdAsync(userId, false);
             await _farmsService.DeleteFarmByUserIdAsync(userId);

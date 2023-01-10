@@ -50,11 +50,23 @@ namespace Domain.Core.Models
         public string Name { get; set; }
         public float HungerValue { get; set; }
         public float ThirstValue { get; set; }
-        public long BirthDate { get; set; } //in seconds
+        /// <summary>
+        /// Birth date in pet's seconds
+        /// </summary>
+        public long BirthDate { get; set; }
         public Guid FarmId { get; set; }
+        /// <summary>
+        /// Happiness days count in pet's days
+        /// </summary>
         public double HappinessDaysCount { get; set; }
-        public long LastPetDetailsUpdatingTime { get; set; } //in seconds
-        public long DeathDate { get; set; } //in seconds
+        /// <summary>
+        /// The last pet's details updating time in pet's seconds
+        /// </summary>
+        public long LastPetDetailsUpdatingTime { get; set; }
+        /// <summary>
+        /// Death date in pet's seconds
+        /// </summary>
+        public long DeathDate { get; set; }
 
         public Guid BodyId { get; set; }
         public float BodyPictureX { get; set; }
