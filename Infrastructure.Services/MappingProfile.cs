@@ -48,12 +48,14 @@ namespace Infrastructure.Services
                 .ForMember(e => e.HungerInProcents, opt => opt.MapFrom(src => petStatsCalculatingService.GetHungerInPercents(src.HungerValue)))
                 .ForMember(e => e.ThirstInProcents, opt => opt.MapFrom(src => petStatsCalculatingService.GetThirstInPercents(src.ThirstValue)))
                 .ForMember(e => e.HungerInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetHungerInPercentsPerRealHour()))
-                .ForMember(e => e.ThirstInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetThirstInPercentsPerRealHour()));
+                .ForMember(e => e.ThirstInProcentsPerRealHour, opt => opt.MapFrom(src => petStatsCalculatingService.GetThirstInPercentsPerRealHour()))
+                .ForMember(e => e.HappinessDaysCount, opt => opt.MapFrom(src => (int)src.HappinessDaysCount));
             CreateMap<Pet, PetMinReadingDto>()
                 .BeforeMap((src, dst) => src = petStatsCalculatingService.UpdatePetVitalSigns(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now)))
                 .ForMember(e => e.HungerLevel, opt => opt.MapFrom(src => HungerLevels.GetHungerLevelName(src.HungerValue)))
                 .ForMember(e => e.ThirstLevel, opt => opt.MapFrom(src => ThirstLevels.GetThirstLevelName(src.ThirstValue)))
-                .ForMember(e => e.Age, opt => opt.MapFrom(src => petStatsCalculatingService.CalculatePetAge(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now))));
+                .ForMember(e => e.Age, opt => opt.MapFrom(src => petStatsCalculatingService.CalculatePetAge(src, dateTimeConverter.ConvertToPetsTime(dateTimeProvider.Now))))
+                .ForMember(e => e.HappinessDaysCount, opt => opt.MapFrom(src => (int)src.HappinessDaysCount));
             CreateMap<PetUpdatingDto, Pet>();
 
             CreateMap<FarmFriendCreatingDto, FarmFriend>();

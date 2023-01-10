@@ -10,7 +10,7 @@ namespace Application.Services.Helpers
         Task UpdateFarmPetsVitalSignsAsync(Guid farmId, long updationTime);
         float CalculateHungerValueAtTime(float hungerValue, long lastPetDetailsUpdatingTime, long time);
         float CalculateThirstValueAtTime(float thirstValue, long lastPetDetailsUpdatingTime, long time);
-        int GetPetHappinessDaysCountAtTime(int happinessDaysCount, long lastPetDetailsUpdatingTime, long time);
+        double GetPetHappinessDaysCountAtTime(double happinessDaysCount, long lastPetDetailsUpdatingTime, long time);
         long CalculateDeathDate(float updatedHungerValue, float updatedThirstValue, long time);
         int CalculatePetAge(Pet pet, long currentTime);
         float GetHungerInPercents(float hungerValue);

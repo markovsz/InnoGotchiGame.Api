@@ -64,11 +64,9 @@ namespace Infrastructure.Services.Helpers
             return thirstValue;
         }
 
-        public int GetPetHappinessDaysCountAtTime(int happinessDaysCount, long lastPetDetailsUpdatingTime, long time)
+        public double GetPetHappinessDaysCountAtTime(double happinessDaysCount, long lastPetDetailsUpdatingTime, long time)
         {
-            var newPetDetailsUpdatingTime = _dateTimeConverter.GetDays(lastPetDetailsUpdatingTime);
-            var today = _dateTimeConverter.GetDays(time);
-            var happinessDays = happinessDaysCount + _dateTimeConverter.SubtractDays(newPetDetailsUpdatingTime, today);
+            var happinessDays = happinessDaysCount + _dateTimeConverter.ConvertFromPetsTime(time).Subtract(_dateTimeConverter.ConvertFromPetsTime(lastPetDetailsUpdatingTime)).TotalDays * PetSettings.PetsTimeConstant; //_dateTimeConverter.SubtractDays(newPetDetailsUpdatingTime, today);
             return happinessDays;
         }
 

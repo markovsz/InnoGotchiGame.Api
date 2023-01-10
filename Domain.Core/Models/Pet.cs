@@ -52,7 +52,7 @@ namespace Domain.Core.Models
         public float ThirstValue { get; set; }
         public long BirthDate { get; set; } //in seconds
         public Guid FarmId { get; set; }
-        public int HappinessDaysCount { get; set; }
+        public double HappinessDaysCount { get; set; }
         public long LastPetDetailsUpdatingTime { get; set; } //in seconds
         public long DeathDate { get; set; } //in seconds
 
