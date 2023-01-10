@@ -469,7 +469,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var petId = Guid.Parse(petIdStr);
-            var petDto = new PetUpdatingDto() { petId = petId };
+            var petDto = new PetUpdatingDto() { Id = petId };
 
             try
             {
@@ -488,7 +488,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var pet = pets[petIdNum];
-            var petDto = new PetUpdatingDto() { petId = pet.Id };
+            var petDto = new PetUpdatingDto() { Id = pet.Id };
 
             try
             {
@@ -507,7 +507,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var pet = pets[petIdNum];
-            var petDto = new PetUpdatingDto() { petId = pet.Id };
+            var petDto = new PetUpdatingDto() { Id = pet.Id };
 
             try
             {
@@ -526,7 +526,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var pet = pets[petIdNum];
-            var petDto = new PetUpdatingDto() { petId = pet.Id };
+            var petDto = new PetUpdatingDto() { Id = pet.Id };
 
             try
             {

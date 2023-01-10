@@ -4,7 +4,7 @@ namespace Application.Services.DataTransferObjects.Updating
 {
     public class PetUpdatingDto
     {
-        public Guid petId { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

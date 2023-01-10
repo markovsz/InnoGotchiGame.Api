@@ -189,7 +189,7 @@ namespace Infrastructure.Services.Services
         public async Task UpdatePetAsync(PetUpdatingDto petDto, Guid userId)
         {
             var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
-            var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(petDto.petId, now);
+            var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(petDto.Id, now);
             if (pet is null)
                 throw new EntityNotFoundException("pet was't found");
             var isMinePet = await IsPetOfUsersFarmAsync(pet, userId);
@@ -197,7 +197,7 @@ namespace Infrastructure.Services.Services
                 throw new AccessException("you can't update this pet");
 
             var petForUpdating = _mapper.Map<Pet>(petDto);
-            pet.Id = petDto.petId;
+            pet.Id = petDto.Id;
             _repositoryManager.Pets.UpdatePet(petForUpdating);
             await _repositoryManager.SaveChangeAsync();
         }
