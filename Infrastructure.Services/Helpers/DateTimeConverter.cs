@@ -17,7 +17,7 @@ namespace Infrastructure.Services.Helpers
 
         public DateTime ConvertFromPetsTime(long time)
         {
-            DateTime realTime = startingDate.AddSeconds(time);
+            DateTime realTime = startingDate.AddSeconds(time / PetSettings.PetsTimeConstant);
             return realTime;
         }
 
