@@ -30,7 +30,7 @@ namespace Infrastructure.Data.ParameterHandlers
         public static IQueryable<TEntity> PaginationParametersHandler<TEntity>(this IQueryable<TEntity> entities, PaginationParameters parameters)
         {
             int entitiesCount = entities.Count();
-            int pageSize = PaginationParameters.PageSize;
+            int pageSize = parameters.PageSize;
             int zeroCountOffset = (entitiesCount == 0 ? 1 : 0);
             if (parameters.PageNumber < 1 || parameters.PageNumber > (entitiesCount + pageSize - 1 + zeroCountOffset) / pageSize)
             {

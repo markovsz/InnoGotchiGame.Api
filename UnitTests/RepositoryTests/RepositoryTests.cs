@@ -52,14 +52,14 @@ namespace UnitTests.RepositoryTests
 
 
         [Theory]
-        [InlineData("Pet1", "2022-01-17 22:00:01", 3)]
-        [InlineData("Pet1", "2022-01-17 21:50:01", 2)]
-        [InlineData("Pet1", "2022-01-17 21:40:01", 2)]
-        [InlineData("Pet1", "2022-01-17 21:30:01", 1)]
-        [InlineData("Pet1", "2022-01-17 21:20:01", 1)]
-        [InlineData("Pet1", "2022-01-17 21:10:01", 1)]
-        [InlineData("Pet1", "2022-01-17 21:02:01", 0)]
-        public async Task GetPetsAsyncTest(string petName, string currentTimeStr, int happinessDaysCount)
+        [InlineData("Pet1", "2022-01-17 22:00:01", 2.172619)]
+        [InlineData("Pet1", "2022-01-17 21:50:01", 1.810515)]
+        [InlineData("Pet1", "2022-01-17 21:40:01", 1.448412)]
+        [InlineData("Pet1", "2022-01-17 21:30:01", 1.086309)]
+        [InlineData("Pet1", "2022-01-17 21:20:01", 0.724206)]
+        [InlineData("Pet1", "2022-01-17 21:10:01", 0.362103)]
+        [InlineData("Pet1", "2022-01-17 21:02:01", 0.072420)]
+        public async Task GetPetsAsyncTest(string petName, string currentTimeStr, double happinessDaysCount)
         {
             //Arrange
             var parameters = new PetParameters();
@@ -73,7 +73,7 @@ namespace UnitTests.RepositoryTests
             var readPet = readPets.Where(e => e.Name.Equals(petName)).FirstOrDefault();
             Assert.NotNull(readPet);
             var calucatedHappinessDaysCount = readPet.HappinessDaysCount;
-            Assert.Equal(happinessDaysCount, calucatedHappinessDaysCount);
+            Assert.Equal(happinessDaysCount, calucatedHappinessDaysCount, 0.0001);
             foreach (var pet in readPets)
                 Assert.True(pet.DeathDate > currentTime);
         }
@@ -138,7 +138,7 @@ namespace UnitTests.RepositoryTests
         }
 
         [Theory]
-        [InlineData("Farm1", "2022-01-17 22:00:01", 3.0)]
+        [InlineData("Farm1", "2022-01-17 22:00:01", 2.17262)]
         public async Task GetFarmAverageHappinessDaysCountAsync(string farmName, string currentTimeStr, double expectedHappinessDaysCount)
         {
             //Arrange
@@ -149,7 +149,7 @@ namespace UnitTests.RepositoryTests
             var calculatedHappinessDaysCount = await petsRepository.GetFarmAverageHappinessDaysCountAsync(farm.Id, currentTime);
 
             //Assert
-            Assert.Equal(expectedHappinessDaysCount, calculatedHappinessDaysCount);
+            Assert.Equal(expectedHappinessDaysCount, calculatedHappinessDaysCount, 0.001);
         }
 
         [Theory]

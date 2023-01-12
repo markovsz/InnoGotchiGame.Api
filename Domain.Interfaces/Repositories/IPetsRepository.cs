@@ -13,6 +13,7 @@ namespace Domain.Interfaces.Repositories
         Task<Pet> GetUntrackablePetByIdAsync(Guid petId, long now);
         Task<IEnumerable<Pet>> GetUserPetsAsync(Guid userId, long now);
         Task<IEnumerable<Pet>> GetPetsAsync(PetParameters parameters, long now);
+        Task<IEnumerable<Pet>> GetFarmPetsAsync(Guid farmId, bool trackChanges);
         Task<int> GetPetsCountAsync(long now);
         Task<int> GetFarmDeadPetsCountAsync(Guid farmId, long now);
         Task<int> GetFarmAlivePetsCountAsync(Guid farmId, long now);

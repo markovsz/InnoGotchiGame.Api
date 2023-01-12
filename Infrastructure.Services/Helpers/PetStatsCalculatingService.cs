@@ -4,33 +4,45 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services.Helpers;
 using System;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Helpers
 {
     public class PetStatsCalculatingService : IPetStatsCalculatingService
     {
+        private IRepositoryManager _repositoryManager;
         private IDateTimeConverter _dateTimeConverter;
 
-        public PetStatsCalculatingService(IDateTimeConverter dateTimeConverter)
+        public PetStatsCalculatingService(IRepositoryManager repositoryManager, IDateTimeConverter dateTimeConverter)
         {
+            _repositoryManager = repositoryManager;
             _dateTimeConverter = dateTimeConverter;
         }
 
-        public Pet UpdatePetVitalSigns(Pet pet, long updationTime) //TODO: delete Async
+        public async Task UpdateFarmPetsVitalSignsAsync(Guid farmId, long updationTime)
+        {
+            var pets = await _repositoryManager.Pets.GetFarmPetsAsync(farmId, true);
+            foreach (var pet in pets)
+            {
+                UpdatePetVitalSigns(pet, updationTime);
+            }
+            await _repositoryManager.SaveChangeAsync();
+        }
+
+        public Pet UpdatePetVitalSigns(Pet pet, long updationTime)
         {
             var hungerValue = CalculateHungerValueAtTime(pet.HungerValue, pet.LastPetDetailsUpdatingTime, updationTime);
             var thirstValue = CalculateThirstValueAtTime(pet.ThirstValue, pet.LastPetDetailsUpdatingTime, updationTime);
             pet.HungerValue = hungerValue;
             pet.ThirstValue = thirstValue;
             if (hungerValue >= HungerLevels.NormalMinHungerValue && thirstValue >= ThirstLevels.NormalMinThirstValue)
-            {
                 pet.HappinessDaysCount = GetPetHappinessDaysCountAtTime(pet.HappinessDaysCount, pet.LastPetDetailsUpdatingTime, updationTime);
-                pet.LastPetDetailsUpdatingTime = updationTime;
-            }
+            else
+                pet.HappinessDaysCount = 0;
+
             pet.DeathDate = CalculateDeathDate(hungerValue, thirstValue, updationTime);
             if (updationTime > pet.DeathDate && pet.LastPetDetailsUpdatingTime < pet.DeathDate)
             {
-                pet.IsAlive = false;
                 pet.HappinessDaysCount = 0;
             }
             pet.LastPetDetailsUpdatingTime = updationTime;
@@ -39,7 +51,7 @@ namespace Infrastructure.Services.Helpers
 
         public float CalculateHungerValueAtTime(float hungerValue, long lastPetDetailsUpdatingTime, long time)
         {
-            var lastFeedingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime); // in pet's time
+            var lastFeedingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime);
             hungerValue -= lastFeedingTimeSpan * PetSettings.HungerUnitsPerPetsHour;
 
             return hungerValue;
@@ -47,16 +59,14 @@ namespace Infrastructure.Services.Helpers
 
         public float CalculateThirstValueAtTime(float thirstValue, long lastPetDetailsUpdatingTime, long time)
         {
-            var lastThirstQuenchingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime); // in pet's time
+            var lastThirstQuenchingTimeSpan = _dateTimeConverter.GetHours(time - lastPetDetailsUpdatingTime);
             thirstValue -= lastThirstQuenchingTimeSpan * PetSettings.ThirstUnitsPerPetsHour;
             return thirstValue;
         }
 
-        public int GetPetHappinessDaysCountAtTime(int happinessDaysCount, long lastPetDetailsUpdatingTime, long time)
+        public double GetPetHappinessDaysCountAtTime(double happinessDaysCount, long lastPetDetailsUpdatingTime, long time)
         {
-            var newPetDetailsUpdatingTime = _dateTimeConverter.GetDays(lastPetDetailsUpdatingTime);
-            var today = _dateTimeConverter.GetDays(time);
-            var happinessDays = happinessDaysCount + _dateTimeConverter.SubtractDays(newPetDetailsUpdatingTime, today);
+            var happinessDays = happinessDaysCount + _dateTimeConverter.ConvertFromPetsTime(time).Subtract(_dateTimeConverter.ConvertFromPetsTime(lastPetDetailsUpdatingTime)).TotalDays * PetSettings.PetsTimeConstant;
             return happinessDays;
         }
 
@@ -69,7 +79,7 @@ namespace Infrastructure.Services.Helpers
 
         public int CalculatePetAge(Pet pet, long currentTime)
         {
-            if (!pet.IsAlive)
+            if (!pet.IsAlive(currentTime))
                 return _dateTimeConverter.GetYears(pet.DeathDate - pet.BirthDate);
             return _dateTimeConverter.GetYears(currentTime - pet.BirthDate);
         }

@@ -22,8 +22,8 @@ namespace Infrastructure.Services.Helpers
         public async Task<double> GetFarmAverageTimeBetweenFeedingAsync(Guid farmId)
         {
             var farmFeedingEventsList = await _repositoryManager.FeedingEvents.GetFarmFeedingEventsAsync(farmId);
-            var farmFeedingTimes = farmFeedingEventsList.Select(e => e.FeedingTime); //TODO: fix convertation
-            var farmFeedingTimesList = farmFeedingTimes.ToList(); //TODO: fix convertation
+            var farmFeedingTimes = farmFeedingEventsList.Select(e => e.FeedingTime);
+            var farmFeedingTimesList = farmFeedingTimes.ToList();
 
 
             if (farmFeedingTimesList.Count <= 1)

@@ -22,7 +22,7 @@ namespace WebApi.Filters
                 .FirstOrDefault();
             Guid userId;
             Guid.TryParse(userIdClaim.Value, out userId);
-            context.ActionArguments.Add("userId", userId); /*!*/
+            context.ActionArguments.Add("userId", userId);
         }
     }
 }

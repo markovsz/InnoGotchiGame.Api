@@ -41,7 +41,7 @@ namespace Infrastructure.Data.Repositories
                 .ThenInclude(e => e.FarmFriends)
             .Select(e => new Pet(e)
             {
-                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+                HappinessDaysCount = e.HappinessDaysCount + ((now - e.LastPetDetailsUpdatingTime) * 1.0 / (60 * 60 * 24))
             })
             .FirstOrDefaultAsync();
 
@@ -49,10 +49,14 @@ namespace Infrastructure.Data.Repositories
             await GetAll(false)
             .Where(e => e.DeathDate > now)
             .Select(e => new Pet(e){ 
-                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+                HappinessDaysCount = e.HappinessDaysCount + (now - e.LastPetDetailsUpdatingTime) * 1.0 / (60 * 60 * 24)
             })
             .OrderByDescending(e => e.HappinessDaysCount)
             .PetParametersHandler(parameters)
+            .ToListAsync();
+
+        public async Task<IEnumerable<Pet>> GetFarmPetsAsync(Guid farmId, bool trackChanges) =>
+            await GetByCondition(e => e.FarmId.Equals(farmId), trackChanges)
             .ToListAsync();
 
         public async Task<int> GetPetsCountAsync(long now) =>
@@ -66,7 +70,7 @@ namespace Infrastructure.Data.Repositories
             .Where(e => e.Farm.UserId.Equals(userId))
             .Select(e => new Pet(e)
             {
-                HappinessDaysCount = e.HappinessDaysCount + (int)((now - now % (60 * 60 * 24) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24))
+                HappinessDaysCount = e.HappinessDaysCount + (now - e.LastPetDetailsUpdatingTime) * 1.0 / (60 * 60 * 24)
             })
             .OrderByDescending(e => e.HappinessDaysCount)
             .ToListAsync();
@@ -84,7 +88,7 @@ namespace Infrastructure.Data.Repositories
         public async Task<double> GetFarmAverageHappinessDaysCountAsync(Guid farmId, long now) =>
             await GetByCondition(e => e.FarmId.Equals(farmId), false)
             .Where(e => e.DeathDate > now)
-            .Select(e => e.HappinessDaysCount + (int)(((now - now % (60 * 60 * 24)) - e.LastPetDetailsUpdatingTime + e.LastPetDetailsUpdatingTime % (60 * 60 * 24)) / (60 * 60 * 24)))
+            .Select(e => e.HappinessDaysCount + ((now - e.LastPetDetailsUpdatingTime) * 1.0 / (60 * 60 * 24)))
             .DefaultIfEmpty()
             .AverageAsync();
 

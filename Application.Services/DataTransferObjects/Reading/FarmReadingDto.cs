@@ -10,8 +10,14 @@ namespace Application.Services.DataTransferObjects.Reading
         public string Name { get; set; }
         public int DeadPetsCount { get; set; }
         public int AlivePetsCount { get; set; }
-        public float AverageFeedingTime { get; set; } //in days
-        public float AverageThirstQuenchingTime { get; set; } // in days
+        /// <summary>
+        /// Average feeding time in pet's days
+        /// </summary>
+        public float AverageFeedingTime { get; set; }
+        /// <summary>
+        /// Average thirst quenching time in pet's days
+        /// </summary>
+        public float AverageThirstQuenchingTime { get; set; }
         public int AverageHappinessDaysCount { get; set; }
         public int AveragePetsAge { get; set; }
         public UserMinReadingDto UserInfo { get; set; }

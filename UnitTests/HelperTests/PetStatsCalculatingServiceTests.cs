@@ -1,6 +1,8 @@
 ﻿using Application.Services.Helpers;
 using Domain.Core.Models;
+using Domain.Interfaces;
 using Infrastructure.Services.Helpers;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +14,28 @@ namespace UnitTests.HelperTests
 {
     public class PetStatsCalculatingServiceTests
     {
+        private Mock<IRepositoryManager> repositoryManagerMock;
         private IDateTimeConverter _dateTimeConverter;
         private PetStatsCalculatingService _petStatsCalculatingService;
 
         public PetStatsCalculatingServiceTests()
         {
             _dateTimeConverter = new DateTimeConverter();
-            _petStatsCalculatingService = new PetStatsCalculatingService(_dateTimeConverter);
+            repositoryManagerMock = new Mock<IRepositoryManager>();
+            _petStatsCalculatingService = new PetStatsCalculatingService(repositoryManagerMock.Object, _dateTimeConverter);
         }
 
         [Theory]
-        [InlineData("2022-01-09 20:00:00", "2022-01-10 20:00:00", "2022-02-01 20:00:00", false, 0)]
-        [InlineData("2022-01-09 20:00:00", "2022-01-17 20:00:00", "2022-02-01 20:00:00", false, 1)]
-        [InlineData("2022-01-09 20:00:00", "2022-01-17 20:00:00", "2022-01-12 20:00:00", true, 0)]
-        [InlineData("2022-01-09 20:00:00", "2022-01-17 20:00:00", "2022-01-16 21:00:00", true, 1)]
-        public void CalculatePetAgeTest(string birthTimeStr, string deathTimeStr, string currentTimeStr, bool isAlive, int expectedAge)
+        [InlineData("2022-01-09 20:00:00", "2022-01-10 20:00:00", "2022-02-01 20:00:00", 0)]
+        [InlineData("2022-01-09 20:00:00", "2022-01-17 20:00:00", "2022-02-01 20:00:00", 1)]
+        [InlineData("2022-01-09 20:00:00", "2022-01-17 20:00:00", "2022-01-12 20:00:00", 0)]
+        [InlineData("2022-01-09 20:00:00", "2022-01-17 20:00:00", "2022-01-16 21:00:00", 1)]
+        public void CalculatePetAgeTest(string birthTimeStr, string deathTimeStr, string currentTimeStr, int expectedAge)
         {
             //Arrange
             var pet = new Pet();
             pet.BirthDate = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(birthTimeStr));
             pet.DeathDate = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(deathTimeStr));
-            pet.IsAlive = isAlive;
             var currentTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
 
             //Act
@@ -90,16 +93,16 @@ namespace UnitTests.HelperTests
             var calculatedHappinessDaysCount = _petStatsCalculatingService.GetPetHappinessDaysCountAtTime(happinessDaysCount, lastPetDetailsUpdatingTime, currentTime);
 
             //Assert
-            Assert.Equal(expectedHappinessDaysCount, calculatedHappinessDaysCount);
+            Assert.Equal(expectedHappinessDaysCount, (int)calculatedHappinessDaysCount);
         }
 
         [Theory]
         [InlineData(75, 75, "2022-01-17 20:00:01", 3.99543375)]
-        public void CalculateDeathDateTest(float updatedHungerValue, float updatedThirstValue, string currentTimeStr, float expectedAliveDaysCount)
+        public void CalculateDeathDateTest(float updatedHungerValue, float updatedThirstValue, string currentTimeStr, float expectedDeadDaysCount)
         {
             //Arrange
             var currentTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
-            var expectedDeadTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr).AddDays(expectedAliveDaysCount));
+            var expectedDeadTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr).AddDays(expectedDeadDaysCount));
 
             //Act
             var calculatedDeadTime = _petStatsCalculatingService.CalculateDeathDate(updatedHungerValue, updatedThirstValue, currentTime);
@@ -109,10 +112,10 @@ namespace UnitTests.HelperTests
         }
 
         [Theory]
-        [InlineData(75.0, 75.0, true, 3, "2022-01-17 19:00:01", "2022-01-21 20:00:01")]
-        [InlineData(25.0, 25.0, true, 3, "2022-01-17 19:00:01", "2022-01-17 20:00:01")]
-        [InlineData(24.0, 24.0, false, 0, "2022-01-17 19:00:01", "2022-01-17 20:00:01")]
-        public void UpdatePetVitalSignsAsyncAsync_PetIsDead(float hungerValue, float thirstValue, bool isAlive, int happinessDaysCount, string lastUpdatingTimeStr, string currentTimeStr)
+        [InlineData(75.0, 75.0, 3, "2022-01-17 19:00:01", "2022-01-21 20:00:01")]
+        [InlineData(26.0, 26.0, 3, "2022-01-17 19:00:01", "2022-01-17 21:00:01")]
+        [InlineData(24.0, 24.0, 0, "2022-01-17 19:00:01", "2022-01-17 20:00:01")]
+        public void UpdatePetVitalSignsAsyncAsync_PetIsDead(float hungerValue, float thirstValue, int happinessDaysCount, string lastUpdatingTimeStr, string currentTimeStr)
         {
             //Arrange
             var lastUpdatingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Parse(lastUpdatingTimeStr));
@@ -121,7 +124,6 @@ namespace UnitTests.HelperTests
             {
                 HungerValue = hungerValue,
                 ThirstValue = thirstValue,
-                IsAlive = isAlive,
                 HappinessDaysCount = happinessDaysCount,
                 LastPetDetailsUpdatingTime = lastUpdatingTime
             };
@@ -130,7 +132,7 @@ namespace UnitTests.HelperTests
             var updatedPet = _petStatsCalculatingService.UpdatePetVitalSigns(pet, currentTime);
 
             //Assert
-            Assert.False(updatedPet.IsAlive);
+            Assert.True(updatedPet.DeathDate < currentTime);
             Assert.Equal(0, updatedPet.HappinessDaysCount);
         }
     }

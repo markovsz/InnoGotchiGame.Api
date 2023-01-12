@@ -16,20 +16,22 @@ namespace Infrastructure.Services.Services
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
         private IDateTimeConverter _dateTimeConverter;
+        private IDateTimeProvider _dateTimeProvider;
 
-        public FeedingEventsService(IRepositoryManager repositoryManager, IMapper mapper, IDateTimeConverter dateTimeConverter)
+        public FeedingEventsService(IRepositoryManager repositoryManager, IMapper mapper, IDateTimeConverter dateTimeConverter, IDateTimeProvider dateTimeProvider)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _dateTimeConverter = dateTimeConverter;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Guid> CreateFeedingEventAsync(FeedingEventCreatingDto feedingEventDto)
         {
             var feedingEvent = _mapper.Map<FeedingEvent>(feedingEventDto);
-            feedingEvent.FeedingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            feedingEvent.FeedingTime = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
 
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(feedingEventDto.PetId, now);
             feedingEvent.HungerValueBefore = pet.HungerValue;
 

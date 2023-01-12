@@ -4,14 +4,16 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230105205511_RemoveIsAliveProperty")]
+    partial class RemoveIsAliveProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,8 +123,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<Guid>("FarmId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("HappinessDaysCount")
-                        .HasColumnType("float");
+                    b.Property<int>("HappinessDaysCount")
+                        .HasColumnType("int");
 
                     b.Property<float>("HungerValue")
                         .HasColumnType("real");
@@ -191,27 +193,27 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("638c22cf-c263-4c54-aec2-d61e19926104"),
+                            Id = new Guid("9305eed8-561a-40ab-b1c3-419a1b734295"),
                             PictureName = "body1.svg"
                         },
                         new
                         {
-                            Id = new Guid("3a4105e7-9400-4ca2-b219-4547c1f403df"),
+                            Id = new Guid("5d72fdbb-fc4d-4701-b452-2d8fd6433d51"),
                             PictureName = "body2.svg"
                         },
                         new
                         {
-                            Id = new Guid("907b67b6-a734-4484-8803-ca83345dc1fe"),
+                            Id = new Guid("7bbce661-b7a9-4638-a4c6-93370dd34685"),
                             PictureName = "body3.svg"
                         },
                         new
                         {
-                            Id = new Guid("eb944fd4-d048-4841-8eef-122382c16368"),
+                            Id = new Guid("ea9f404c-86aa-461e-9cc9-beefe839d1ee"),
                             PictureName = "body4.svg"
                         },
                         new
                         {
-                            Id = new Guid("3f5e5c0b-3c72-4e62-a104-84f5ca67bc6a"),
+                            Id = new Guid("79728da6-bb68-46de-80e1-d6407ff04170"),
                             PictureName = "body5.svg"
                         });
                 });
@@ -232,32 +234,32 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b42b1b86-2951-4a76-a94a-5faf4f8fbeca"),
+                            Id = new Guid("e0c3b0b6-4a7d-47e1-931b-3ba1495acc8d"),
                             PictureName = "eyes1.svg"
                         },
                         new
                         {
-                            Id = new Guid("06d190c6-a65b-4724-bee1-e77f9123a013"),
+                            Id = new Guid("85fbd86a-2621-4c40-b34e-b69431cea7eb"),
                             PictureName = "eyes2.svg"
                         },
                         new
                         {
-                            Id = new Guid("73e8c8d8-cd0c-489d-9395-5aef716fe6cf"),
+                            Id = new Guid("b5c3a3ed-e9de-4610-9485-da45f6ca1da7"),
                             PictureName = "eyes3.svg"
                         },
                         new
                         {
-                            Id = new Guid("6cf7bec9-6a46-4254-9042-6799abc55fe4"),
+                            Id = new Guid("8db17680-fb9e-40e1-ad1b-fa0a09897a86"),
                             PictureName = "eyes4.svg"
                         },
                         new
                         {
-                            Id = new Guid("c95e34a9-c31b-4cea-9448-c75b46543e15"),
+                            Id = new Guid("806f751d-8e6f-42ce-b3d3-f9e53fb49954"),
                             PictureName = "eyes5.svg"
                         },
                         new
                         {
-                            Id = new Guid("cbd51b6a-f471-44b7-8bc5-bba0f6419597"),
+                            Id = new Guid("867dfb5c-ead6-4434-be3d-53e379192fb8"),
                             PictureName = "eyes6.svg"
                         });
                 });
@@ -278,27 +280,27 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("85a51344-9854-4bfd-aa34-514de6f9bfe8"),
+                            Id = new Guid("0a63d64e-b7d8-4ba8-88c8-ed707e5a2de8"),
                             PictureName = "mouth1.svg"
                         },
                         new
                         {
-                            Id = new Guid("3f6701dd-0339-4269-bef2-c96b97cd6df1"),
+                            Id = new Guid("1e2c214f-49ce-40ff-9e16-8d8aeda36fe3"),
                             PictureName = "mouth2.svg"
                         },
                         new
                         {
-                            Id = new Guid("70aa064e-9906-45a9-8836-f45eaeb4365c"),
+                            Id = new Guid("1178251e-7ae9-4bae-82ea-07b8a44ba9cf"),
                             PictureName = "mouth3.svg"
                         },
                         new
                         {
-                            Id = new Guid("963084a5-5344-46c6-bd10-f46abd41e248"),
+                            Id = new Guid("9f6013b1-020f-4121-a8b3-9c3929d687d4"),
                             PictureName = "mouth4.svg"
                         },
                         new
                         {
-                            Id = new Guid("ada1a20c-bae3-44c9-a9c3-a5e6dd3d7e85"),
+                            Id = new Guid("a6353dfc-55ea-4e81-82bc-245492089646"),
                             PictureName = "mouth5.svg"
                         });
                 });
@@ -319,32 +321,32 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("cef37ad9-e5bf-438e-84cf-c07fc6fc77e2"),
+                            Id = new Guid("22786959-e3bf-43e9-bb35-5eaefcf8f1a8"),
                             PictureName = "nose1.svg"
                         },
                         new
                         {
-                            Id = new Guid("623107d8-6114-47af-9f7a-611d15728e5d"),
+                            Id = new Guid("21c584d0-6d46-4f2d-92f3-b374fd3dd0e1"),
                             PictureName = "nose2.svg"
                         },
                         new
                         {
-                            Id = new Guid("7caf962c-30dd-4a6c-98c8-edb403233acd"),
+                            Id = new Guid("56bc0350-89c8-453f-9399-d983fbaa1561"),
                             PictureName = "nose3.svg"
                         },
                         new
                         {
-                            Id = new Guid("709df7fe-d5e5-4283-8900-bc491927776e"),
+                            Id = new Guid("22eb787f-52be-4fae-ab5c-20f1269efa24"),
                             PictureName = "nose4.svg"
                         },
                         new
                         {
-                            Id = new Guid("ba1eb6ee-e045-497e-89d3-a272e9c676f5"),
+                            Id = new Guid("1c3cce28-e42a-4529-9e6b-fb408de25aea"),
                             PictureName = "nose5.svg"
                         },
                         new
                         {
-                            Id = new Guid("346339df-3558-48c6-99e2-d2e8d891ee3f"),
+                            Id = new Guid("edb7a31f-f412-470f-b044-62d455c401d2"),
                             PictureName = "nose6.svg"
                         });
                 });
@@ -486,8 +488,8 @@ namespace Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0cecf2c7-99f5-4aaa-a838-bdff8a26dcd6"),
-                            ConcurrencyStamp = "ecd1b52f-87e5-431f-9630-dbfbe5fc26a0",
+                            Id = new Guid("5228430a-f33d-44a2-9f72-c7c89342d4c7"),
+                            ConcurrencyStamp = "9c8b5d08-bcb1-46e3-9ca2-72df8f5f6861",
                             Name = "user",
                             NormalizedName = "USER"
                         });

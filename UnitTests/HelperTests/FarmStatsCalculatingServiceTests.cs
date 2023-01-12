@@ -69,14 +69,12 @@ namespace UnitTests.HelperTests
             pets.AddRange(new List<Pet>(){
                 new Pet { Id = Guid.NewGuid(), Name = "Octopus Mike",
                     HungerValue = 80.0f, ThirstValue = 80.0f, HappinessDaysCount = 2,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 3)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2023, 03, 29)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     Farm = farms[0] },
                 new Pet { Id = Guid.NewGuid(), Name = "Octopus Kira",
                     HungerValue = 80.0f, ThirstValue = 80.0f, HappinessDaysCount = 2,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 3)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2023, 03, 29)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
@@ -84,14 +82,12 @@ namespace UnitTests.HelperTests
                 },
                 new Pet { Id = Guid.NewGuid(), Name = "Slime Hen",
                     HungerValue = 60.0f, ThirstValue = 60.0f, HappinessDaysCount = 1,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 6)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     Farm = farms[2] },
                 new Pet { Id = Guid.NewGuid(), Name = "Monke Mikael",
                     HungerValue = 60.0f, ThirstValue = 60.0f, HappinessDaysCount = 2,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 3)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2023, 03, 29)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
@@ -99,7 +95,6 @@ namespace UnitTests.HelperTests
                 },
                 new Pet { Id = Guid.NewGuid(), Name = "Slime Hent",
                     HungerValue = 20.0f, ThirstValue = 20.0f, HappinessDaysCount = 1,
-                    IsAlive = false,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 6)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
@@ -112,10 +107,10 @@ namespace UnitTests.HelperTests
 
             petsRepositoryMock = new Mock<IPetsRepository>();
             petsRepositoryMock.Setup(e => e.GetFarmAlivePetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()))
-                .Returns(Task.FromResult(pets.Where(e => e.IsAlive).Count()))
+                .Returns(Task.FromResult(pets.Where(e => e.DeathDate < now).Count()))
                 .Verifiable();
             petsRepositoryMock.Setup(e => e.GetFarmDeadPetsCountAsync(It.IsAny<Guid>(), It.IsAny<long>()))
-                .Returns(Task.FromResult(pets.Where(e => !e.IsAlive).Count()))
+                .Returns(Task.FromResult(pets.Where(e => e.DeathDate > now).Count()))
                 .Verifiable();
             petsRepositoryMock.Setup(e => e.GetFarmAverageHappinessDaysCountAsync(It.IsAny<Guid>(), It.IsAny<long>()))
                 .Returns(Task.FromResult((double)averageHappinessDaysCount))
@@ -134,9 +129,11 @@ namespace UnitTests.HelperTests
             thirstQuenchingFarmStatsServiceMock = new Mock<IThirstQuenchingFarmStatsService>();
             thirstQuenchingFarmStatsServiceMock.Setup(e => e.GetFarmAverageTimeBetweenThirstQuenchingAsync(It.IsAny<Guid>())).Returns(Task.FromResult((double)averageThirstQuenchingTime));
 
-            var petStatsCalculatingService = new PetStatsCalculatingService(dateTimeConverter);
+            var repositoryManager = repositoryManagerMock.Object;
 
-            farmStatsCalculatingService = new FarmStatsCalculatingService(feedingFarmStatsServiceMock.Object, thirstQuenchingFarmStatsServiceMock.Object, repositoryManagerMock.Object);
+            var petStatsCalculatingService = new PetStatsCalculatingService(repositoryManager, dateTimeConverter);
+
+            farmStatsCalculatingService = new FarmStatsCalculatingService(petStatsCalculatingService, feedingFarmStatsServiceMock.Object, thirstQuenchingFarmStatsServiceMock.Object, repositoryManager);
         }
 
         [Theory]
@@ -149,8 +146,8 @@ namespace UnitTests.HelperTests
             var farmDto = new FarmReadingDto()
             {
                 Name = farms[farmId].Name,
-                AlivePetsCount = pets.Where(e => e.IsAlive).Count(),
-                DeadPetsCount = pets.Where(e => !e.IsAlive).Count(),
+                AlivePetsCount = pets.Where(e => e.DeathDate < now).Count(),
+                DeadPetsCount = pets.Where(e => e.DeathDate > now).Count(),
                 AverageFeedingTime = averageFeedingTime,
                 AverageThirstQuenchingTime = averageThirstQuenchingTime,
                 AverageHappinessDaysCount = averageHappinessDaysCount,
@@ -180,8 +177,8 @@ namespace UnitTests.HelperTests
             var farmDto = new FarmMinReadingDto()
             {
                 Name = pets[petId].Name,
-                AlivePetsCount = pets.Where(e => e.IsAlive).Count(),
-                DeadPetsCount = pets.Where(e => !e.IsAlive).Count(),
+                AlivePetsCount = pets.Where(e => e.DeathDate < now).Count(),
+                DeadPetsCount = pets.Where(e => e.DeathDate > now).Count(),
                 AverageFeedingTime = averageFeedingTime,
                 AverageThirstQuenchingTime = averageThirstQuenchingTime,
                 AverageHappinessDaysCount = averageHappinessDaysCount,

@@ -16,20 +16,22 @@ namespace Infrastructure.Services.Services
         private IRepositoryManager _repositoryManager;
         private IMapper _mapper;
         private IDateTimeConverter _dateTimeConverter;
+        private IDateTimeProvider _dateTimeProvider;
 
-        public ThirstQuenchingEventsService(IRepositoryManager repositoryManager, IMapper mapper, IDateTimeConverter dateTimeConverter)
+        public ThirstQuenchingEventsService(IRepositoryManager repositoryManager, IMapper mapper, IDateTimeConverter dateTimeConverter, IDateTimeProvider dateTimeProvider)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
             _dateTimeConverter = dateTimeConverter;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<Guid> CreateThirstQuenchingEventAsync(ThirstQuenchingEventCreatingDto thirstQuenchingEventDto)
         {
             var thirstQuenchingEvent = _mapper.Map<ThirstQuenchingEvent>(thirstQuenchingEventDto);
-            thirstQuenchingEvent.ThirstQuenchingTime = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            thirstQuenchingEvent.ThirstQuenchingTime = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
 
-            var now = _dateTimeConverter.ConvertToPetsTime(DateTime.Now);
+            var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
             var pet = await _repositoryManager.Pets.GetUntrackablePetByIdAsync(thirstQuenchingEvent.PetId, now);
             thirstQuenchingEvent.ThirstValueBefore = pet.HungerValue;
 

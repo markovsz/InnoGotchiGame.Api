@@ -34,6 +34,8 @@ namespace UnitTests.ServiceTests
         private Farm farm = new Farm();
         private Farm friendFarm = new Farm();
 
+        private DateTime now = new DateTime(2022, 7, 11);
+
 
         private Mock<IFeedingEventsService> feedingEventsServiceMock;
         private Mock<IThirstQuenchingEventsService> thirstQuenchingEventsServiceMock;
@@ -47,6 +49,8 @@ namespace UnitTests.ServiceTests
         private Mock<IPetNosesRepository> nosesRepositoryMock;
 
         private Mock<IRepositoryManager> repositoryManagerMock;
+
+        private Mock<IDateTimeProvider> dateTimeProviderMock;
 
 
         public PetsServiceTests()
@@ -69,14 +73,12 @@ namespace UnitTests.ServiceTests
             pets.AddRange(new List<Pet>(){
                 new Pet { Id = Guid.NewGuid(), Name = "Octopus Mike",
                     HungerValue = 80.0f, ThirstValue = 80.0f, HappinessDaysCount = 2,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 3)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2023, 03, 29)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     Farm = farm },
                 new Pet { Id = Guid.NewGuid(), Name = "Octopus Kira",
                     HungerValue = 80.0f, ThirstValue = 80.0f, HappinessDaysCount = 2,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 3)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2023, 03, 29)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
@@ -84,14 +86,12 @@ namespace UnitTests.ServiceTests
                 },
                 new Pet { Id = Guid.NewGuid(), Name = "Slime Hen",
                     HungerValue = 60.0f, ThirstValue = 60.0f, HappinessDaysCount = 1,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 6)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     Farm = new Farm() { Id = Guid.NewGuid(), UserId = foreignerUserId } },
                 new Pet { Id = Guid.NewGuid(), Name = "Monke Mikael",
                     HungerValue = 60.0f, ThirstValue = 60.0f, HappinessDaysCount = 2,
-                    IsAlive = true,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 3)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2023, 03, 29)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
@@ -102,7 +102,6 @@ namespace UnitTests.ServiceTests
                 },
                 new Pet { Id = Guid.NewGuid(), Name = "Slime Hent",
                     HungerValue = 20.0f, ThirstValue = 20.0f, HappinessDaysCount = 1,
-                    IsAlive = false,
                     BirthDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 6)),
                     DeathDate = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
                     LastPetDetailsUpdatingTime = dateTimeConverter.ConvertToPetsTime(new DateTime(2022, 7, 9)),
@@ -122,7 +121,13 @@ namespace UnitTests.ServiceTests
 
             petsRepositoryMock = new Mock<IPetsRepository>();
             petsRepositoryMock.Setup(e => e.GetUntrackablePetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>()))
-                .Returns((Guid id, long now, bool tc) => 
+                .Returns((Guid id, long now) => 
+                    Task.FromResult(pets
+                        .Where(e => e.Id.Equals(id))
+                        .FirstOrDefault()))
+                .Verifiable();
+            petsRepositoryMock.Setup(e => e.GetTrackablePetByIdAsync(It.IsAny<Guid>(), It.IsAny<long>()))
+                .Returns((Guid id, long now) =>
                     Task.FromResult(pets
                         .Where(e => e.Id.Equals(id))
                         .FirstOrDefault()))
@@ -171,17 +176,20 @@ namespace UnitTests.ServiceTests
             repositoryManagerMock.Setup(e => e.PetNoses).Returns(nosesRepositoryMock.Object);
             repositoryManagerMock.Setup(e => e.SaveChangeAsync()).Returns(Task.CompletedTask);
 
-            var petStatsCalculatingService = new PetStatsCalculatingService(dateTimeConverter);
 
             var repositoryManager = repositoryManagerMock.Object;
+            var petStatsCalculatingService = new PetStatsCalculatingService(repositoryManager, dateTimeConverter);
             var feedingFarmStatsService = new FeedingFarmStatsService(repositoryManager, dateTimeConverter);
             var thirstQuenchingFarmStatsService = new ThirstQuenchingFarmStatsService(repositoryManager, dateTimeConverter);
-            var farmStatsCalculatingService = new FarmStatsCalculatingService(feedingFarmStatsService, thirstQuenchingFarmStatsService, repositoryManager);
+            var farmStatsCalculatingService = new FarmStatsCalculatingService(petStatsCalculatingService, feedingFarmStatsService, thirstQuenchingFarmStatsService, repositoryManager);
 
             var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(m => m.Map<PetCreatingDto, Pet>(It.IsAny<PetCreatingDto>())).Returns(new Pet());
 
-            petsService = new PetsService(feedingEventsServiceMock.Object, thirstQuenchingEventsServiceMock.Object, repositoryManagerMock.Object, mapperMock.Object, petStatsCalculatingService, dateTimeConverter);
+            dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            dateTimeProviderMock.Setup(e => e.Now).Returns(now);
+
+            petsService = new PetsService(feedingEventsServiceMock.Object, thirstQuenchingEventsServiceMock.Object, repositoryManagerMock.Object, mapperMock.Object, petStatsCalculatingService, dateTimeConverter, dateTimeProviderMock.Object);
         }
 
         [Theory]
@@ -461,7 +469,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var petId = Guid.Parse(petIdStr);
-            var petDto = new PetUpdatingDto() { petId = petId };
+            var petDto = new PetUpdatingDto() { Id = petId };
 
             try
             {
@@ -480,7 +488,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var pet = pets[petIdNum];
-            var petDto = new PetUpdatingDto() { petId = pet.Id };
+            var petDto = new PetUpdatingDto() { Id = pet.Id };
 
             try
             {
@@ -499,7 +507,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var pet = pets[petIdNum];
-            var petDto = new PetUpdatingDto() { petId = pet.Id };
+            var petDto = new PetUpdatingDto() { Id = pet.Id };
 
             try
             {
@@ -518,7 +526,7 @@ namespace UnitTests.ServiceTests
         {
             //Arrange
             var pet = pets[petIdNum];
-            var petDto = new PetUpdatingDto() { petId = pet.Id };
+            var petDto = new PetUpdatingDto() { Id = pet.Id };
 
             try
             {
