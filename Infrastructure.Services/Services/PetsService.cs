@@ -10,6 +10,7 @@ using Domain.Interfaces.RequestParameters;
 using Infrastructure.Data;
 using Infrastructure.Services.Exceptions;
 using Infrastructure.Services.Helpers;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,9 @@ namespace Infrastructure.Services.Services
         private IDateTimeConverter _dateTimeConverter;
         private IDateTimeProvider _dateTimeProvider;
         private IPetStatsCalculatingService _petStatsCalculatingService;
+        private IConfiguration _configuration;
 
-        public PetsService(IFeedingEventsService feedingEventsService, IThirstQuenchingEventsService thirstQuenchingEventsService, IRepositoryManager repositoryManager, IMapper mapper, IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter, IDateTimeProvider dateTimeProvider)
+        public PetsService(IFeedingEventsService feedingEventsService, IThirstQuenchingEventsService thirstQuenchingEventsService, IRepositoryManager repositoryManager, IMapper mapper, IPetStatsCalculatingService petStatsCalculatingService, IDateTimeConverter dateTimeConverter, IDateTimeProvider dateTimeProvider, IConfiguration configuration)
         {
             _feedingEventsService = feedingEventsService;
             _thirstQuenchingEventsService = thirstQuenchingEventsService;
@@ -36,6 +38,7 @@ namespace Infrastructure.Services.Services
             _petStatsCalculatingService = petStatsCalculatingService;
             _dateTimeConverter = dateTimeConverter;
             _dateTimeProvider = dateTimeProvider;
+            _configuration = configuration;
         }
 
         public async Task<Guid> CreatePetAsync(PetCreatingDto petDto, Guid userId)
@@ -168,9 +171,11 @@ namespace Infrastructure.Services.Services
         public async Task<PetsPaginationDto> GetPetsAsync(PetParameters parameters)
         {
             var now = _dateTimeConverter.ConvertToPetsTime(_dateTimeProvider.Now);
+            var pageSizeStr = _configuration.GetSection("Pagination").GetSection("PageSize").Value;
+            parameters.PageSize = Int32.Parse(pageSizeStr);
             var pets = await _repositoryManager.Pets.GetPetsAsync(parameters, now);
             var petsCount = await _repositoryManager.Pets.GetPetsCountAsync(now);
-            petsCount = (petsCount + PetParameters.PageSize - 1) / PetParameters.PageSize;
+            petsCount = (petsCount + parameters.PageSize - 1) / parameters.PageSize;
 
             var paginationDto = new PetsPaginationDto();
             paginationDto.Pets = _mapper.Map<IEnumerable<PetMinReadingDto>>(pets);
