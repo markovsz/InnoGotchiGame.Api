@@ -49,7 +49,9 @@ namespace Infrastructure.Data.Repositories
             await GetAll(false)
             .Where(e => e.DeathDate > now)
             .Select(e => new Pet(e){ 
-                HappinessDaysCount = e.HappinessDaysCount + (now - e.LastPetDetailsUpdatingTime) * 1.0 / (60 * 60 * 24)
+                HappinessDaysCount = e.HappinessDaysCount + (now - e.LastPetDetailsUpdatingTime) * 1.0 / (60 * 60 * 24),
+                HungerValue = e.HungerValue - (now - e.LastPetDetailsUpdatingTime) / (60 * 60 * 24) * PetSettings.HungerUnitsPerPetsHour,
+                ThirstValue = e.ThirstValue - (now - e.LastPetDetailsUpdatingTime) / (60 * 60 * 24) * PetSettings.ThirstUnitsPerPetsHour
             })
             .OrderByDescending(e => e.HappinessDaysCount)
             .PetParametersHandler(parameters)
