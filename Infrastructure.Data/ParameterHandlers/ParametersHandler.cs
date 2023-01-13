@@ -23,6 +23,22 @@ namespace Infrastructure.Data.ParameterHandlers
             if (parameters.MaxThirstLevel.HasValue)
                 pets = pets.Where(e => e.ThirstValue <= parameters.MaxThirstLevel.Value);
 
+            if (parameters.SortedBy is not null)
+            {
+                switch (parameters.SortedBy.ToLower())
+                {
+                    case "age":
+                        pets = pets.OrderBy(e => e.BirthDate);
+                        break;
+                    case "hunger":
+                        pets = pets.OrderBy(e => e.HungerValue);
+                        break;
+                    case "thirst":
+                        pets = pets.OrderBy(e => e.ThirstValue);
+                        break;
+                }
+            }
+
             return pets
                 .PaginationParametersHandler(parameters);
         }

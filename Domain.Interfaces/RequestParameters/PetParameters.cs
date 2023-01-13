@@ -7,5 +7,6 @@
         public float? MaxHungerLevel { get; set; }
         public float? MinThirstLevel { get; set; }
         public float? MaxThirstLevel { get; set; }
+        public string SortedBy { get; set; }
     }
 }
