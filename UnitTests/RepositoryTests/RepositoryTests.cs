@@ -64,6 +64,7 @@ namespace UnitTests.RepositoryTests
             //Arrange
             var parameters = new PetParameters();
             parameters.PageNumber = 1;
+            parameters.PageSize = 15;
             var currentTime = dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
 
             //Act
@@ -80,14 +81,14 @@ namespace UnitTests.RepositoryTests
 
 
         [Theory]
-        [InlineData("Pet1", "2022-01-17 22:00:01", 3, "email@gmail.com")]
-        [InlineData("Pet1", "2022-01-17 21:50:01", 2, "email@gmail.com")]
-        [InlineData("Pet1", "2022-01-17 21:40:01", 2, "email@gmail.com")]
-        [InlineData("Pet1", "2022-01-17 21:30:01", 1, "email@gmail.com")]
-        [InlineData("Pet1", "2022-01-17 21:20:01", 1, "email@gmail.com")]
-        [InlineData("Pet1", "2022-01-17 21:10:01", 1, "email@gmail.com")]
-        [InlineData("Pet1", "2022-01-17 21:02:01", 0, "email@gmail.com")]
-        public async Task GetUserPetsAsync(string petName, string currentTimeStr, int happinessDaysCount, string userEmail)
+        [InlineData("Pet1", "2022-01-17 22:00:01", 2.172619, "email@gmail.com")]
+        [InlineData("Pet1", "2022-01-17 21:50:01", 1.810515, "email@gmail.com")]
+        [InlineData("Pet1", "2022-01-17 21:40:01", 1.448412, "email@gmail.com")]
+        [InlineData("Pet1", "2022-01-17 21:30:01", 1.086309, "email@gmail.com")]
+        [InlineData("Pet1", "2022-01-17 21:20:01", 0.724206, "email@gmail.com")]
+        [InlineData("Pet1", "2022-01-17 21:10:01", 0.362103, "email@gmail.com")]
+        [InlineData("Pet1", "2022-01-17 21:02:01", 0.072420, "email@gmail.com")]
+        public async Task GetUserPetsAsync(string petName, string currentTimeStr, double happinessDaysCount, string userEmail)
         {
             //Arrange
             var currentTime = dateTimeConverter.ConvertToPetsTime(DateTime.Parse(currentTimeStr));
@@ -100,7 +101,7 @@ namespace UnitTests.RepositoryTests
             var readPet = readPets.Where(e => e.Name.Equals(petName)).FirstOrDefault();
             Assert.NotNull(readPet);
             Assert.NotNull(readPet.Farm);
-            Assert.Equal(happinessDaysCount, readPet.HappinessDaysCount);
+            Assert.Equal(happinessDaysCount, readPet.HappinessDaysCount, 0.0001);
             foreach (var pet in readPets)
             {
                 Assert.Equal(user.Id, pet.Farm.UserId);
