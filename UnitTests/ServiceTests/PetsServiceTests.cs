@@ -13,6 +13,7 @@ using Infrastructure.Services;
 using Infrastructure.Services.Exceptions;
 using Infrastructure.Services.Helpers;
 using Infrastructure.Services.Services;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -189,7 +190,15 @@ namespace UnitTests.ServiceTests
             dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(e => e.Now).Returns(now);
 
-            petsService = new PetsService(feedingEventsServiceMock.Object, thirstQuenchingEventsServiceMock.Object, repositoryManagerMock.Object, mapperMock.Object, petStatsCalculatingService, dateTimeConverter, dateTimeProviderMock.Object);
+            var inMemorySettings = new Dictionary<string, string> {
+                {"Pagination", "{\"PageSize\": \"15\"}"},
+            };
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
+            petsService = new PetsService(feedingEventsServiceMock.Object, thirstQuenchingEventsServiceMock.Object, repositoryManagerMock.Object, mapperMock.Object, petStatsCalculatingService, dateTimeConverter, dateTimeProviderMock.Object, configuration);
         }
 
         [Theory]
