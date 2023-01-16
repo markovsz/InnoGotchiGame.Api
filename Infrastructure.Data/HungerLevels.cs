@@ -5,7 +5,7 @@ namespace Infrastructure.Data
 {
     public class HungerLevels
     {
-        public static readonly List<(string, float)> HungerLevelsList = new List<(string, float)>{ ("dead", -0.0f),  
+        private static readonly List<(string, float)> HungerLevelsList = new List<(string, float)>{ ("dead", -0.0f),  
                                                                                                    ("hunger", 25.0f),
                                                                                                    ("normal", 50.0f),
                                                                                                    ("full", 75.0f) };
