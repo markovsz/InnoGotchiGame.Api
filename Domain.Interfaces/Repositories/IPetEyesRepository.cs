@@ -9,7 +9,7 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IPetEyesRepository
     {
-        public Task<IEnumerable<PetEyes>> GetPetEyesAsync();
-        public Task<PetEyes> GetPetEyesByNameAsync(string picName);
+        Task<IEnumerable<PetEyes>> GetPetEyesAsync();
+        Task<PetEyes> GetPetEyesByNameAsync(string picName);
     }
 }
