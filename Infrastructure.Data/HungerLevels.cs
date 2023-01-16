@@ -5,10 +5,10 @@ namespace Infrastructure.Data
 {
     public class HungerLevels
     {
-        private static readonly List<(string, float)> HungerLevelsList = new List<(string, float)>{ ("dead", -0.0f),  
-                                                                                                   ("hunger", 25.0f),
-                                                                                                   ("normal", 50.0f),
-                                                                                                   ("full", 75.0f) };
+        private static readonly List<(string name, float minValue)> HungerLevelsList = new List<(string, float)>{ ("dead", -0.0f),  
+                                                                                                                  ("hunger", 25.0f),
+                                                                                                                  ("normal", 50.0f),
+                                                                                                                  ("full", 75.0f) };
 
         public static readonly string Dead = HungerLevelsList[0].Item1;
         public static readonly string Hunger = HungerLevelsList[1].Item1;
