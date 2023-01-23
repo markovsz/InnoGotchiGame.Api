@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Static images
+**/wwwroot/images/*
+!**/wwwroot/images/body-parts
